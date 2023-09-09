@@ -30,10 +30,3 @@ class Award(models.Model):
         """Returns the URL to access a detail record for this book."""
         return reverse('award-detail', args=[str(self.id)])
     
-class Genre(models.Model):
-    """Model representing a book genre."""
-    name = models.CharField(max_length=200, help_text='Enter a book genre (e.g. Science Fiction)')
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.name
