@@ -18,7 +18,7 @@ class Belt(models.Model):
 
 class Award(models.Model):
     """Model representing an award."""
-    recipients = models.ManyToManyField('Member', help_text='Who are the recipients of this award?')
+    #recipients = models.ManyToManyField('Member', help_text='Who are the recipients of this award?')
     name = models.CharField('Type of Award', max_length=200, help_text="Enter what the award is for.")
     def __str__(self):
         """string for representing the award"""
