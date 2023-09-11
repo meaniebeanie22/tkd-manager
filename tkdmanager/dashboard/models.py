@@ -67,6 +67,7 @@ class Member(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.id_number})'
