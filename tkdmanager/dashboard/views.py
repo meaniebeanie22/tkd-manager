@@ -20,3 +20,12 @@ def index(request):
     print(context['belt_count'])
 
     return render(request, 'home.html', context=context)
+
+class MemberListView(generic.ListView):
+    model = Member
+    paginate_by = 25
+
+class MemberDetailView(generic.DetailView):
+    model = Member
+
+

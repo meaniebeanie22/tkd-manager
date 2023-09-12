@@ -1,15 +1,15 @@
-{% extends "base_generic.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+</head>
 
-{% block title %}
-  <title>TKD Manager Dashboard</title>
-{% endblock %}
-
-{% block content %}
-  <h1>TKD Manager Dashboard</h1>
-  <ul>
-    <li><strong>Total Members:</strong> {{ num_members }}</li>
-    <li><strong>Active Members:</strong> {{ num_active_members }}</li>
-  </ul>
+<body class="wrapper container">
+<h2>Hello!</h2>
+<p>There are {{ num_members }} members currently in the database, with {{ num_active_members }} that are active.</p>
 
 <div class="row">
     <div class="col-md-6">
@@ -42,4 +42,6 @@ new Chart("myChart", {
 });
 
 </script>
-{% endblock %}
+
+</body>
+</html>
