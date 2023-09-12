@@ -8,10 +8,11 @@
   <div style="margin-left:20px;margin-top:20px">
     <h4>Gradings</h4>
     {% if member.member2gradings.all %}
-
+    <ul>
         {% for gr in member.member2gradings.all %}
-            <strong><a href="{{ gr.get_absolute_url }}">{{ gr.date }}</a> ({{ gr.type }})</strong>
+            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date }}</a> ({{ gr.type }})</strong></li>
         {% endfor %}
+    </ul>
     {% else %}
         <p>This member has not graded.</p>
     {% endif %}

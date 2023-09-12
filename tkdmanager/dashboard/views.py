@@ -37,12 +37,15 @@ class GradingResultDetailView(generic.DetailView):
         # Create any data and add it to the context
         maxpts = 0
         apts = 0
-        for au in self.get_object().assessmentunit_set.all():
-            maxpts += au.max_pts
-            apts += au.achieved_pts
+        if self.get_object().assessmentunit_set.all():
+            for au in self.get_object().assessmentunit_set.all():
+                maxpts += au.max_pts
+                apts += au.achieved_pts
 
-        context['total_max_pts'] = maxpts
-        context['total_achieved_pts'] = apts
-        context['total_percent'] = round((context['total_achieved_pts']/context['total_max_pts'])*100)
+            context['total_max_pts'] = maxpts
+            context['total_achieved_pts'] = apts
+            context['total_percent'] = round((context['total_achieved_pts']/context['total_max_pts'])*100)
+
+        
         return context
 

@@ -53,7 +53,7 @@ class Award(models.Model):
 class Member(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    idnumber = models.SmallIntegerField()
+    idnumber = models.SmallIntegerField(verbose_name="ID Number")
     address_line_1 = models.CharField(max_length=200, help_text="Street Number and Name", blank=True)
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
@@ -62,7 +62,7 @@ class Member(models.Model):
     awards = models.ManyToManyField(Award, help_text="What awards has this person recieved?", blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
-    team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True)
+    team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
     active = models.BooleanField(default=True)
 
     class Meta:
@@ -90,7 +90,7 @@ class GradingResult(models.Model):
     date = models.DateField()
     type = models.CharField(max_length=2, choices=GRADINGS)
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
-    for_belt = models.CharField(max_length=50, choices=BELT_CHOICES)
+    forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'

@@ -5,6 +5,7 @@
   {% if gradingresult.member.date_of_birth %}
     <p>DOB - {{ gradingresult.member.date_of_birth }}</p>
   {% endif %}
+  <h4>Graded for: {{ gradingresult.get_forbelt_display }}</h4>
   <div style="margin-left:20px;margin-top:20px">
     <h4>Grading Units</h4>
     {% if gradingresult.assessmentunit_set.all %}
