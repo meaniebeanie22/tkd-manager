@@ -91,7 +91,7 @@ class GradingResult(models.Model):
     type = models.CharField(max_length=2, choices=GRADINGS)
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
     for_belt = models.CharField(max_length=50, choices=BELT_CHOICES)
-    comments = models.CharField(max_length=200)
+    comments = models.CharField(max_length=200, blank=True)
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'
     
