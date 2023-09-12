@@ -48,16 +48,12 @@ class Award(models.Model):
 
     def __str__(self):
         """string for representing the award"""
-        return self.name
-  
-    def get_absolute_url(self):
-        """Returns the URL to access a detail record for this award."""
-        return reverse('award-detail', args=[str(self.id)])  
+        return self.name 
 
 class Member(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    id_number = models.SmallIntegerField(primary_key=True)
+    idnumber = models.SmallIntegerField()
     address_line_1 = models.CharField(max_length=200, help_text="Street Number and Name", blank=True)
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
@@ -69,8 +65,15 @@ class Member(models.Model):
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True)
     active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['idnumber']
+
     def __str__(self):
-        return f'{self.last_name}, {self.first_name} ({self.id_number})'
+        return f'{self.last_name}, {self.first_name} ({self.idnumber})'
+    
+    def get_absolute_url(self):
+        """Returns the URL to access a detail record for this member."""
+        return reverse('member-detail', args=[str(self.id)]) 
     
 class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""

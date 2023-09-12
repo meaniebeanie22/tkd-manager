@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
+  {% if member.date_of_birth %}
+    <p>DOB - {{ member.date_of_birth }}</p>
+  {% endif %}
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Gradings</h4>
+    {% if member.gradingresult_set.all %}
+
+        {% for gr in member.gradingresult_set.all %}
+            <strong><a href="{{ gr.get_absolute_url }}">{{ gr.date }}</a> ({{ gr.type }})</strong>
+        {% endfor %}
+    {% else %}
+        <p>This member has not graded.</p>
+    {% endif %}
+  </div>
+{% endblock %}
