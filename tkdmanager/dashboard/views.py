@@ -28,4 +28,21 @@ class MemberListView(generic.ListView):
 class MemberDetailView(generic.DetailView):
     model = Member
 
+class GradingResultDetailView(generic.DetailView):
+    model = GradingResult
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(GradingResultDetailView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        maxpts = 0
+        apts = 0
+        for au in self.get_object().assessmentunit_set.all():
+            maxpts += au.max_pts
+            apts += au.achieved_pts
+
+        context['total_max_pts'] = maxpts
+        context['total_achieved_pts'] = apts
+        context['total_percent'] = round((context['total_achieved_pts']/context['total_max_pts'])*100)
+        return context
 

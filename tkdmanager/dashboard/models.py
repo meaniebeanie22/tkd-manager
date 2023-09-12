@@ -93,4 +93,8 @@ class GradingResult(models.Model):
     for_belt = models.CharField(max_length=50, choices=BELT_CHOICES)
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'
+    
+    def get_absolute_url(self):
+        """Returns the URL to access a detail record for this member's grading results."""
+        return reverse('grading-result-detail', args=[str(self.id)]) 
 

@@ -7,9 +7,9 @@
   {% endif %}
   <div style="margin-left:20px;margin-top:20px">
     <h4>Gradings</h4>
-    {% if member.gradingresult_set.all %}
+    {% if member.member2gradings.all %}
 
-        {% for gr in member.gradingresult_set.all %}
+        {% for gr in member.member2gradings.all %}
             <strong><a href="{{ gr.get_absolute_url }}">{{ gr.date }}</a> ({{ gr.type }})</strong>
         {% endfor %}
     {% else %}

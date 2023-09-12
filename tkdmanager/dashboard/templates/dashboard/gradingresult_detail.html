@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a> - Grading on {{ gradingresult.date }}</h1>
+  {% if gradingresult.member.date_of_birth %}
+    <p>DOB - {{ gradingresult.member.date_of_birth }}</p>
+  {% endif %}
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Grading Units</h4>
+    {% if gradingresult.assessmentunit_set.all %}
+        <ul>
+        {% for au in gradingresult.assessmentunit_set.all %}
+            <li>
+                <b>{{ au.unit }}</b> - {{ au.achieved_pts }} / {{ au.max_pts }}
+            </li>
+        {% endfor %}
+        </ul>
+        <b>Total: {{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %})</b>
+    {% else %}
+        <p>This grading has no units.</p>
+    {% endif %}
+    <br>
+    <h4>Assessors</h4>
+    {% if gradingresult.assessor.all %}
+        <ul>
+        {% for as in gradingresult.assessor.all %}
+        <li>
+            <a href="{{ as.get_absolute_url }}"><p>{{ as }} - <b>{{ as.get_belt_display }}</b></p></a>
+        </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>This grading has no assessors.</p>
+    {% endif %}
+  </div>
+{% endblock %}
