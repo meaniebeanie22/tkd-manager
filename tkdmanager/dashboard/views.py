@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult
 from django.views import generic
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
+@login_required
 def index(request):
     """homepage"""
 
@@ -21,14 +24,14 @@ def index(request):
 
     return render(request, 'home.html', context=context)
 
-class MemberListView(generic.ListView):
+class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     paginate_by = 25
 
-class MemberDetailView(generic.DetailView):
+class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
 
-class GradingResultDetailView(generic.DetailView):
+class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
     model = GradingResult
 
     def get_context_data(self, **kwargs):
