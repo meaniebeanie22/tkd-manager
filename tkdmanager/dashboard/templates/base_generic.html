@@ -24,6 +24,11 @@
           <li>User: {{ user.get_username }}</li>
           
           <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+          </ul>
+          <ul>
+            <li><a href="{% url 'add-member' %}">New Member</a></li>
+            <li><a href="{% url 'add-grading-result' %}">Add Grading Results</a></li>
+          </ul>
           {% else %}
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
           {% endif %}
