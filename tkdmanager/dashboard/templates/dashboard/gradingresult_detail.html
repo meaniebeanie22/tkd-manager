@@ -12,7 +12,7 @@
         <ul>
         {% for au in gradingresult.assessmentunit_set.all %}
             <li>
-                <b>{{ au.unit }}</b> - {{ au.achieved_pts }} / {{ au.max_pts }}
+                <b>{{ au.get_unit_display }}</b> - {{ au.achieved_pts }} / {{ au.max_pts }}
             </li>
         {% endfor %}
         </ul>
