@@ -20,6 +20,17 @@
     {% else %}
         <p>This grading has no units.</p>
     {% endif %}
+    {% if gradingresult.award_set.all %}
+    <br>
+    <h4>Awards</h4>
+    <ul>
+        {% for award in gradingresult.award_set.all %}
+            <li>
+                <b>{{ award }}</b>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <br>
     <h4>Assessors</h4>
     {% if gradingresult.assessor.all %}

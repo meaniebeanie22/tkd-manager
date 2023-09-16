@@ -19,7 +19,11 @@ ASSESSMENT_UNITS = (
     ('PA1','1st Pattern'),
     ('PA2','2nd Pattern'),
     ('PA3','3rd Pattern'),
-    ('BA', 'Basics - Hands and Feet')
+    ('BA', 'Basics - Hands and Feet'),
+    ('BW', 'Bag Work'),
+    ('SP', 'Sparring'),
+    ('BB', 'Board Breaking'),
+    ('BF', 'Back and Fighting Stances'),
 )
 
 GRADINGS = (
@@ -45,6 +49,7 @@ TL_INST_RANKS = (
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
+    grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT, verbose_name='Associated Grading', null=True)
 
     def __str__(self):
         """string for representing the award"""
@@ -59,7 +64,6 @@ class Member(models.Model):
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
     belt = models.CharField(max_length=50, choices=BELT_CHOICES, blank=True)
-    awards = models.ManyToManyField(Award, help_text="What awards has this person recieved?", blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
@@ -80,7 +84,7 @@ class AssessmentUnit(models.Model):
     unit = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
     achieved_pts = models.SmallIntegerField()
     max_pts = models.SmallIntegerField()
-    grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT)
+    grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT, verbose_name="Associated Grading Result")
     
     def __str__(self):
         return f'{self.unit} - {self.grading_result}'
