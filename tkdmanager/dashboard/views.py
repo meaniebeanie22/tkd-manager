@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 import datetime
+from django.forms import inlineformset_factory
+from django.http import HttpResponseRedirect
+
 
 # Create your views here.
 @login_required
@@ -62,22 +65,18 @@ class MemberCreate(LoginRequiredMixin, CreateView):
 class MemberUpdate(LoginRequiredMixin, UpdateView):
     model = Member
     fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
-    
 
-class GradingResultCreate(LoginRequiredMixin, CreateView):
-    model = GradingResult   
-    fields = ['member','date','type','assessor','forbelt','comments', 'award']
-    initial = {'date': datetime.date.today(),}
-
-class GradingResultUpdate(LoginRequiredMixin, UpdateView):
-    model = GradingResult
-    fields = ['member','date','type','assessor','forbelt','comments', 'award']
-
-class AssessmentUnitCreate(LoginRequiredMixin, CreateView):
-    model = AssessmentUnit
-    fields = ['unit', 'achieved_pts', 'max_pts', 'grading_result']
-
-class AssessmentUnitUpdate(LoginRequiredMixin, UpdateView):
-    model = AssessmentUnit
-    fields = ['unit', 'achieved_pts', 'max_pts', 'grading_result']
+@login_required 
+def manageGradingResult(request, **kwargs):
+    gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, fields=['unit','achieved_pts','max_pts'], extra=10-gradingresult.assessmentunit_set.all().count())
+    if request.method == "POST":
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        if formset.is_valid():
+            formset.save()
+            # Do something. Should generally end with a redirect. For example:
+            return HttpResponseRedirect(gradingresult.get_absolute_url())
+    else:
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+    return render(request, 'gradingresult_form.html', {'formset': formset})
 

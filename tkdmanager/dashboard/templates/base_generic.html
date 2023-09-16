@@ -27,8 +27,6 @@
           </ul>
           <ul>
             <li><a href="{% url 'add-member' %}">New Member</a></li>
-            <li><a href="{% url 'add-grading-result' %}">New Grading Results</a></li>
-            <li><a href="{% url 'add-assessment-unit' %}">New Assessment Units</a></li>
           </ul>
           {% else %}
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
