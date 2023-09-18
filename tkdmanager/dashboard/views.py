@@ -11,6 +11,7 @@ from django.urls import reverse_lazy, reverse
 import datetime
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
+from django.db.models.signals import post_save
 
 
 # Create your views here.
@@ -77,10 +78,6 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
-    
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        print(self.get_object().member)
-        return super().form_valid(form)
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     model = GradingResult
@@ -88,11 +85,6 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
-    
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        print(self.get_object().member)
-        print(self.get_object().member.gradingresult_set.all())
-        return super().form_valid(form)
 
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
@@ -122,4 +114,11 @@ def manageGradingResult(request, **kwargs):
     else:
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
+
+def update_belt(sender, **kwargs):
+    target = kwargs['instance'].member # target should be a member
+    target.belt = target.member2gradings.order_by('-date').first().forbelt
+    target.save()
+
+post_save.connect(update_belt, sender=GradingResult)
 
