@@ -1,19 +1,20 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
+  <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }}) - {% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</h1>
   <p>
   {% if member.date_of_birth %}
-    DOB - {{ member.date_of_birth }}
+    DOB - {{ member.date_of_birth|date:"d/m/y" }}
   {% endif %}
+  <br>
   <a href="{% url 'update-member' member.pk %}">Edit</a>
   </p>
   <div style="margin-left:20px;margin-top:20px">
-    <h4>Gradings</h4>
+    <h4>Gradings - <a href="{% url 'add-grading-result' %}">Add</a></h4>
     {% if member.member2gradings.all %}
     <ul>
         {% for gr in member.member2gradings.all %}
-            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date }}</a> ({{ gr.type }})
+            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }})
             {% if gr.award_set.all %}
             {% for award in gr.award_set.all %} - {{award}}{% endfor %}
             {% endif %}            

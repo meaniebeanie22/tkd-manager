@@ -49,7 +49,6 @@ TL_INST_RANKS = (
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
-    grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT, verbose_name='Associated Grading', null=True)
 
     def __str__(self):
         """string for representing the award"""
@@ -70,7 +69,7 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ['idnumber']
+        ordering = ['-belt','idnumber']
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.idnumber})'
@@ -85,6 +84,9 @@ class AssessmentUnit(models.Model):
     achieved_pts = models.SmallIntegerField()
     max_pts = models.SmallIntegerField()
     grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT, verbose_name="Associated Grading Result")
+
+    class Meta:
+        ordering = ['unit']
     
     def __str__(self):
         return f'{self.unit} - {self.grading_result}'
@@ -96,7 +98,11 @@ class GradingResult(models.Model):
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
+    award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True)
     
+    class Meta:
+        ordering = ['date', 'member__idnumber']
+
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'
     

@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Grading Result List</h1>
+  {% if gradingresult_list %}
+  <ul>
+    {% for gr in gradingresult_list %}
+      <li>
+        <a href="{{ gr.get_absolute_url }}">{{ gr }} - {{ gr.member }}
+        {% if gr.award %}
+            (Award - {{ gr.award }}) 
+        {% endif %} </a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no grading results.</p>
+  {% endif %}
+{% endblock %}

@@ -6,9 +6,9 @@
   <ul>
     {% for member in member_list %}
       <li>
-        <a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }} - {{ member.get_belt_display }} ({{ member.idnumber }})
+        <a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }} - {% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %} ({{ member.idnumber }})
         {% if member.date_of_birth %}
-            (DOB - {{ member.date_of_birth }}) 
+            (DOB - {{ member.date_of_birth|date:"d/m/y" }}) 
         {% endif %} </a>
       </li>
     {% endfor %}
