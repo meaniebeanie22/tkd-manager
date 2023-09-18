@@ -104,7 +104,7 @@ class GradingResult(models.Model):
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     
     class Meta:
-        ordering = ['date', 'member__idnumber']
+        ordering = ['-date', 'member__idnumber']
 
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'

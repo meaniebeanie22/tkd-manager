@@ -1,4 +1,5 @@
 from typing import Any
+from django.forms.models import BaseModelForm
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult
 from django.views import generic
@@ -9,7 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 import datetime
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 # Create your views here.
@@ -74,12 +75,12 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
     model = GradingResult
     fields = ['member','date','type','assessor','forbelt','comments','award']
 
-    def get_initial(self) -> dict[str, Any]:
-        res = super().get_initial()
-        return res
-    
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        print(self.get_object().member)
+        return super().form_valid(form)
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     model = GradingResult
@@ -87,6 +88,11 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        print(self.get_object().member)
+        print(self.get_object().member.gradingresult_set.all())
+        return super().form_valid(form)
 
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
