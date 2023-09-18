@@ -12,4 +12,8 @@ urlpatterns = [
     path('grading-result/<int:pk>/update', views.GradingResultUpdate.as_view(), name='update-grading-result'),
     path('grading-result/<int:pk>/update2', views.manageGradingResult, name='update-grading-result2'),
     path('gradings/', views.GradingResultListView.as_view(), name='gradingresults'),
+    path('awards/', views.AwardListView.as_view(), name='awards'),
+    path('award/<int:pk>/update', views.AwardUpdate.as_view(), name='update-award'),
+    path('award/create', views.AwardCreate.as_view(), name='add-award'),
+    path('award/<int:pk>', views.AwardDetailView.as_view(), name='award-detail'),
 ]

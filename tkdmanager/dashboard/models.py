@@ -53,6 +53,9 @@ class Award(models.Model):
     def __str__(self):
         """string for representing the award"""
         return self.name 
+    
+    def get_absolute_url(self):
+        return reverse('award-detail', args=[str(self.id)])
 
 class Member(models.Model):
     first_name = models.CharField(max_length=50)
@@ -98,7 +101,7 @@ class GradingResult(models.Model):
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
-    award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True)
+    award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     
     class Meta:
         ordering = ['date', 'member__idnumber']

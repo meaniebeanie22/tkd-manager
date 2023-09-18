@@ -6,7 +6,7 @@
   <ul>
     {% for gr in gradingresult_list %}
       <li>
-        <a href="{{ gr.get_absolute_url }}">{{ gr }} - {{ gr.member }}
+        <a href="{{ gr.get_absolute_url }}">{{ gr }}
         {% if gr.award %}
             (Award - {{ gr.award }}) 
         {% endif %} </a>

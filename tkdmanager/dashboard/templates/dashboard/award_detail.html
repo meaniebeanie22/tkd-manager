@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ award }}</h1>
+  <p><a href="{% url 'update-award' award.pk %}">Edit</a></p>
+  <h3>Holders</h3>
+  {% if award.gradingresult_set.all %}
+    <ul>
+        {% for gr in award.gradingresult_set.all %}
+            <li><a href="{{ gr.get_absolute_url }}">{{ gr }}</a></li>
+        {% endfor %}
+    </ul>
+  {% else %}
+  <p>This award is held by no one</p>  
+  {% endif %}
+{% endblock %}

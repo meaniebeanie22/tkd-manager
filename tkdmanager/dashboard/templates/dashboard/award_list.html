@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Award List</h1>
+  {% if award_list %}
+  <ul>
+    {% for a in award_list %}
+      <li>
+        <a href="{{ a.get_absolute_url }}">{{ a }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no awards.</p>
+  {% endif %}
+{% endblock %}

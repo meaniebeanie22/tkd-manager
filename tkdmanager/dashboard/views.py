@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult
 from django.views import generic
@@ -71,18 +72,35 @@ class MemberUpdate(LoginRequiredMixin, UpdateView):
 
 class GradingResultCreate(LoginRequiredMixin, CreateView):
     model = GradingResult
-    fields = ['member','date','type','assessor','forbelt','comments']
+    fields = ['member','date','type','assessor','forbelt','comments','award']
+
+    def get_initial(self) -> dict[str, Any]:
+        res = super().get_initial()
+        return res
     
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     model = GradingResult
-    fields = ['member','date','type','assessor','forbelt','comments']
+    fields = ['member','date','type','assessor','forbelt','comments','award']
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
 
+class AwardListView(LoginRequiredMixin, generic.ListView):
+    model = Award
+
+class AwardCreate(LoginRequiredMixin, CreateView):
+    model = Award
+    fields = ['name']
+
+class AwardUpdate(LoginRequiredMixin, UpdateView):
+    model = Award
+    fields = ['name']
+
+class AwardDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Award
 
 @login_required 
 def manageGradingResult(request, **kwargs):
@@ -97,5 +115,5 @@ def manageGradingResult(request, **kwargs):
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
-    return render(request, 'gradingresult_form.html', {'formset': formset})
+    return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 

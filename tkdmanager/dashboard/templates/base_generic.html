@@ -19,6 +19,7 @@
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'members' %}">All members</a></li>
           <li><a href="{% url 'gradingresults' %}">All grading results</a></li>
+          <li><a href="{% url 'awards' %}">All awards</a></li>
         </ul>
         <ul>
           {% if user.is_authenticated %}
@@ -28,6 +29,8 @@
           </ul>
           <ul class="sidebar-nav">
             <li><a href="{% url 'add-member' %}">New Member</a></li>
+            <li><a href="{% url 'add-grading-result' %}">New Grading Result</a></li>
+            <li><a href="{% url 'add-award' %}">New Award</a></li>
           </ul>
           {% else %}
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
