@@ -1,18 +1,47 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<style>
+  th, td {
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    padding-right: 15px;
+    padding-bottom: 5px;
+  }
+
+  tr:nth-child(even) {background-color: #f2f2f2;}
+  tr:hover {background-color: coral;}
+</style>
+
   <h1>Grading Result List</h1>
   {% if gradingresult_list %}
-  <ul>
+  <table style="width: 100%;">
+    <tr>
+      <th>Type</th>
+      <th>Date</th>
+      <th>Member</th>
+      <th>For Belt</th>
+      <th>Assessor(s)</th>
+      <th>Award</th>
+
+    </tr>
     {% for gr in gradingresult_list %}
-      <li>
-        <a href="{{ gr.get_absolute_url }}">{{ gr }}
-        {% if gr.award %}
-            (Award - {{ gr.award }}) 
-        {% endif %} </a>
-      </li>
+      <tr>
+        <td>{{ gr.type }}</td>
+        <td>{{ gr.date }}</td>
+        <td>{{ gr.member }}</td>
+        <td>{{ gr.get_forbelt_display }}</td>
+        <td>
+          <dl>
+          {% for a in gr.assessor.all %}
+            <dt>{{ a }}</dt>
+          {% endfor %}
+          </dl>
+        </td>
+        <td>{{ gr.award }}</td>
+      </tr>
     {% endfor %}
-  </ul>
+  </table>
   {% else %}
     <p>There are no grading results.</p>
   {% endif %}

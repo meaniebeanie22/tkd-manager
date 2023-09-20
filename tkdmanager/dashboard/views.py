@@ -1,5 +1,3 @@
-from typing import Any
-from django.forms.models import BaseModelForm
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult
 from django.views import generic
@@ -11,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 import datetime
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from django.db.models.signals import post_save
+from .forms import GradingResultForm
 
 
 # Create your views here.
@@ -73,15 +71,33 @@ class MemberUpdate(LoginRequiredMixin, UpdateView):
     fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
 
 class GradingResultCreate(LoginRequiredMixin, CreateView):
+    form_class = GradingResultForm
     model = GradingResult
-    fields = ['member','date','type','assessor','forbelt','comments','award']
+    template_name = 'dashboard/gradingresult_form.html'
+
+    def form_valid(self, form):
+        response = super(GradingResultCreate, self).form_valid(form)
+        # do something with self.object
+        target = self.object.member
+        target.belt = target.member2gradings.order_by('-date').first().forbelt
+        target.save()
+        return response
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
+    form_class = GradingResultForm
+    template_name = 'dashboard/gradingresult_form.html'
     model = GradingResult
-    fields = ['member','date','type','assessor','forbelt','comments','award']
+
+    def form_valid(self, form):
+        response = super(GradingResultUpdate, self).form_valid(form)
+        # do something with self.object
+        target = self.object.member
+        target.belt = target.member2gradings.order_by('-date').first().forbelt
+        target.save()
+        return response
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
@@ -115,10 +131,5 @@ def manageGradingResult(request, **kwargs):
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
-def update_belt(sender, **kwargs):
-    target = kwargs['instance'].member # target should be a member
-    target.belt = target.member2gradings.order_by('-date').first().forbelt
-    target.save()
 
-post_save.connect(update_belt, sender=GradingResult)
 

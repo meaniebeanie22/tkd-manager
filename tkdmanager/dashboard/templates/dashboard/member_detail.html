@@ -14,7 +14,7 @@
     {% if member.member2gradings.all %}
     <ul>
         {% for gr in member.member2gradings.all %}
-            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }})
+            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }}) - {{ gr.get_forbelt_display }}
             {% if gr.award_set.all %}
             {% for award in gr.award_set.all %} - {{award}}{% endfor %}
             {% endif %}            

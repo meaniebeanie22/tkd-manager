@@ -1,18 +1,36 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<style>
+th, td {
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  padding-right: 15px;
+  padding-left: 5px;
+  padding-bottom: 2px;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
+tr:hover {background-color: coral;}
+</style>
+
   <h1>Member List</h1>
   {% if member_list %}
-  <ul>
+  <table style="width: 100%;">
+    <tr>
+      <th>Name</th>
+      <th>Belt</th>
+      <th>ID Number</th>
+      <th>DOB</th>
+    </tr>
     {% for member in member_list %}
-      <li>
-        <a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }} - {% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %} ({{ member.idnumber }})
-        {% if member.date_of_birth %}
-            (DOB - {{ member.date_of_birth|date:"d/m/y" }}) 
-        {% endif %} </a>
-      </li>
+      <tr>
+        <td><a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }}</a></td>
+        <td>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</td>
+        <td>{{ member.idnumber }}</td>
+        <td>{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
+      </tr>
     {% endfor %}
-  </ul>
+  </table>
   {% else %}
     <p>There are no members.</p>
   {% endif %}

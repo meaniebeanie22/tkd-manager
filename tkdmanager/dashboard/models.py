@@ -4,11 +4,11 @@ from django.urls import reverse # Used to generate URLs by reversing the URL pat
 # Create your models here.
 
 BELT_CHOICES = (
-                ("White",      (('0', 'White'), ('1', 'White 1/2'), ('2', 'White 1'), ('3', 'White 1 1/2'), ('4', 'White 2'), ('5', 'White 2 1/2'), ('6', 'White 3'), ('7', 'White-Orange'))),
-                ("Orange",     (('8', 'Orange'), ('9', 'Orange 1/2'), ('10', 'Orange 1'), ('11', 'Orange 1 1/2'), ('12', 'Orange 2'), ('13', 'Orange 2 1/2'), ('14', 'Orange 3'), ('15', 'White-Yellow'))),
-                ("Yellow",     (('16', 'Yellow'), ('17', 'Yellow 1/2'), ('18', 'Yellow 1'), ('19', 'Yellow 1 1/2'), ('20', 'Yellow 2'), ('21', 'Yellow 2 1/2'), ('22', 'Yellow 3'), ('23', 'White-Blue'))),
-                ("Blue",       (('24', 'Blue'), ('25', 'Blue 1/2'), ('26', 'Blue 1'), ('27', 'Blue 1 1/2'), ('28', 'Blue 2'), ('29', 'Blue 2 1/2'), ('30', 'Blue 3'), ('31', 'White-Red'))),
-                ("Red",        (('32', 'Red'), ('33', 'Red 1/2'), ('34', 'Red 1'), ('35', 'Red 1 1/2'), ('36', 'Red 2'), ('37', 'Red 2 1/2'), ('38', 'Red 3'))),
+                ("White",      (('0', 'White Belt'), ('1', 'White 1/2'), ('2', 'White 1'), ('3', 'White 1 1/2'), ('4', 'White 2'), ('5', 'White 2 1/2'), ('6', 'White 3'), ('7', 'White-Orange'))),
+                ("Orange",     (('8', 'Orange Belt'), ('9', 'Orange 1/2'), ('10', 'Orange 1'), ('11', 'Orange 1 1/2'), ('12', 'Orange 2'), ('13', 'Orange 2 1/2'), ('14', 'Orange 3'), ('15', 'White-Yellow'))),
+                ("Yellow",     (('16', 'Yellow Belt'), ('17', 'Yellow 1/2'), ('18', 'Yellow 1'), ('19', 'Yellow 1 1/2'), ('20', 'Yellow 2'), ('21', 'Yellow 2 1/2'), ('22', 'Yellow 3'), ('23', 'White-Blue'))),
+                ("Blue",       (('24', 'Blue Belt'), ('25', 'Blue 1/2'), ('26', 'Blue 1'), ('27', 'Blue 1 1/2'), ('28', 'Blue 2'), ('29', 'Blue 2 1/2'), ('30', 'Blue 3'), ('31', 'White-Red'))),
+                ("Red",        (('32', 'Red Belt'), ('33', 'Red 1/2'), ('34', 'Red 1'), ('35', 'Red 1 1/2'), ('36', 'Red 2'), ('37', 'Red 2 1/2'), ('38', 'Red 3'))),
                 ("Cho-Dan Bo", (('39', 'Cho-Dan Bo 1'), ('40', 'Cho-Dan Bo 2'), ('41', 'Cho-Dan Bo 3'), ('42', 'Cho-Dan Bo 4'), ('43', 'Cho-Dan Bo 5'), ('44', 'Cho-Dan Bo 6'), ('45', 'Advanced Cho-Dan Bo'), ('46', 'Probationary Black Belt'))),
                 ("Black Belt", (('47', '1st Dan'), ('48', '2nd Dan'), ('49', '3rd Dan'), ('50', '4th Dan'), ('51', '5th Dan'), ('52', '6th Dan'), ('53', '7th Dan'), ('54', '8th Dan'), ('55', '9th Dan'))),
                 )
@@ -104,7 +104,7 @@ class GradingResult(models.Model):
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     
     class Meta:
-        ordering = ['-date', 'member__idnumber']
+        ordering = ['-date', 'type', '-forbelt', 'member__idnumber']
 
     def __str__(self):
         return f'{self.type} - {self.date}, by {self.member}'
