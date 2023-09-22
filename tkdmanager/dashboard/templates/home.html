@@ -18,7 +18,38 @@
 </div>
 
 <script>
+  const ctx = document.getElementById('myChart');
+  var barColors = ["grey", "cornsilk", "orange", "yellow", "blue", "red", "black", "black"];
 
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{belt_labels | safe}},
+      datasets: [
+      {
+        label: 'Members by Belt Rank',
+        backgroundColor: barColors,
+        data: {{belt_count}},
+        borderWidth: 1
+      }
+      ]
+    },
+    options: {
+      legend: {display: false},
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {if (value % 1 === 0) {return value;}}
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<!--
+<script>
 var barColors = ["grey", "cyan", "blue", "orange", "green", "black"];
 
 new Chart("myChart", {
@@ -42,4 +73,5 @@ new Chart("myChart", {
 });
 
 </script>
+-->
 {% endblock %}

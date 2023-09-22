@@ -22,6 +22,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('', RedirectView.as_view(url='dashboard/', permanent=True)),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('api/', include('api.urls')),
 ]
 
 from django.conf import settings
