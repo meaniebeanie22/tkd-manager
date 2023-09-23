@@ -70,6 +70,10 @@ class MemberUpdate(LoginRequiredMixin, UpdateView):
     model = Member
     fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
 
+class MemberDelete(LoginRequiredMixin, DeleteView):
+    model = Member
+    success_url = reverse_lazy("members")
+
 class GradingResultCreate(LoginRequiredMixin, CreateView):
     form_class = GradingResultForm
     model = GradingResult
@@ -101,6 +105,10 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+
+class GradingResultDelete(LoginRequiredMixin, DeleteView):
+    model = GradingResult
+    success_url = reverse_lazy("gradingresults")
 
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award

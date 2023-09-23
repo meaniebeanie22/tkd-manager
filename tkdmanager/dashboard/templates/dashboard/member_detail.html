@@ -7,7 +7,7 @@
     DOB - {{ member.date_of_birth|date:"d/m/y" }}
   {% endif %}
   <br>
-  <a href="{% url 'update-member' member.pk %}">Edit</a>
+  <a href="{% url 'update-member' member.pk %}">Edit</a> <a href="{% url 'delete-member' member.pk %}">Delete</a>
   </p>
   <div style="margin-left:20px;margin-top:20px">
     <h4>Gradings - <a href="{% url 'add-grading-result' %}">Add</a></h4>

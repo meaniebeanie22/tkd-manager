@@ -1,22 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<style>
-  th, td {
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-    padding-right: 15px;
-    padding-bottom: 5px;
-  }
-
-  tr:nth-child(even) {background-color: #f2f2f2;}
-  tr:hover {background-color: coral;}
-</style>
-
   <h1>Grading Result List</h1>
   {% if gradingresult_list %}
   <table style="width: 100%;">
     <tr>
+      <th>Link</th>
       <th>Type</th>
       <th>Date</th>
       <th>Member</th>
@@ -27,18 +16,19 @@
     </tr>
     {% for gr in gradingresult_list %}
       <tr>
-        <td>{{ gr.type }}</td>
-        <td>{{ gr.date }}</td>
-        <td>{{ gr.member }}</td>
-        <td>{{ gr.get_forbelt_display }}</td>
-        <td>
+        <td class="content"><a href="{{ gr.get_absolute_url }}">Link</a></td>
+        <td class="content">{{ gr.type }}</td>
+        <td class="content">{{ gr.date }}</td>
+        <td class="content"><a href="{{ gr.member.get_absolute_url }}">{{ gr.member }}</a></td>
+        <td class="content">{{ gr.get_forbelt_display }}</td>
+        <td class="content">
           <dl>
           {% for a in gr.assessor.all %}
-            <dt>{{ a }}</dt>
+            <dt><a href="{{ a.get_absolute_url }}">{{ a }}</a></dt>
           {% endfor %}
           </dl>
         </td>
-        <td>{{ gr.award }}</td>
+        <td class="content">{{ gr.award }}</td>
       </tr>
     {% endfor %}
   </table>
