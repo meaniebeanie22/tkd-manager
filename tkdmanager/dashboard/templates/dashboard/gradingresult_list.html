@@ -15,20 +15,20 @@
 
     </tr>
     {% for gr in gradingresult_list %}
-      <tr>
-        <td class="content"><a href="{{ gr.get_absolute_url }}">Link</a></td>
-        <td class="content">{{ gr.type }}</td>
-        <td class="content">{{ gr.date }}</td>
-        <td class="content"><a href="{{ gr.member.get_absolute_url }}">{{ gr.member }}</a></td>
-        <td class="content">{{ gr.get_forbelt_display }}</td>
-        <td class="content">
+      <tr class="content">
+        <td><a href="{{ gr.get_absolute_url }}">Link</a></td>
+        <td>{{ gr.type }}</td>
+        <td>{{ gr.date }}</td>
+        <td><a href="{{ gr.member.get_absolute_url }}">{{ gr.member }}</a></td>
+        <td>{{ gr.get_forbelt_display }}</td>
+        <td>
           <dl>
           {% for a in gr.assessor.all %}
             <dt><a href="{{ a.get_absolute_url }}">{{ a }}</a></dt>
           {% endfor %}
           </dl>
         </td>
-        <td class="content">{{ gr.award }}</td>
+        <td>{{ gr.award }}</td>
       </tr>
     {% endfor %}
   </table>

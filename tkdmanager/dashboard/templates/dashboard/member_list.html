@@ -11,11 +11,11 @@
       <th>DOB</th>
     </tr>
     {% for member in member_list %}
-      <tr>
-        <td class="content"><a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }}</a></td>
-        <td class="content">{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</td>
-        <td class="content">{{ member.idnumber }}</td>
-        <td class="content">{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
+      <tr class="content">
+        <td><a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }}</a></td>
+        <td>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</td>
+        <td>{{ member.idnumber }}</td>
+        <td>{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
       </tr>
     {% endfor %}
   </table>

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from dashboard.models import GradingResult, AssessmentUnit
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GradingResultSerializer
+from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -15,8 +15,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GradingResultViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows grading results to be viewed or edited.
+    API endpoint that allows grading results and their assessment units to be viewed, and grading results to be edited.
     """
     queryset = GradingResult.objects.all()
     serializer_class = GradingResultSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class AssessmentUnitViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows assessment units to be viewed or edited.
+    """
+    queryset = AssessmentUnit.objects.all()
+    serializer_class = AssessmentUnitSerializer
     permission_classes = [permissions.IsAuthenticated]
