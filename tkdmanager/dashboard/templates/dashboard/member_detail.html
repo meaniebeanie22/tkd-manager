@@ -2,15 +2,18 @@
 
 {% block content %}
   <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }}) - {% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</h1>
-  <p>
-  {% if member.date_of_birth %}
-    DOB - {{ member.date_of_birth|date:"d/m/y" }}
-  {% endif %}
+  <button type="button" class="collapsible">Show more info</button>
+  <div class="content">
+    <p>
+      {% if member.date_of_birth %}
+        DOB - {{ member.date_of_birth|date:"d/m/y" }}
+      {% endif %}</p>
+  </div>
   <br>
   <a href="{% url 'update-member' member.pk %}">Edit</a> <a href="{% url 'delete-member' member.pk %}">Delete</a>
   </p>
   <div style="margin-left:20px;margin-top:20px">
-    <h4>Gradings - <a href="{% url 'add-grading-result' %}">Add</a></h4>
+    <h4>Gradings - <a href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></h4>
     {% if member.member2gradings.all %}
     <ul>
         {% for gr in member.member2gradings.all %}

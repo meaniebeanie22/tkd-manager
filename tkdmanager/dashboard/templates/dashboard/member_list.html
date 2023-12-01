@@ -1,7 +1,12 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Member List</h1>
+<h1>Member List</h1>
+<form method="get">
+  <input type="text" name="q" placeholder="Search">
+  <button type="submit">Search</button>
+  
+</form>
   {% if member_list %}
   <table style="width: 100%;">
     <tr>

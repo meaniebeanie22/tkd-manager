@@ -6,10 +6,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-import datetime
+from datetime import date
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import GradingResultForm
+from django.db.models import Q
 
 
 # Create your views here.
@@ -33,6 +34,13 @@ def index(request):
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     paginate_by = 15
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Member.objects.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(idnumber__icontains=query) | Q(email__icontains=query) | Q(phone__iexact=query))
+        else:
+            return Member.objects.all()
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
@@ -89,6 +97,18 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+    
+    def get_initial(self):
+        # Autofill the member field based on the 'member_id' parameter in the URL
+        member_id = self.request.GET.get('member_id')
+        i = {}
+        if member_id:
+            i['member'] = member_id
+            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+
+
+        i['date'] = date.today()
+        return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     form_class = GradingResultForm
