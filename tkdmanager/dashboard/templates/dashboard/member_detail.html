@@ -3,6 +3,7 @@
 {% block content %}
   <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
   <div>
+    <h4>Personal Info</h4>
     <ul>
       <li>{% if member.date_of_birth %}
         DOB - {{ member.date_of_birth|date:"d/m/y" }}
@@ -18,7 +19,7 @@
   </div>
   <br>
   </p>
-  <div style="margin-left:20px;margin-top:20px">
+  <div>
     <h4>Gradings - <a href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></h4>
     {% if member.member2gradings.all %}
     <ul>
@@ -33,5 +34,15 @@
     {% else %}
         <p>This member has not graded.</p>
     {% endif %}
+  </div>
+  <div>
+    <h4>Attendance and Teaching</h4>
+    <ul>
+      <li>Classes attended this term: {{ member.students2classes.all.count }}</li>
+      {% if member.team_leader_instructor != "" %}
+      <li>Classes taught this term: {{ member.instructors2classes.all.count }}</li>
+      <li>Hours taught this term: {{ hours_taught }}</li>
+      {% endif %}
+    </ul>
   </div>
 {% endblock %}

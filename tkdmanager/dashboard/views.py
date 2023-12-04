@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult, Class
 from django.views import generic
@@ -34,7 +35,6 @@ def index(request):
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     paginate_by = 15
-
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
@@ -44,6 +44,20 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(MemberDetailView, self).get_context_data(**kwargs)
+        print(f'Object = {self.get_object}')
+        classes_taught = self.get_object().instructors2classes.all()
+        print(f'Classes Taught = {classes_taught}')
+        seconds = 0
+        for cl in classes_taught:
+            length = cl.end - cl.start
+            seconds += length.total_seconds()
+        hours = round(seconds/3600, 2)
+        context['hours_taught'] = hours
+        return context
 
 class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
     model = GradingResult
@@ -170,7 +184,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return Class.objects.filter(Q(start__iexact=query) | Q(end__iexact=query) | Q(type__icontains=query) | Q(instructors__icontains=query))
+            return Class.objects.filter(Q(start__iexact=query) | Q(end__iexact=query) | Q(type__icontains=query))
         else:
             return Class.objects.all()
         
