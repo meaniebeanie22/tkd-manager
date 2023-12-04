@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Class List</h1>
+<form method="get">
+  <input type="text" name="q" placeholder="Search">
+  <button type="submit">Search</button>
+  
+</form>
+  {% if class_list %}
+  <table style="width: 100%;">
+    <tr>
+      <th>Type</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Instructors</th>
+      <th>No. Students</th>
+    </tr>
+    {% for class in class_list %}
+      <tr class="content">
+        <td>{{ class.type }}</td>
+        <td><a href="{{ class.get_absolute_url }}">{{ class.start }}</a></td>
+        <td><a href="{{ class.get_absolute_url }}">{{ class.end }}</a></td>
+        <td><ul>
+            {% for instructor in class.instructors.all %}
+                <li><a href="{{ instructor.get_absolute_url }}">{{ instructor }}</a></li>
+            {% endfor %}
+        </ul></td>
+        <td>{{ class.students.all.count }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no classes.</p>
+  {% endif %}
+{% endblock %}

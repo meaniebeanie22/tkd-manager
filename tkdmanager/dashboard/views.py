@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult
+from .models import Member, Award, AssessmentUnit, GradingResult, Class
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -141,6 +141,10 @@ class AwardUpdate(LoginRequiredMixin, UpdateView):
     model = Award
     fields = ['name']
 
+class AwardDelete(LoginRequiredMixin, DeleteView):
+    model = Award
+    success_url = reverse_lazy("awards")
+
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
 
@@ -159,5 +163,29 @@ def manageGradingResult(request, **kwargs):
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
+class ClassListView(LoginRequiredMixin, generic.ListView):
+    model = Class
+    paginate_by = 15
 
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Class.objects.filter(Q(start__iexact=query) | Q(end__iexact=query) | Q(type__icontains=query) | Q(instructors__icontains=query))
+        else:
+            return Class.objects.all()
+        
+class ClassDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Class
+
+class ClassCreate(LoginRequiredMixin, CreateView):
+    model = Class
+    fields = ['type','start','end','instructors','students']
+
+class ClassUpdate(LoginRequiredMixin, UpdateView):
+    model = Class
+    fields = ['type','start','end','instructors','students']
+
+class ClassDelete(LoginRequiredMixin, DeleteView):
+    model = Class
+    success_url = reverse_lazy("classes")
 

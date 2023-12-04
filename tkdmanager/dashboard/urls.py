@@ -18,4 +18,10 @@ urlpatterns = [
     path('award/<int:pk>/update', views.AwardUpdate.as_view(), name='update-award'),
     path('award/create', views.AwardCreate.as_view(), name='add-award'),
     path('award/<int:pk>', views.AwardDetailView.as_view(), name='award-detail'),
+    path('award/<int:pk>/delete', views.AwardDelete.as_view(), name='delete-award'),
+    path('classes/', views.ClassListView.as_view(), name='classes'),
+    path('class/<int:pk>', views.ClassDetailView.as_view(), name='class-detail'),
+    path('class/create', views.ClassCreate.as_view(), name='add-class'),
+    path('class/<int:pk>/update', views.ClassUpdate.as_view(), name='update-class'),
+    path('class/<int:pk>/delete', views.ClassDelete.as_view(), name='delete-class')
 ]

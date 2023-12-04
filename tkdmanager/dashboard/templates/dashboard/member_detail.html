@@ -1,16 +1,22 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }}) - {% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</h1>
-  <button type="button" class="collapsible">Show more info</button>
-  <div class="content">
-    <p>
-      {% if member.date_of_birth %}
+  <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
+  <div>
+    <ul>
+      <li>{% if member.date_of_birth %}
         DOB - {{ member.date_of_birth|date:"d/m/y" }}
-      {% endif %}</p>
+      {% else %}
+        No DOB on file - <a href="{% url 'update-member' member.pk %}">Fix</a>
+      {% endif %}
+      </li>
+      <li>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</li>
+      <li>{% if member.email %}Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a>{% else %}No email on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
+      <li>{% if member.phone %}Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a>{% else %}No phone number on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
+      <a href="{% url 'update-member' member.pk %}">Edit</a> <a href="{% url 'delete-member' member.pk %}">Delete</a>
+    </ul>
   </div>
   <br>
-  <a href="{% url 'update-member' member.pk %}">Edit</a> <a href="{% url 'delete-member' member.pk %}">Delete</a>
   </p>
   <div style="margin-left:20px;margin-top:20px">
     <h4>Gradings - <a href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></h4>

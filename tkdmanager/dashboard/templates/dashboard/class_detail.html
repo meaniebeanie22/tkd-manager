@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ class }}</h1>
+  <p><a href="{% url 'update-class' class.pk %}">Edit</a> <a href="{% url 'delete-class' class.pk %}">Delete</a></p>
+  <h3>Instructors</h3>
+  <ul>
+  {% for instructor in class.instructors.all %}
+    <li><a href="{{ instructor.get_absolute_url }}">{{ instructor }}</a></li>
+  {% endfor %}
+  </ul>
+  <h3>Students</h3>
+  <ul>
+  {% for student in class.students.all %}
+    <li><a href="{{ student.get_absolute_url }}">{{ student }}</a></li>
+  {% endfor %}
+  </ul>
+{% endblock %}
