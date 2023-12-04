@@ -11,6 +11,7 @@
   <table style="width: 100%;">
     <tr>
       <th>Type</th>
+      <th>Date</th>
       <th>Start</th>
       <th>End</th>
       <th>Instructors</th>
@@ -19,6 +20,7 @@
     {% for class in class_list %}
       <tr class="content">
         <td>{{ class.type }}</td>
+        <td><a href="{{ class.get_absolute_url }}">{{ class.date }}</a></td>
         <td><a href="{{ class.get_absolute_url }}">{{ class.start }}</a></td>
         <td><a href="{{ class.get_absolute_url }}">{{ class.end }}</a></td>
         <td><ul>

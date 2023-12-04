@@ -1,4 +1,3 @@
-from typing import Any
 from django.shortcuts import render
 from .models import Member, Award, AssessmentUnit, GradingResult, Class
 from django.views import generic
@@ -10,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm
+from .forms import GradingResultForm, ClassForm
 from django.db.models import Q
 
 
@@ -193,11 +192,11 @@ class ClassDetailView(LoginRequiredMixin, generic.DetailView):
 
 class ClassCreate(LoginRequiredMixin, CreateView):
     model = Class
-    fields = ['type','start','end','instructors','students']
+    form_class = ClassForm
 
 class ClassUpdate(LoginRequiredMixin, UpdateView):
     model = Class
-    fields = ['type','start','end','instructors','students']
+    form_class = ClassForm
 
 class ClassDelete(LoginRequiredMixin, DeleteView):
     model = Class

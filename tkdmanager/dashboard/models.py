@@ -117,8 +117,9 @@ class GradingResult(models.Model):
         return reverse('grading-result-detail', args=[str(self.id)]) 
     
 class Class(models.Model):
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    date = models.DateField()
+    start = models.TimeField()
+    end = models.TimeField()
     type = models.CharField(max_length=2, choices=GRADINGS)
     instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes')
     students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes')
@@ -128,6 +129,6 @@ class Class(models.Model):
         return reverse('class-detail', args=[str(self.id)]) 
     
     def __str__(self):
-        return f'{self.get_type_display()}: {self.start.strftime("%x, %X")} - {self.end.strftime("%X")}'
+        return f'{self.get_type_display()}: {self.date.strftime("%x")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
 
 
