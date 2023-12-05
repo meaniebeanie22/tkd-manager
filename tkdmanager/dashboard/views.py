@@ -187,7 +187,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return Class.objects.filter(Q(start__iexact=query) | Q(end__iexact=query) | Q(type__icontains=query))
+            return Class.objects.filter(Q(type__icontains=query))
         else:
             return Class.objects.all()
         
