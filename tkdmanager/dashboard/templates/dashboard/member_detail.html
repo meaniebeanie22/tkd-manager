@@ -2,48 +2,66 @@
 
 {% block content %}
   <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
-  <div>
-    <h4>Personal Info</h4>
-    <ul>
-      <li>{% if member.date_of_birth %}
-        DOB - {{ member.date_of_birth|date:"d/m/y" }}
-      {% else %}
-        No DOB on file - <a href="{% url 'update-member' member.pk %}">Fix</a>
-      {% endif %}
-      </li>
-      <li>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</li>
-      <li>{% if member.email %}Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a>{% else %}No email on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
-      <li>{% if member.phone %}Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a>{% else %}No phone number on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
-      <a href="{% url 'update-member' member.pk %}">Edit</a> <a href="{% url 'delete-member' member.pk %}">Delete</a>
-    </ul>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Personal Info</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{% if member.date_of_birth %}
+              DOB - {{ member.date_of_birth|date:"d/m/y" }}
+            {% else %}
+              No DOB on file - <a href="{% url 'update-member' member.pk %}">Fix</a>
+            {% endif %}
+            </li>
+            <li class="list-group-item">{% if member.belt %}Belt - {{ member.get_belt_display }}{% else %}No Belt{% endif %}</li>
+            <li class="list-group-item">Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
+            <li class="list-group-item">Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a></li>
+            <li class="list-group-item">{% if member.address_line_1 and member.address_line_2 and address_line_3 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
+            <li class="list-group-item"><button type="button" class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-member' member.pk %}">Edit</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Gradings</h4>
+          <ul class="list-group list-group-flush">
+            {% if member.member2gradings.all %}
+              {% for gr in member.member2gradings.all %}
+                  <li class="list-group-item"><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }}) - {{ gr.get_forbelt_display }}
+                  {% if gr.award_set.all %}
+                  {% for award in gr.award_set.all %} - {{award}}{% endfor %}
+                  {% endif %}            
+                  </li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">This member has not graded.</li>
+            {% endif %}
+              <li class="list-group-item"><button type="button" class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</button></li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Attendance and Teaching</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Classes attended this term: {{ member.students2classes.all.count }}</li>
+            {% if member.team_leader_instructor != "" %}
+            <li class="list-group-item">Classes taught this term: {{ member.instructors2classes.all.count }}</li>
+            <li class="list-group-item">Hours taught this term: {{ hours_taught }}</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-  <br>
-  </p>
-  <div>
-    <h4>Gradings - <a href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></h4>
-    {% if member.member2gradings.all %}
-    <ul>
-        {% for gr in member.member2gradings.all %}
-            <li><strong><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }}) - {{ gr.get_forbelt_display }}
-            {% if gr.award_set.all %}
-            {% for award in gr.award_set.all %} - {{award}}{% endfor %}
-            {% endif %}            
-            </strong></li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        <p>This member has not graded.</p>
-    {% endif %}
-  </div>
-  <br>
-  <div>
-    <h4>Attendance and Teaching</h4>
-    <ul>
-      <li>Classes attended this term: {{ member.students2classes.all.count }}</li>
-      {% if member.team_leader_instructor != "" %}
-      <li>Classes taught this term: {{ member.instructors2classes.all.count }}</li>
-      <li>Hours taught this term: {{ hours_taught }}</li>
-      {% endif %}
-    </ul>
-  </div>
+
 {% endblock %}

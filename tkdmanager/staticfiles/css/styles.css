@@ -19,3 +19,7 @@ tr:nth-child(even) {
 tr.content:hover {
   background-color: coral;
 }
+
+.btn-outline-thicker {
+  border-width: 2px;
+}

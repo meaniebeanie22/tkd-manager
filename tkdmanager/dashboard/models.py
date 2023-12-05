@@ -64,7 +64,7 @@ class Member(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     idnumber = models.SmallIntegerField(verbose_name="ID Number")
-    address_line_1 = models.CharField(max_length=200, help_text="Street Number and Name", blank=True)
+    address_line_1 = models.CharField(max_length=200, help_text="Unit, Street Number and Name", blank=True)
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
