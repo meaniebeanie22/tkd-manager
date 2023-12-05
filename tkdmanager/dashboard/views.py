@@ -12,6 +12,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .forms import GradingResultForm, ClassForm
 from django.db.models import Q
 
+def time_difference_in_seconds(time1, time2):
+    # Convert time objects to seconds
+    seconds1 = time1.hour * 3600 + time1.minute * 60 + time1.second
+    seconds2 = time2.hour * 3600 + time2.minute * 60 + time2.second
+    # Calculate the time difference in seconds
+    difference_seconds = seconds2 - seconds1
+    return difference_seconds
 
 # Create your views here.
 @login_required
@@ -47,13 +54,10 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super(MemberDetailView, self).get_context_data(**kwargs)
-        print(f'Object = {self.get_object}')
         classes_taught = self.get_object().instructors2classes.all()
-        print(f'Classes Taught = {classes_taught}')
         seconds = 0
         for cl in classes_taught:
-            length = cl.end - cl.start
-            seconds += length.total_seconds()
+            seconds += time_difference_in_seconds(cl.start, cl.end)
         hours = round(seconds/3600, 2)
         context['hours_taught'] = hours
         return context

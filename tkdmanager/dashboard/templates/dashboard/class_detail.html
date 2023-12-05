@@ -3,13 +3,13 @@
 {% block content %}
   <h1>{{ class }}</h1>
   <p><a href="{% url 'update-class' class.pk %}">Edit</a> <a href="{% url 'delete-class' class.pk %}">Delete</a></p>
-  <h3>Instructors</h3>
+  <h3>Instructors ({{ class.instructors.all.count}})</h3>
   <ul>
   {% for instructor in class.instructors.all %}
     <li><a href="{{ instructor.get_absolute_url }}">{{ instructor }}</a></li>
   {% endfor %}
   </ul>
-  <h3>Students</h3>
+  <h3>Students ({{ class.students.all.count }})</h3>
   <ul>
   {% for student in class.students.all %}
     <li><a href="{{ student.get_absolute_url }}">{{ student }}</a></li>
