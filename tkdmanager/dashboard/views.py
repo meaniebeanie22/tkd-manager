@@ -1,15 +1,17 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult, Class
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, GRADINGS
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-from datetime import date
+from datetime import date, datetime
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm
+from .forms import GradingResultForm, ClassForm, GradingResultSearchForm
 from django.db.models import Q
 
 def time_difference_in_seconds(time1, time2):
@@ -86,6 +88,43 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
 class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
     paginate_by = 15
+
+    def get_queryset(self):
+        queryset = GradingResult.objects.all()
+
+        # Process form data to filter queryset
+        form = GradingResultSearchForm(self.request.GET)
+        if form.is_valid():
+            type = form.cleaned_data.get('type')
+            if type:
+                queryset = queryset.filter(type=type)
+
+            date = form.cleaned_data.get('date')
+            if date:
+                queryset = queryset.filter(date=date)
+
+            assessor = form.cleaned_data.get('assessor')
+            if assessor:
+                queryset = queryset.filter(assessor=assessor)
+
+            member = form.cleaned_data.get('member')
+            if member:
+                queryset = queryset.filter(member=member)
+
+            award = form.cleaned_data.get('award')
+            if award:
+                queryset = queryset.filter(award=award)
+
+            forbelt = form.cleaned_data.get('forbelt')
+            if forbelt:
+                queryset = queryset.filter(forbelt=forbelt)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = GradingResultSearchForm(self.request.GET)
+        return context
     
 class MemberCreate(LoginRequiredMixin, CreateView):
     model = Member
@@ -185,11 +224,21 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        if query:
-            return Class.objects.filter(Q(type__icontains=query))
-        else:
+        type = self.request.GET.get('type')
+        date_str = self.request.GET.get('date')
+        if not (type or date_str):
             return Class.objects.all()
+        else:
+            queryset = Class.objects.all()
+            if type:
+                type = type.lower()
+                backwards = {x[1]:x[0] for x in GRADINGS}
+                type = backwards.get(type, type)
+                queryset = queryset.filter(Q(type__icontains=type))
+            if date_str:
+                date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                queryset = queryset.filter(Q(date=date))
+            return queryset           
         
 class ClassDetailView(LoginRequiredMixin, generic.DetailView):
     model = Class

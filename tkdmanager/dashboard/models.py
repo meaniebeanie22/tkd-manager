@@ -3,7 +3,7 @@ from django.urls import reverse # Used to generate URLs by reversing the URL pat
 
 # Create your models here.
 
-BELT_CHOICES = (
+BELT_CHOICES = [
                 ("White",      (('0', 'White Belt'), ('1', 'White ½'), ('2', 'White 1'), ('3', 'White 1 ½'), ('4', 'White 2'), ('5', 'White 2 ½'), ('6', 'White 3'), ('7', 'White-Orange'))),
                 ("Orange",     (('8', 'Orange Belt'), ('9', 'Orange ½'), ('10', 'Orange 1'), ('11', 'Orange 1 ½'), ('12', 'Orange 2'), ('13', 'Orange 2 ½'), ('14', 'Orange 3'), ('15', 'White-Yellow'))),
                 ("Yellow",     (('16', 'Yellow Belt'), ('17', 'Yellow ½'), ('18', 'Yellow 1'), ('19', 'Yellow 1 ½'), ('20', 'Yellow 2'), ('21', 'Yellow 2 ½'), ('22', 'Yellow 3'), ('23', 'White-Blue'))),
@@ -11,9 +11,9 @@ BELT_CHOICES = (
                 ("Red",        (('32', 'Red Belt'), ('33', 'Red ½'), ('34', 'Red 1'), ('35', 'Red 1 ½'), ('36', 'Red 2'), ('37', 'Red 2 ½'), ('38', 'Red 3'))),
                 ("Cho-Dan Bo", (('39', 'Cho-Dan Bo 1'), ('40', 'Cho-Dan Bo 2'), ('41', 'Cho-Dan Bo 3'), ('42', 'Cho-Dan Bo 4'), ('43', 'Cho-Dan Bo 5'), ('44', 'Cho-Dan Bo 6'), ('45', 'Advanced Cho-Dan Bo'), ('46', 'Probationary Black Belt'))),
                 ("Black Belt", (('47', '1st Dan'), ('48', '2nd Dan'), ('49', '3rd Dan'), ('50', '4th Dan'), ('51', '5th Dan'), ('52', '6th Dan'), ('53', '7th Dan'), ('54', '8th Dan'), ('55', '9th Dan'))),
-                )
+                ]
 
-ASSESSMENT_UNITS = (
+ASSESSMENT_UNITS = [
     ('SD','Self Defense'),
     ('SE','Self Develop'),
     ('PA1','1st Pattern'),
@@ -24,9 +24,9 @@ ASSESSMENT_UNITS = (
     ('SP', 'Sparring'),
     ('BB', 'Board Breaking'),
     ('BF', 'Back and Fighting Stances'),
-)
+]
 
-GRADINGS = (
+GRADINGS = [
     ('MS','Musketeers'),
     ('JR','Juniors'),
     ('SN','Seniors'),
@@ -34,9 +34,9 @@ GRADINGS = (
     ('BJ','BJJ'),
     ('BO','Boxing'),
     ('MA','MMA'),
-)
+]
 
-TL_INST_RANKS = (
+TL_INST_RANKS = [
     ('T1','Team Leader Level 1'),
     ('T2','Team Leader Level 2'),
     ('T3','Team Leader Level 3'),
@@ -47,7 +47,7 @@ TL_INST_RANKS = (
     ('II','Instructor'),
     ('IS','Senior Instructor'),
     ('IH','Head Instructor')
-)
+]
 
 class Award(models.Model):
     """Model representing a type of award."""

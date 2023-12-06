@@ -3,8 +3,9 @@
 {% block content %}
 <h1>Class List</h1>
 <form method="get">
-  <input type="text" name="q" placeholder="Search">
-  <button type="submit">Search</button>
+  <input type="text" name="type" placeholder="Type">
+  <input type="date" name="date" placeholder="Date">
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
   
 </form>
   {% if class_list %}
@@ -19,8 +20,8 @@
     </tr>
     {% for class in class_list %}
       <tr class="content">
-        <td>{{ class.type }}</td>
-        <td><a href="{{ class.get_absolute_url }}">{{ class.date }}</a></td>
+        <td>{{ class.get_type_display }}</td>
+        <td><a href="{{ class.get_absolute_url }}">{{ class.date }} - ({{ class.date|date:"l" }})</a></td>
         <td><a href="{{ class.get_absolute_url }}">{{ class.start }}</a></td>
         <td><a href="{{ class.get_absolute_url }}">{{ class.end }}</a></td>
         <td><ul>
