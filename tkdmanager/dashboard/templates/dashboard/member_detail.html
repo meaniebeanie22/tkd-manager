@@ -19,7 +19,7 @@
             <li class="list-group-item">Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
             <li class="list-group-item">Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a></li>
             <li class="list-group-item">{% if member.address_line_1 and member.address_line_2 and address_line_3 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
-            <li class="list-group-item"><button type="button" class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-member' member.pk %}">Edit</button></li>
+            <li class="list-group-item"><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-member' member.pk %}">Edit</a></li>
           </ul>
         </div>
       </div>
@@ -41,7 +41,7 @@
             {% else %}
               <li class="list-group-item">This member has not graded.</li>
             {% endif %}
-              <li class="list-group-item"><button type="button" class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</button></li>
+              <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
           
         </div>

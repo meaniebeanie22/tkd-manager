@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, TextInput, Form
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form
 from django.forms.widgets import DateInput, TimeInput
 from .models import GradingResult, Class, Member, Award, BELT_CHOICES, GRADINGS
 
@@ -7,7 +7,17 @@ class GradingResultForm(ModelForm):
         model = GradingResult
         fields = ['member','date','type','forbelt','assessor','comments','award']
 
+class MemberForm(ModelForm):
+    class Meta:
+        model = Member
+        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+        widgets = {
+            'phone': TextInput(attrs={'type': 'tel'})
+        }
+
 class ClassForm(ModelForm):
+    instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+
     class Meta:
         model = Class
         fields = ['type','date','start','end','instructors','students']

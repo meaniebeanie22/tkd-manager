@@ -30,10 +30,16 @@ GRADINGS = [
     ('MS','Musketeers'),
     ('JR','Juniors'),
     ('SN','Seniors'),
+    ('JS','Juniors/Seniors All'),
+    ('JD','Juniors/Seniors Beginner-Blue'),
+    ('JF','Juniors/Seniors Red-Black'),
+    ('PA','TKD Patterns/Grading'),
     ('BB','Black Belt'),
-    ('BJ','BJJ'),
+    ('BJ','BJJ/MMA'),
     ('BO','Boxing'),
-    ('MA','MMA'),
+    ('BK','BJJ for Kids'),
+    ('WE','Weapons'),
+    ('FC','Fight Class'),
 ]
 
 TL_INST_RANKS = [
@@ -121,8 +127,11 @@ class Class(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     type = models.CharField(max_length=2, choices=GRADINGS)
-    instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes')
-    students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes')
+    instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes', blank=True)
+    students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes', blank=True)
+
+    class Meta:
+        ordering = ['-date', '-start']
 
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""

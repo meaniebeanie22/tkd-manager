@@ -14,6 +14,7 @@
       <th>Belt</th>
       <th>ID Number</th>
       <th>DOB</th>
+      <th>TL/Inst</th>
     </tr>
     {% for member in member_list %}
       <tr class="content">
@@ -21,6 +22,7 @@
         <td>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</td>
         <td>{{ member.idnumber }}</td>
         <td>{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
+        <td>{{ member.get_team_leader_instructor_display }}</td>
       </tr>
     {% endfor %}
   </table>

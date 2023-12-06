@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm, GradingResultSearchForm
+from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm
 from django.db.models import Q
 
 def time_difference_in_seconds(time1, time2):
@@ -128,11 +128,11 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     
 class MemberCreate(LoginRequiredMixin, CreateView):
     model = Member
-    fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+    form_class = MemberForm
 
 class MemberUpdate(LoginRequiredMixin, UpdateView):
     model = Member
-    fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+    form_class = MemberForm
 
 class MemberDelete(LoginRequiredMixin, DeleteView):
     model = Member
