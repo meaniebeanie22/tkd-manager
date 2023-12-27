@@ -262,7 +262,7 @@ class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
 
 class PaymentCreate(LoginRequiredMixin, CreateView):
-    model = Class
+    model = Payment
     form_class = PaymentForm
 
 class PaymentUpdate(LoginRequiredMixin, UpdateView):

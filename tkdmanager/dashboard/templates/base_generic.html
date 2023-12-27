@@ -22,6 +22,7 @@
           <li><a href="{% url 'gradingresults' %}">All grading results</a></li>
           <li><a href="{% url 'awards' %}">All awards</a></li>
           <li><a href="{% url 'classes' %}">All classes</a></li>
+          <li><a href="{% url 'payments' %}">All payments</li>
         </ul>
         <hr>
         <ul class="sidebar-nav">
@@ -36,6 +37,7 @@
             <li><a href="{% url 'add-grading-result' %}">New grading result</a></li>
             <li><a href="{% url 'add-award' %}">New award</a></li>
             <li><a href="{% url 'add-class' %}">New class</a></li>
+            <li><a href="{% url 'add-payment' %}">New payment</a></li>
           </ul>
         {% else %}
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>

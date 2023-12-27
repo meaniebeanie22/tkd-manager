@@ -1,6 +1,7 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form
-from django.forms.widgets import DateInput, TimeInput
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField
+from django.forms.widgets import DateInput, TimeInput, DateTimeInput
 from .models import GradingResult, Class, Member, Award, Payment, BELT_CHOICES, GRADINGS
+from django.utils import timezone
 
 class GradingResultForm(ModelForm):
     class Meta:
@@ -38,6 +39,12 @@ class GradingResultSearchForm(Form):
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False)
 
 class PaymentForm(ModelForm):
+    date_created = DateTimeField(disabled=True, initial=timezone.now())
+
     class Meta:
         model = Payment
-        fields = ['member', 'paymenttype', 'created', 'due', 'paid', 'amount']
+        fields = ['member', 'paymenttype', 'date_created', 'date_due', 'date_paid', 'amount_due']
+        widgets = {
+            'date_due': DateInput(attrs={'type': 'date'}),
+            'date_paid': DateTimeInput(attrs={'type':'datetime-local'})
+        }

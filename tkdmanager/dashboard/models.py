@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
+from django.utils import timezone
 
 # Create your models here.
 
@@ -141,15 +142,26 @@ class Class(models.Model):
         return f'{self.get_type_display()}: {self.date.strftime("%x")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
 
 class Payment(models.Model):
-    member = models.ForeignKey(Member, help_text='Who need to pay this?', on_delete=models.PROTECT)
-    paymenttype = models.ForeignKey('PaymentType', help_text='What type of payment is this?', null=True, on_delete=models.SET_NULL)
-    created = models.DateTimeField()
-    due = models.DateTimeField()
-    paid = models.DateTimeField(blank=True)
-    amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
+    member = models.ForeignKey(Member, help_text='Who needs to pay this?', on_delete=models.PROTECT)
+    paymenttype = models.ForeignKey('PaymentType', help_text='What type of payment is this?', null=True, on_delete=models.SET_NULL, verbose_name='Payment type')
+    date_created = models.DateTimeField(default=timezone.now)
+    date_due = models.DateTimeField()
+    date_paid = models.DateTimeField(null=True, blank=True)
+    amount_due = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
+    amount_paid = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount currently paid, in $', default=0)
 
     class Meta:
-        ordering = ['-due', 'paymenttype']
+        ordering = ['-date_due', 'paymenttype']
+
+    def get_absolute_url(self):
+        return reverse('payment-detail', args=[str(self.id)])
+    
+    def __str__(self):
+        return f'{self.paymenttype}, {self.member}'
 
 class PaymentType(models.Model):
     name = models.CharField(max_length=200)
+    standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)
+
+    def __str__(self):
+        return f'{self.name}'
