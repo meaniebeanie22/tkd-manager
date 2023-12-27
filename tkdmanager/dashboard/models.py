@@ -146,7 +146,7 @@ class Payment(models.Model):
     created = models.DateTimeField()
     due = models.DateTimeField()
     paid = models.DateTimeField(blank=True)
-    amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $')
+    amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
 
     class Meta:
         ordering = ['-due', 'paymenttype']
