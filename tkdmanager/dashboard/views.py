@@ -1,7 +1,7 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, GRADINGS
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, GRADINGS
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm
+from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm
 from django.db.models import Q
 
 def time_difference_in_seconds(time1, time2):
@@ -255,3 +255,20 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
     model = Class
     success_url = reverse_lazy("classes")
 
+class PaymentListView(LoginRequiredMixin, generic.ListView):
+    model = Payment
+
+class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Payment
+
+class PaymentCreate(LoginRequiredMixin, CreateView):
+    model = Class
+    form_class = PaymentForm
+
+class PaymentUpdate(LoginRequiredMixin, UpdateView):
+    model = Payment
+    form_class = Payment
+
+class PaymentDelete(LoginRequiredMixin, DeleteView):
+    model = Payment
+    success_url = reverse_lazy("payments")

@@ -23,5 +23,10 @@ urlpatterns = [
     path('class/<int:pk>', views.ClassDetailView.as_view(), name='class-detail'),
     path('class/create', views.ClassCreate.as_view(), name='add-class'),
     path('class/<int:pk>/update', views.ClassUpdate.as_view(), name='update-class'),
-    path('class/<int:pk>/delete', views.ClassDelete.as_view(), name='delete-class')
+    path('class/<int:pk>/delete', views.ClassDelete.as_view(), name='delete-class'),
+    path('payments/', views.PaymentListView.as_view(), name='payments'),
+    path('payment/<int:pk>', views.PaymentDetailView.as_view(), name='payment-detail'),
+    path('payment/create', views.PaymentCreate.as_view(), name='add-payment'),
+    path('payment/<int:pk>/update', views.PaymentUpdate.as_view(), name='update-payment'),
+    path('payment/<int:pk>/delete', views.PaymentDelete.as_view(), name='delete-payment'),
 ]

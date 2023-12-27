@@ -95,7 +95,7 @@ class AssessmentUnit(models.Model):
     unit = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
     achieved_pts = models.SmallIntegerField()
     max_pts = models.SmallIntegerField()
-    grading_result = models.ForeignKey('GradingResult', on_delete=models.RESTRICT, verbose_name="Associated Grading Result")
+    grading_result = models.ForeignKey('GradingResult', on_delete=models.CASCADE, verbose_name="Associated Grading Result")
 
     class Meta:
         ordering = ['unit']
@@ -104,7 +104,7 @@ class AssessmentUnit(models.Model):
         return f'{self.unit} - {self.grading_result}'
 
 class GradingResult(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.RESTRICT, related_name='member2gradings')
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
     date = models.DateField()
     type = models.CharField(max_length=2, choices=GRADINGS)
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
@@ -140,4 +140,16 @@ class Class(models.Model):
     def __str__(self):
         return f'{self.get_type_display()}: {self.date.strftime("%x")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
 
+class Payment(models.Model):
+    member = models.ForeignKey(Member, help_text='Who need to pay this?', on_delete=models.PROTECT)
+    paymenttype = models.ForeignKey('PaymentType', help_text='What type of payment is this?', null=True, on_delete=models.SET_NULL)
+    created = models.DateTimeField()
+    due = models.DateTimeField()
+    paid = models.DateTimeField(blank=True)
+    amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $')
 
+    class Meta:
+        ordering = ['-due', 'paymenttype']
+
+class PaymentType(models.Model):
+    name = models.CharField(max_length=200)

@@ -1,6 +1,6 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form
 from django.forms.widgets import DateInput, TimeInput
-from .models import GradingResult, Class, Member, Award, BELT_CHOICES, GRADINGS
+from .models import GradingResult, Class, Member, Award, Payment, BELT_CHOICES, GRADINGS
 
 class GradingResultForm(ModelForm):
     class Meta:
@@ -36,3 +36,8 @@ class GradingResultSearchForm(Form):
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False)
+
+class PaymentForm(ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['member', 'paymenttype', 'created', 'due', 'paid', 'amount']
