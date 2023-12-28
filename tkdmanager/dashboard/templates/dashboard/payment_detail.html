@@ -5,7 +5,11 @@
 <ul>
     <li>Member: {{ payment.member }}</li>
     <li>Type: {{ payment.paymenttype }}</li>
-    <li>
+    <li>{{ payment.date_created|date:"d/m/y" }}</li>
+    <li>{{ payment.date_due|date:"d/m/y" }}</li>
+    <li>{{ payment.date_paid|date:"d/m/y" }}</li>
+    <li>{{ payment.amount_due }}</li>
+    <li>{{ payment.amount_paid }}</li>
 </ul>
 
 {% endblock %}
