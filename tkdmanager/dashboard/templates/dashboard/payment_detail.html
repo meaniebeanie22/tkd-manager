@@ -11,5 +11,6 @@
     <li>{{ payment.amount_due }}</li>
     <li>{{ payment.amount_paid }}</li>
 </ul>
+<a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-payment' payment.pk %}">Edit</a>
 
 {% endblock %}
