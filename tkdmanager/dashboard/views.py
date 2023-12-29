@@ -257,6 +257,7 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
 
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
+    paginate_by = 15
 
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment

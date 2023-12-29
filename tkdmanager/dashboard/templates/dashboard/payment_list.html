@@ -8,6 +8,7 @@
     <tr>
         <th>Link</th>
         <th>Member</th>
+        <th>Status</th>
         <th>Type</th>
         <th>Date Created</th>
         <th>Date Due</th>
@@ -19,12 +20,13 @@
       <tr>
         <td><a href="{{ p.get_absolute_url }}">Link</a></td>
         <td>{{ p.member }}</td>
+        <td{% if p.get_payment_status == 'Overdue' %} style="color:red;"{% elif p.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>{{ p.get_payment_status }}</td>
         <td>{{ p.paymenttype }}</td>
         <td>{{ p.date_created|date:"d/m/y" }}</td>
-        <td>{{ p.date_due|date:"d/m/y" }}</td>
-        <td>{{ p.date_paid|date:"d/m/y" }}</td>
-        <td>{{ p.amount_due }}</td>
-        <td>{{ p.amount_paid }}</td>
+        <td{% if p.is_past_due %}{% if p.date_paid_in_full is None %} style="color:red;"{% endif %}{% endif %}>{{ p.date_due|date:"d/m/y" }}</td>
+        <td>{% if p.date_paid_in_full %}{{ p.date_paid_in_full|date:"d/m/y" }}{% else %}---{% endif %}</td>
+        <td>${{ p.amount_due }}</td>
+        <td>${{ p.amount_paid }}</td>
       </tr>
     {% endfor %}
 </table>

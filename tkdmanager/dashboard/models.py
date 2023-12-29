@@ -158,6 +158,22 @@ class Payment(models.Model):
     
     def __str__(self):
         return f'{self.paymenttype}, {self.member}'
+    
+    @property
+    def is_past_due(self):
+        return self.date_due < timezone.now()
+    
+    def get_payment_status(self):
+        if self.is_past_due and self.date_paid_in_full == None:
+            return "Overdue"
+        elif self.date_paid_in_full:
+            if self.date_paid_in_full > self.date_due:
+                return "Paid Late"
+            else:
+                return "Paid On Time"
+        else:
+            return "Awaiting Payment"
+        
 
 class PaymentType(models.Model):
     name = models.CharField(max_length=200)
