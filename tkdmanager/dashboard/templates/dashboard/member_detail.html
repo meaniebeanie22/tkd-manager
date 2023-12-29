@@ -4,7 +4,7 @@
   <h1>{{ member.last_name }}, {{ member.first_name }} ({{ member.idnumber }})</h1>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Personal Info</h4>
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Gradings</h4>
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Attendance and Teaching</h4>
@@ -57,6 +57,23 @@
             {% if member.team_leader_instructor != "" %}
             <li class="list-group-item">Classes taught this term: {{ member.instructors2classes.all.count }}</li>
             <li class="list-group-item">Hours taught this term: {{ hours_taught }}</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Payments/Fees</h4>
+          <ul class="list-group list-group-flush">
+            {% if relevant_payments %}
+              {% for payment in relevant_payments %}
+                <li class="list-group-item"><a href="{{ payment.get_absolute_url }}"{% if payment.get_payment_status == 'Overdue' %} style="color:red;"{% endif %}>{{ payment }}</a></li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">No overdue or upcoming payments.</li>
             {% endif %}
           </ul>
         </div>

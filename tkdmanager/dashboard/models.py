@@ -157,7 +157,7 @@ class Payment(models.Model):
         return reverse('payment-detail', args=[str(self.id)])
     
     def __str__(self):
-        return f'{self.paymenttype}, {self.member}'
+        return f'{self.paymenttype} for {self.member}. Due {self.date_due.strftime("%x")}.'
     
     @property
     def is_past_due(self):

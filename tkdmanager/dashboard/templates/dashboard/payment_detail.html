@@ -4,7 +4,7 @@
 {% now "Y-m-d H:i:s" as today %}
 <h4>Payment Details</h4>
 <ul>
-    <li>Member: {{ payment.member }}</li>
+    <li>Member: <a href="{{ payment.member.get_absolute_url }}">{{ payment.member }}</a></li>
     <li>Type: {{ payment.paymenttype }}</li>
     <li{% if payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>Status: {{ payment.get_payment_status }}</li>
     <li>Date Created: {{ payment.date_created|date:"d/m/y" }}</li>

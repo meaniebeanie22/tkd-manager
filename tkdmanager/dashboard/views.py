@@ -8,11 +8,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm
 from django.db.models import Q
+from django.utils import timezone
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to seconds
@@ -56,12 +57,22 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super(MemberDetailView, self).get_context_data(**kwargs)
+        
+        # Find no. hours taught
         classes_taught = self.get_object().instructors2classes.all()
         seconds = 0
         for cl in classes_taught:
             seconds += time_difference_in_seconds(cl.start, cl.end)
         hours = round(seconds/3600, 2)
         context['hours_taught'] = hours
+
+        # Find overdue payments + those for the next 6 months
+        today = datetime.now().date()
+        six_months_later = today + timedelta(days=6 * 30)
+        recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=today) & Q(date_due__date__lte=six_months_later)).all()
+        payments = self.get_object().payment_set.all()
+        overdue_payments = [p for p in payments if p.get_payment_status() == "Overdue"]
+        context['relevant_payments'] = list(recent_payments) + overdue_payments
         return context
 
 class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
