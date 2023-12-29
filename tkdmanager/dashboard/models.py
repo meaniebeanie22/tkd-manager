@@ -146,7 +146,7 @@ class Payment(models.Model):
     paymenttype = models.ForeignKey('PaymentType', help_text='What type of payment is this?', null=True, on_delete=models.SET_NULL, verbose_name='Payment type')
     date_created = models.DateTimeField(default=timezone.now)
     date_due = models.DateTimeField()
-    date_paid = models.DateTimeField(null=True, blank=True)
+    date_paid_in_full = models.DateTimeField(null=True, blank=True)
     amount_due = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     amount_paid = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount currently paid, in $', default=0)
 

@@ -17,7 +17,7 @@
     </tr>
     {% for p in payment_list %}
       <tr>
-        <td>{{ p.get_absolute_url }}</td>
+        <td><a href="{{ p.get_absolute_url }}">Link</a></td>
         <td>{{ p.member }}</td>
         <td>{{ p.paymenttype }}</td>
         <td>{{ p.date_created|date:"d/m/y" }}</td>

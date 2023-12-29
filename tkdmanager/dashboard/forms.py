@@ -43,8 +43,8 @@ class PaymentForm(ModelForm):
 
     class Meta:
         model = Payment
-        fields = ['member', 'paymenttype', 'date_created', 'date_due', 'date_paid', 'amount_due']
+        fields = ['member', 'paymenttype', 'date_created', 'date_due', 'date_paid_in_full', 'amount_due', 'amount_paid']
         widgets = {
             'date_due': DateInput(attrs={'type': 'date'}),
-            'date_paid': DateTimeInput(attrs={'type':'datetime-local'})
+            'date_paid_in_full': DateInput(attrs={'type':'date'})
         }

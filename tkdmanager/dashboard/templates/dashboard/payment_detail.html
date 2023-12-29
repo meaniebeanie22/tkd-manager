@@ -1,15 +1,16 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+{% now "Y-m-d H:i:s" as today %}
 <h4>Payment Details</h4>
 <ul>
     <li>Member: {{ payment.member }}</li>
     <li>Type: {{ payment.paymenttype }}</li>
-    <li>{{ payment.date_created|date:"d/m/y" }}</li>
-    <li>{{ payment.date_due|date:"d/m/y" }}</li>
-    <li>{{ payment.date_paid|date:"d/m/y" }}</li>
-    <li>{{ payment.amount_due }}</li>
-    <li>{{ payment.amount_paid }}</li>
+    <li>Date Created: {{ payment.date_created|date:"d/m/y" }}</li>
+    <li{% if payment.date_due < today %} style="color:red;"{% endif %}>Date Due: {{ payment.date_due|date:"d/m/y" }}</li>
+    <li>Date Paid in Full: {{ payment.date_paid_in_full|date:"d/m/y" }}</li>
+    <li>Amount Due: {{ payment.amount_due }}</li>
+    <li>Amount Paid: {{ payment.amount_paid }}</li>
 </ul>
 <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-payment' payment.pk %}">Edit</a>
 <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-payment' payment.pk %}">Delete</a>

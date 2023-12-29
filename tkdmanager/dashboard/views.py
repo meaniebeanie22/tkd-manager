@@ -267,7 +267,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
 
 class PaymentUpdate(LoginRequiredMixin, UpdateView):
     model = Payment
-    form_class = Payment
+    form_class = PaymentForm
 
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
