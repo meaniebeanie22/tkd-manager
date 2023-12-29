@@ -16,11 +16,10 @@ from django.db.models import Q
 from django.utils import timezone
 
 def time_difference_in_seconds(time1, time2):
-    # Convert time objects to seconds
-    seconds1 = time1.hour * 3600 + time1.minute * 60 + time1.second
-    seconds2 = time2.hour * 3600 + time2.minute * 60 + time2.second
+    # Convert time objects to timedelta
+    delta = datetime.combine(datetime.today(), time2) - datetime.combine(datetime.today(), time1)
     # Calculate the time difference in seconds
-    difference_seconds = seconds2 - seconds1
+    difference_seconds = delta.total_seconds()
     return difference_seconds
 
 # Create your views here.
@@ -60,10 +59,13 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         
         # Find no. hours taught
         classes_taught = self.get_object().instructors2classes.all()
-        seconds = 0
-        for cl in classes_taught:
-            seconds += time_difference_in_seconds(cl.start, cl.end)
-        hours = round(seconds/3600, 2)
+
+        # Use sum with a generator expression to calculate total seconds
+        total_seconds = sum(time_difference_in_seconds(cl.start, cl.end) for cl in classes_taught)
+
+        # Calculate hours directly from total seconds
+        hours = round(total_seconds / 3600, 2)
+
         context['hours_taught'] = hours
 
         # Find overdue payments + those for the next 6 months
