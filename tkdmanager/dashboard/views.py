@@ -1,6 +1,6 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, GRADINGS
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, GRADINGS, LETTER_GRADES
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm
+from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
 from django.db.models import Q
 from django.utils import timezone
 
@@ -83,6 +83,29 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
         # Call the base implementation first to get the context
         context = super(GradingResultDetailView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
+        gr = self.get_object()
+        assessmentunits = gr.assessmentunit_set.all()
+        if assessmentunits:
+            maxpts = 0
+            apts = 0
+            for au in assessmentunits:
+                maxpts += au.max_pts
+                apts += au.achieved_pts
+            if gr.is_letter:
+                context['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
+            else:
+                context['total_max_pts'] = maxpts
+                context['total_achieved_pts'] = apts
+                context['total_percent'] = round((context['total_achieved_pts']/context['total_max_pts'])*100)
+            
+        return context
+
+
+    """
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(GradingResultDetailView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
         maxpts = 0
         apts = 0
         if self.get_object().assessmentunit_set.all():
@@ -96,6 +119,7 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
 
         
         return context
+    """
     
 class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
@@ -150,7 +174,10 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+        if self.object.is_letter:
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+        else:
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
     
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
@@ -216,6 +243,21 @@ def manageGradingResult(request, **kwargs):
     else:
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
+
+@login_required
+def manageGradingResultLetter(request, **kwargs):
+    gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
+    
+    if request.method == "POST":
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        if formset.is_valid():
+            formset.save()
+            # Do something. Should generally end with a redirect. For example:
+            return HttpResponseRedirect(gradingresult.get_absolute_url())
+    else:
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+    return render(request, 'dashboard/gradingresult_form3.html', {'formset': formset})    
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class

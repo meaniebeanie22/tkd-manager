@@ -12,6 +12,7 @@ urlpatterns = [
     path('grading-result/create', views.GradingResultCreate.as_view(), name='add-grading-result'),
     path('grading-result/<int:pk>/update', views.GradingResultUpdate.as_view(), name='update-grading-result'),
     path('grading-result/<int:pk>/update2', views.manageGradingResult, name='update-grading-result2'),
+    path('grading-result/<int:pk>/update3', views.manageGradingResultLetter, name='update-grading-result3'),
     path('grading-result/<int:pk>/delete', views.GradingResultDelete.as_view(), name='delete-grading-result'),
     path('gradings/', views.GradingResultListView.as_view(), name='gradingresults'),
     path('awards/', views.AwardListView.as_view(), name='awards'),

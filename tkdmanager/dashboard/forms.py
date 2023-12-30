@@ -1,6 +1,6 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput
 from django.forms.widgets import DateInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, BELT_CHOICES, GRADINGS
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, BELT_CHOICES, GRADINGS, LETTER_GRADES
 from django.utils import timezone
 
 class GradingResultForm(ModelForm):
@@ -49,3 +49,11 @@ class PaymentForm(ModelForm):
             'date_due': DateInput(attrs={'type': 'date'}),
             'date_paid_in_full': DateInput(attrs={'type':'date'})
         }
+
+class AssessmentUnitLetterForm(ModelForm):
+    achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES))
+    max_pts = IntegerField(initial=7, widget=HiddenInput())
+    class Meta:
+        model = AssessmentUnit
+        fields = ['unit', 'achieved_pts', 'max_pts', 'grading_result']
+
