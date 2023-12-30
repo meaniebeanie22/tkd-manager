@@ -56,6 +56,9 @@ TL_INST_RANKS = [
     ('IH','Head Instructor')
 ]
 
+#FDCC+BB+AA+
+LETTER_GRADES_TO_NUMBERS = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
+
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
@@ -95,14 +98,22 @@ class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""
     unit = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
     achieved_pts = models.SmallIntegerField()
-    max_pts = models.SmallIntegerField()
+    max_pts = models.SmallIntegerField() # if letter rep then should be set to 7
     grading_result = models.ForeignKey('GradingResult', on_delete=models.CASCADE, verbose_name="Associated Grading Result")
+    is_letter = models.BooleanField(default=False)
+
 
     class Meta:
         ordering = ['unit']
     
     def __str__(self):
         return f'{self.unit} - {self.grading_result}'
+    
+    def get_letter_rep(self):
+        if self.is_letter == True:
+            return LETTER_GRADES_TO_NUMBERS[self.achieved_pts]
+        else:
+            raise ValueError     
 
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
