@@ -5,6 +5,7 @@
   <form method="get" action="{% url 'gradingresults' %}">
     {{ search_form }}
     <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
+    <button type="reset" class="btn btn-outline-danger btn-outline-thicker">Clear</button>
   </form>
   {% if gradingresult_list %}
   <table style="width: 100%;">
@@ -32,11 +33,11 @@
           {% endfor %}
           </dl>
         </td>
-        <td>{{ gr.award }}</td>
+        <td>{% if gr.award %}{{ gr.award }}{% else %}---{% endif %}</td>
       </tr>
     {% endfor %}
   </table>
   {% else %}
-    <p>There are no grading results.</p>
+    <p>There are no grading results that match your filters.</p>
   {% endif %}
 {% endblock %}

@@ -107,29 +107,15 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET)
         if form.is_valid():
-            type = form.cleaned_data.get('type')
-            if type:
-                queryset = queryset.filter(type=type)
+            filters = {}
 
-            date = form.cleaned_data.get('date')
-            if date:
-                queryset = queryset.filter(date=date)
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if value:
+                    filters[field_name] = value
 
-            assessor = form.cleaned_data.get('assessor')
-            if assessor:
-                queryset = queryset.filter(assessor=assessor)
-
-            member = form.cleaned_data.get('member')
-            if member:
-                queryset = queryset.filter(member=member)
-
-            award = form.cleaned_data.get('award')
-            if award:
-                queryset = queryset.filter(award=award)
-
-            forbelt = form.cleaned_data.get('forbelt')
-            if forbelt:
-                queryset = queryset.filter(forbelt=forbelt)
+            # Apply all filters to the queryset in a single call
+            queryset = queryset.filter(**filters)
 
         return queryset
 
