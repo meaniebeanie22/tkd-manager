@@ -205,12 +205,10 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
         return response
     
     def get_success_url(self):
-        print(self.object.is_letter)
         if self.object.is_letter:
             return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
         else:
             return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
-
 
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
@@ -257,7 +255,15 @@ def manageGradingResultLetter(request, **kwargs):
     if request.method == "POST":
         formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
         if formset.is_valid():
-            formset.save()
+            for form in formset:
+                unit = form.cleaned_data.get('unit')
+                print(f'Unit: {unit}')
+                if form.cleaned_data.get('unit'):
+                    print("Saved!")
+                    form.save()
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                obj.delete()
             # Do something. Should generally end with a redirect. For example:
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
