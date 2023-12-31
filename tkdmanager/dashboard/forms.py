@@ -1,19 +1,31 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
 from django.forms.widgets import DateInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, BELT_CHOICES, GRADINGS
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 
-class GradingResultForm(ModelForm):
+class GradingResultUpdateForm(ModelForm):
+    is_letter = BooleanField(disabled=True, required=False)
+    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+
     class Meta:
         model = GradingResult
-        fields = ['member','date','type','forbelt','assessor','comments','award']
+        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+
+class GradingResultCreateForm(ModelForm):
+    is_letter = BooleanField(required=False)
+    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+
+    class Meta:
+        model = GradingResult
+        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
 
 class MemberForm(ModelForm):
     class Meta:
         model = Member
         fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
         widgets = {
-            'phone': TextInput(attrs={'type': 'tel'})
+            'phone': TextInput(attrs={'type': 'tel'}),
+            'date_of_birth': DateInput(attrs={'type': 'date'}),
         }
 
 class ClassForm(ModelForm):
@@ -47,5 +59,16 @@ class PaymentForm(ModelForm):
         fields = ['member', 'paymenttype', 'date_created', 'date_due', 'date_paid_in_full', 'amount_due', 'amount_paid']
         widgets = {
             'date_due': DateInput(attrs={'type': 'date'}),
-            'date_paid_in_full': DateInput(attrs={'type':'date'})
+            'date_paid_in_full': DateInput(attrs={'type':'date'}),
         }
+
+class AssessmentUnitLetterForm(ModelForm):
+    BLANK_CHOICE = [(None, '---------')]
+
+    achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
+    max_pts = IntegerField(initial=7, widget=HiddenInput())
+    unit = ChoiceField(choices= BLANK_CHOICE + ASSESSMENT_UNITS, required=False)
+    class Meta:
+        model = AssessmentUnit
+        fields = ['unit', 'achieved_pts', 'max_pts']
+

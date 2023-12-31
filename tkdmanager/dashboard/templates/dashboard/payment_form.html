@@ -7,6 +7,27 @@
   <table>
     {{ form.as_table }}
   </table>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      function updateAmountDue() {
+        var pk = $('#id_paymenttype').val();
+        $.ajax({
+          url: '/dashboard/paymenttype/' + pk + '/get_standard_amount',
+          success: function (data) {
+            $('#id_amount_due').val(data.standard_amount);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching standard amount:', error);
+            // Handle error, e.g., display a message to the user
+          }
+        });
+      }
+  
+      $('#id_paymenttype').change(updateAmountDue);
+      updateAmountDue();
+    });
+  </script>
   <input type="submit" value="Submit" />
 </form>
 {% endblock %}

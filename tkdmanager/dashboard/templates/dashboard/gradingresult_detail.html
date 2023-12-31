@@ -5,18 +5,18 @@
   {% if gradingresult.member.date_of_birth %}
     <p>DOB - {{ gradingresult.member.date_of_birth|date:"d/m/y" }} <a href="{% url 'update-grading-result' gradingresult.pk %}">Edit</a> <a href="{% url 'delete-grading-result' gradingresult.pk %}">Delete</a></p>
   {% endif %}
-  <h4>Graded for: {{ gradingresult.get_forbelt_display }}</h4>
+  <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.get_type_display }}</h4>
   <div style="margin-left:20px;margin-top:20px">
     <h5>Grading Units</h5>
     {% if gradingresult.assessmentunit_set.all %}
         <ul>
         {% for au in gradingresult.assessmentunit_set.all %}
             <li>
-                <b>{{ au.get_unit_display }}</b> - {{ au.achieved_pts }} / {{ au.max_pts }}
+                <b>{{ au.get_unit_display }}</b> - {% if gradingresult.is_letter %}{{ au.get_letter_rep }}{% else %}{{ au.achieved_pts }} / {{ au.max_pts }}{% endif %}
             </li>
         {% endfor %}
         </ul>
-        <b>Total: {{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %})</b>
+        <b>{% if gradingresult.is_letter %}Average: {{ average_grade }}{% else %}Total: {{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %}){% endif %}</b>
     {% else %}
         <p>This grading has no units.</p>
     {% endif %}

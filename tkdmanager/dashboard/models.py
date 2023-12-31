@@ -56,6 +56,9 @@ TL_INST_RANKS = [
     ('IH','Head Instructor')
 ]
 
+#FDCC+BB+AA+
+LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
+
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
@@ -95,7 +98,7 @@ class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""
     unit = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
     achieved_pts = models.SmallIntegerField()
-    max_pts = models.SmallIntegerField()
+    max_pts = models.SmallIntegerField() # if letter rep then should be set to 7
     grading_result = models.ForeignKey('GradingResult', on_delete=models.CASCADE, verbose_name="Associated Grading Result")
 
     class Meta:
@@ -103,6 +106,9 @@ class AssessmentUnit(models.Model):
     
     def __str__(self):
         return f'{self.unit} - {self.grading_result}'
+    
+    def get_letter_rep(self):
+        return LETTER_GRADES[self.achieved_pts]          
 
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
@@ -112,6 +118,7 @@ class GradingResult(models.Model):
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
+    is_letter = models.BooleanField(default=False)
     
     class Meta:
         ordering = ['-date', 'type', '-forbelt', 'member__idnumber']
@@ -174,7 +181,6 @@ class Payment(models.Model):
         else:
             return "Awaiting Payment"
         
-
 class PaymentType(models.Model):
     name = models.CharField(max_length=200)
     standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)

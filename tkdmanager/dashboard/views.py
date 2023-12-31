@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
-from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, GRADINGS
-from django.views import generic
+from django.shortcuts import render, get_object_or_404
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GRADINGS, LETTER_GRADES
+from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -9,8 +9,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
 from django.db.models import Q
 from django.utils import timezone
 
@@ -41,7 +41,7 @@ def index(request):
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
-    paginate_by = 15
+    paginate_by = 25
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
@@ -83,6 +83,29 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
         # Call the base implementation first to get the context
         context = super(GradingResultDetailView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
+        gr = self.get_object()
+        assessmentunits = gr.assessmentunit_set.all()
+        if assessmentunits:
+            maxpts = 0
+            apts = 0
+            for au in assessmentunits:
+                maxpts += au.max_pts
+                apts += au.achieved_pts
+            if gr.is_letter:
+                context['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
+            else:
+                context['total_max_pts'] = maxpts
+                context['total_achieved_pts'] = apts
+                context['total_percent'] = round((context['total_achieved_pts']/context['total_max_pts'])*100)
+            
+        return context
+
+
+    """
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(GradingResultDetailView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
         maxpts = 0
         apts = 0
         if self.get_object().assessmentunit_set.all():
@@ -96,10 +119,11 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
 
         
         return context
+    """
     
 class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
-    paginate_by = 15
+    paginate_by = 25
 
     def get_queryset(self):
         queryset = GradingResult.objects.all()
@@ -137,7 +161,7 @@ class MemberDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("members")
 
 class GradingResultCreate(LoginRequiredMixin, CreateView):
-    form_class = GradingResultForm
+    form_class = GradingResultCreateForm
     model = GradingResult
     template_name = 'dashboard/gradingresult_form.html'
 
@@ -150,7 +174,10 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+        if self.object.is_letter:
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+        else:
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
     
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
@@ -165,7 +192,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
-    form_class = GradingResultForm
+    form_class = GradingResultUpdateForm
     template_name = 'dashboard/gradingresult_form.html'
     model = GradingResult
 
@@ -176,9 +203,12 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
         target.belt = target.member2gradings.order_by('-date').first().forbelt
         target.save()
         return response
-
+    
     def get_success_url(self):
-        return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+        if self.object.is_letter:
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+        else:
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
 
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
@@ -217,9 +247,32 @@ def manageGradingResult(request, **kwargs):
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
+@login_required
+def manageGradingResultLetter(request, **kwargs):
+    gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
+    
+    if request.method == "POST":
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        if formset.is_valid():
+            for form in formset:
+                unit = form.cleaned_data.get('unit')
+                print(f'Unit: {unit}')
+                if form.cleaned_data.get('unit'):
+                    print("Saved!")
+                    form.save()
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                obj.delete()
+            # Do something. Should generally end with a redirect. For example:
+            return HttpResponseRedirect(gradingresult.get_absolute_url())
+    else:
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+    return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})    
+
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
-    paginate_by = 15
+    paginate_by = 25
 
     def get_queryset(self):
         type = self.request.GET.get('type')
@@ -255,7 +308,7 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
 
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
-    paginate_by = 15
+    paginate_by = 25
 
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
@@ -271,3 +324,9 @@ class PaymentUpdate(LoginRequiredMixin, UpdateView):
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
     success_url = reverse_lazy("payments")
+
+class GetStandardAmountView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        payment_type = get_object_or_404(PaymentType, pk=pk)
+        standard_amount = payment_type.standard_amount
+        return JsonResponse({'standard_amount': standard_amount})
