@@ -31,4 +31,9 @@ urlpatterns = [
     path('payment/<int:pk>/update', views.PaymentUpdate.as_view(), name='update-payment'),
     path('payment/<int:pk>/delete', views.PaymentDelete.as_view(), name='delete-payment'),
     path('paymenttype/<int:pk>/get_standard_amount', views.GetStandardAmountView.as_view(), name='payment-get-standard-amount'),
+    path('gradinginvite/<int:pk>/', views.GradingInviteDetailView.as_view(), name='grading-invite-detail'),
+    path('gradinginvites/', views.GradingInviteListView.as_view(), name='grading-invites'),
+    path('gradinginvite/<int:pk>/update/', views.GradingInviteUpdateView.as_view(), name='grading-invite-update'),
+    path('gradinginvite/create/', views.GradingInviteCreateView.as_view(), name='grading-invite-create'),
+    path('gradinginvite/<int:pk>/delete/', views.GradingInviteDeleteView.as_view(), name='grading-invite-delete')
 ]

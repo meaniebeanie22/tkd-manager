@@ -1,6 +1,6 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GRADINGS, LETTER_GRADES
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, GRADINGS, LETTER_GRADES
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm
 from django.db.models import Q
 from django.utils import timezone
 
@@ -309,3 +309,22 @@ class GetStandardAmountView(LoginRequiredMixin, View):
         payment_type = get_object_or_404(PaymentType, pk=pk)
         standard_amount = payment_type.standard_amount
         return JsonResponse({'standard_amount': standard_amount})
+    
+class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
+    model = GradingInvite
+
+class GradingInviteListView(LoginRequiredMixin, generic.DetailView):
+    model = GradingInvite
+    paginate_by = 25
+
+class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
+    model = GradingInvite
+    success_url = reverse_lazy("grading-invites")
+
+class GradingInviteCreateView(LoginRequiredMixin, CreateView):
+    model = GradingInvite
+    form_class = GradingInviteForm
+
+class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
+    model = GradingInvite
+    form_class = GradingInviteForm

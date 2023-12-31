@@ -1,6 +1,6 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
 from django.forms.widgets import DateInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 
 class GradingResultUpdateForm(ModelForm):
@@ -10,6 +10,9 @@ class GradingResultUpdateForm(ModelForm):
     class Meta:
         model = GradingResult
         fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+        widgets = {
+            'date': DateInput(attrs={'type': 'date'}),
+        }
 
 class GradingResultCreateForm(ModelForm):
     is_letter = BooleanField(required=False)
@@ -18,6 +21,9 @@ class GradingResultCreateForm(ModelForm):
     class Meta:
         model = GradingResult
         fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+        widgets = {
+            'date': DateInput(attrs={'type': 'date'}),
+        }
 
 class MemberForm(ModelForm):
     class Meta:
@@ -71,4 +77,12 @@ class AssessmentUnitLetterForm(ModelForm):
     class Meta:
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']
+
+class GradingInviteForm(ModelForm):
+    class Meta:
+        model = GradingInvite
+        fields = ['member', 'forbelt', 'type', 'date', 'issued_by']
+        widgets = {
+            'date': DateInput(attrs={'type': 'date'}),
+        }
 
