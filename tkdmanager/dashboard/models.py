@@ -108,8 +108,7 @@ class AssessmentUnit(models.Model):
         return f'{self.unit} - {self.grading_result}'
     
     def get_letter_rep(self):
-        return LETTER_GRADES[self.achieved_pts]
-           
+        return LETTER_GRADES[self.achieved_pts]          
 
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
@@ -119,7 +118,7 @@ class GradingResult(models.Model):
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
-    is_letter = models.BooleanField(default=False)
+    is_letter = models.BooleanField(default=False, blank=True, null=True)
     
     class Meta:
         ordering = ['-date', 'type', '-forbelt', 'member__idnumber']

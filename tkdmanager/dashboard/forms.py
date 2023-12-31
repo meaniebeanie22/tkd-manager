@@ -1,12 +1,19 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
 from django.forms.widgets import DateInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, BELT_CHOICES, GRADINGS, LETTER_GRADES
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 
-class GradingResultForm(ModelForm):
+class GradingResultUpdateForm(ModelForm):
+    is_letter = BooleanField(disabled=True, required=False)
+
     class Meta:
         model = GradingResult
-        fields = ['member','date','type','forbelt','assessor','comments','award']
+        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+
+class GradingResultCreateForm(ModelForm):
+    class Meta:
+        model = GradingResult
+        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
 
 class MemberForm(ModelForm):
     class Meta:
@@ -51,9 +58,12 @@ class PaymentForm(ModelForm):
         }
 
 class AssessmentUnitLetterForm(ModelForm):
-    achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES))
+    BLANK_CHOICE = [(None, '---------')]
+
+    achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
     max_pts = IntegerField(initial=7, widget=HiddenInput())
+    unit = ChoiceField(choices=ASSESSMENT_UNITS + BLANK_CHOICE, required=False)
     class Meta:
         model = AssessmentUnit
-        fields = ['unit', 'achieved_pts', 'max_pts', 'grading_result']
+        fields = ['unit', 'achieved_pts', 'max_pts']
 

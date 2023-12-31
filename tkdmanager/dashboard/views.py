@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import GradingResultForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
 from django.db.models import Q
 from django.utils import timezone
 
@@ -161,7 +161,7 @@ class MemberDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("members")
 
 class GradingResultCreate(LoginRequiredMixin, CreateView):
-    form_class = GradingResultForm
+    form_class = GradingResultCreateForm
     model = GradingResult
     template_name = 'dashboard/gradingresult_form.html'
 
@@ -192,7 +192,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
-    form_class = GradingResultForm
+    form_class = GradingResultUpdateForm
     template_name = 'dashboard/gradingresult_form.html'
     model = GradingResult
 
@@ -203,9 +203,14 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
         target.belt = target.member2gradings.order_by('-date').first().forbelt
         target.save()
         return response
-
+    
     def get_success_url(self):
-        return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+        print(self.object.is_letter)
+        if self.object.is_letter:
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+        else:
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+
 
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
@@ -257,7 +262,7 @@ def manageGradingResultLetter(request, **kwargs):
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
-    return render(request, 'dashboard/gradingresult_form3.html', {'formset': formset})    
+    return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})    
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
