@@ -9,6 +9,11 @@
         <div class="card-body">
           <h4 class="card-title">Personal Info</h4>
           <ul class="list-group list-group-flush">
+            {% if member.active %}
+            <li class="list-group-item" style="color:lime;">Active</li>
+            {% else %}
+            <li class="list-group-item" style="color:red;">Inactive</li>
+            {% endif %}
             <li class="list-group-item">{% if member.date_of_birth %}
               DOB - {{ member.date_of_birth|date:"d/m/y" }}
             {% else %}
@@ -58,6 +63,11 @@
             <li class="list-group-item">Classes taught this term: {{ member.instructors2classes.all.count }}</li>
             <li class="list-group-item">Hours taught this term: {{ hours_taught }}</li>
             {% endif %}
+            <li class="list-group-item">Types of classes attended:
+                {% for type in member.get_class_types_pretty %}
+                  <li class="list-group-item"> - {{ type }}</li>
+                {% endfor %}
+            </li>
           </ul>
         </div>
       </div>

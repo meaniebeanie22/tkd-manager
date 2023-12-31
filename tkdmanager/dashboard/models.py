@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -92,7 +93,20 @@ class Member(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member."""
-        return reverse('member-detail', args=[str(self.id)]) 
+        return reverse('member-detail', args=[str(self.id)])
+
+    def get_class_types_pretty(self):
+        today = datetime.now().date()
+        six_months_ago = today - timedelta(days=6 * 30)
+        class_types = set(obj.get_type_display() for obj in self.students2classes.filter(date__gte=six_months_ago))
+        return class_types
+    
+    def get_class_types(self):
+        today = datetime.now().date()
+        six_months_ago = today - timedelta(days=6 * 30)
+        classes_queryset = self.students2classes.filter(date__gte=six_months_ago)
+        class_types = classes_queryset.values_list('type', flat=True).distinct()
+        return class_types
     
 class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""
