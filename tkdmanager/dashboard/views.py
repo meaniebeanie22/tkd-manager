@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
-from django.shortcuts import render
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, GRADINGS, LETTER_GRADES
-from django.views import generic
+from django.shortcuts import render, get_object_or_404
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GRADINGS, LETTER_GRADES
+from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
 from django.db.models import Q
 from django.utils import timezone
@@ -41,7 +41,7 @@ def index(request):
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
-    paginate_by = 15
+    paginate_by = 25
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
@@ -123,7 +123,7 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
     
 class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
-    paginate_by = 15
+    paginate_by = 25
 
     def get_queryset(self):
         queryset = GradingResult.objects.all()
@@ -272,7 +272,7 @@ def manageGradingResultLetter(request, **kwargs):
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
-    paginate_by = 15
+    paginate_by = 25
 
     def get_queryset(self):
         type = self.request.GET.get('type')
@@ -308,7 +308,7 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
 
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
-    paginate_by = 15
+    paginate_by = 25
 
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
@@ -324,3 +324,9 @@ class PaymentUpdate(LoginRequiredMixin, UpdateView):
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
     success_url = reverse_lazy("payments")
+
+class GetStandardAmountView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        payment_type = get_object_or_404(PaymentType, pk=pk)
+        standard_amount = payment_type.standard_amount
+        return JsonResponse({'standard_amount': standard_amount})

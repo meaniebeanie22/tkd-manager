@@ -118,7 +118,7 @@ class GradingResult(models.Model):
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=200, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
-    is_letter = models.BooleanField(default=False, blank=True, null=True)
+    is_letter = models.BooleanField(default=False)
     
     class Meta:
         ordering = ['-date', 'type', '-forbelt', 'member__idnumber']

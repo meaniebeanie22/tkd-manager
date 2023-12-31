@@ -30,4 +30,5 @@ urlpatterns = [
     path('payment/create', views.PaymentCreate.as_view(), name='add-payment'),
     path('payment/<int:pk>/update', views.PaymentUpdate.as_view(), name='update-payment'),
     path('payment/<int:pk>/delete', views.PaymentDelete.as_view(), name='delete-payment'),
+    path('paymenttype/<int:pk>/get_standard_amount', views.GetStandardAmountView.as_view(), name='payment-get-standard-amount'),
 ]
