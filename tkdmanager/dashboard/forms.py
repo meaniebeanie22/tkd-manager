@@ -52,7 +52,7 @@ class GradingResultSearchForm(Form):
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={'type': 'date'}))
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
-    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False)
+    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
     assessor = ModelChoiceField(queryset=Member.objects.all(), required=False)
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
     
@@ -81,8 +81,8 @@ class AssessmentUnitLetterForm(ModelForm):
 class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
-        fields = ['member', 'forbelt', 'type', 'date', 'issued_by']
+        fields = ['member', 'forbelt', 'type', 'grading_date', 'issued_by']
         widgets = {
-            'date': DateInput(attrs={'type': 'date'}),
+            'grading_date': DateInput(attrs={'type': 'date'}),
         }
 
