@@ -366,7 +366,8 @@ class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
 
 @login_required
 def pdf_view(request, pk, **kwargs):
+    gi = get_object_or_404(GradingInvite, pk=pk)
     data = {
-        'gradinginvite': get_object_or_404(GradingInvite, pk=pk)
+        'gradinginvite': gi
     }
-    return renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data)
+    return renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
