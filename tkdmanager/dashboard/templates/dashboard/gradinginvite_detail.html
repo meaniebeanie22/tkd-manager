@@ -11,7 +11,11 @@
           <li class="list-group-item">Type: {{ gradinginvite.get_grading_type_display }} </li>
           <li class="list-group-item">Grading Date: {{ gradinginvite.grading_date|date:"d/m/y" }}</li>
           <li class="list-group-item">Issued by: {{ gradinginvite.issued_by }}</li>
-          <li class="list-group-item"><a href="{{ gradinginvite.payment.get_absolute_url }}">Payment: {{ gradinginvite.payment }}</a></li>
+          {% if gradinginvite.payment %}
+            <li class="list-group-item"><a href="{{ gradinginvite.payment.get_absolute_url }}">Payment: {{ gradinginvite.payment }}</a></li>
+          {% else %}
+            <li class="list-group-item">No payment yet, <a href="{% url 'create-payment' %}">Create a payment</a></li>
+          {% endif %}
         </ul>
         <br>
         <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading-invite' gradinginvite.pk %}">Edit</a>

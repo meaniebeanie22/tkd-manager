@@ -152,7 +152,7 @@ class GradingInvite(models.Model):
     grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_date = models.DateField()
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True)
+    payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'{self.grading_type} on {self.grading_date} for {self.get_forbelt_display()}, by {self.member}'

@@ -9,42 +9,61 @@
   </table>
   <input type="submit" value="Submit" />
   <!-- Add this script after the jQuery script -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script>
-  $(document).ready(function() {
-      // Function to update grading_invite options based on the selected member
-      function updateGradingInviteOptions() {
-          var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
-          var gradingInviteField = $('#id_grading_invite');  // Assuming 'id_grading_invite' is the ID of the grading_invite field
-  
-          // Make an AJAX request to fetch the filtered grading invites
-          $.ajax({
-              url: '/dashboard/member/' + selectedMember + '/get_grading_invites/',  // Replace with the actual URL to your filtering view
-              dataType: 'json',
-              success: function(data) {
-                  // Clear existing options and add new options
-                  gradingInviteField.empty();
-                  $.each(data, function(index, option) {
-                      gradingInviteField.append($('<option>', {
-                          value: option.value,
-                          text: option.label
-                      }));
-                  });
-              },
-              error: function(xhr, status, error) {
-                  console.error('Error fetching grading invites:', error);
-                  // Handle error, e.g., display a message to the user
-              }
-          });
-      }
-  
-      // Bind the function to the change event of the member field
-      $('#id_member').change(updateGradingInviteOptions);
-  
-      // Trigger the function on page load if a member is pre-selected (e.g., during editing)
-      updateGradingInviteOptions();
-  });
-  </script>
-  
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        function updateGradingInviteOptions() {
+            var selectedMember = $('#id_member').val();
+            var gradingInviteField = $('#id_grading_invite');
+
+            $.ajax({
+                url: '/dashboard/member/' + selectedMember + '/get_grading_invites/',
+                dataType: 'json',
+                success: function(data) {
+                    gradingInviteField.empty();
+                    $.each(data, function(index, option) {
+                        gradingInviteField.append($('<option>', {
+                            value: option.value,
+                            text: option.label
+                        }));
+                    });
+
+                    // Trigger the change event on the grading_invite field
+                    gradingInviteField.trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching grading invites:', error);
+                }
+            });
+        }
+
+        function updateGradingInviteDetails() {
+            var selectedGradingInvite = $('#id_grading_invite').val();
+
+            if (selectedGradingInvite) {
+                $.ajax({
+                    url: '/dashboard/gradinginvite/' + selectedGradingInvite + '/get_details/',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Update the form fields with grading invite details
+                        $('#id_forbelt').val(data.forbelt);
+                        $('#id_type').val(data.grading_type);
+                        $('#id_grading_date').val(data.grading_date);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching grading invite details:', error);
+                    }
+                });
+            }
+        }
+
+        $('#id_member').change(updateGradingInviteOptions);
+        $('#id_grading_invite').change(updateGradingInviteDetails);
+
+        // Trigger the functions on page load if member and grading_invite are pre-selected
+        updateGradingInviteOptions();
+        updateGradingInviteDetails();
+    });
+    </script> 
 </form>
 {% endblock %}

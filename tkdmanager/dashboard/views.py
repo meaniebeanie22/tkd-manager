@@ -314,14 +314,13 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         grading_invite = get_object_or_404(GradingInvite, pk=pk)
         response = {
-            'member': grading_invite.member,
             'forbelt': grading_invite.forbelt,
-            'type': grading_invite.type,
+            'grading_type': grading_invite.grading_type,
             'grading_date': grading_invite.grading_date,
         }
         return JsonResponse(response)
     
-class MemberGetGradingInvites(View):
+class MemberGetGradingInvites(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
