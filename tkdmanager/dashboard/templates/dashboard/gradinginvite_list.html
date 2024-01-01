@@ -1,0 +1,30 @@
+{% extends 'base_generic.html' %}
+
+
+{% block content %}
+<h1>Grading Invites</h1>
+{% if gradinginvite_list %}
+  <table style="width: 100%;">
+    <tr>
+      <th>Link</th>
+      <th>Type</th>
+      <th>Date & Time</th>
+      <th>Member</th>
+      <th>For Belt</th>
+      <th>Payment</th>
+    </tr>
+    {% for gi in gradinginvite_list %}
+      <tr class="content">
+        <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
+        <td>{{ gi.get_grading_type_display }}</td>
+        <td>{{ gi.grading_datetime|date:"d/m/y" }}</td>
+        <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
+        <td>{{ gi.get_forbelt_display }}</td>
+        <td><a href="{{ gi.payment.get_absolute_url }}" {% if gi.payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif gi.payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ gi.payment }}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no grading invites.</p>
+  {% endif %}
+{% endblock %}

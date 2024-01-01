@@ -316,7 +316,7 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
         response = {
             'forbelt': grading_invite.forbelt,
             'grading_type': grading_invite.grading_type,
-            'grading_date': grading_invite.grading_date,
+            'grading_datetime': grading_invite.grading_datetime,
         }
         return JsonResponse(response)
     
@@ -332,16 +332,28 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
 
+class MemberGetPayments(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+
+        today = datetime.now().date()
+        six_months_before = today - timedelta(days=6 * 30)
+
+        payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all()
+
+        data = [{'value': payment.id, 'label': str(payment)} for payment in payments]
+        return JsonResponse(data, safe=False)
+
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
     model = GradingInvite
 
-class GradingInviteListView(LoginRequiredMixin, generic.DetailView):
+class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
     paginate_by = 25
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
     model = GradingInvite
-    success_url = reverse_lazy("grading-invites")
+    success_url = reverse_lazy("gradinginvites")
 
 class GradingInviteCreateView(LoginRequiredMixin, CreateView):
     model = GradingInvite

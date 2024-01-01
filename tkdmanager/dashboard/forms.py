@@ -81,8 +81,8 @@ class AssessmentUnitLetterForm(ModelForm):
 class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
-        fields = ['member', 'forbelt', 'grading_type', 'grading_date', 'issued_by', 'payment']
+        fields = ['member', 'forbelt', 'grading_type', 'grading_datetime', 'issued_by', 'payment']
         widgets = {
-            'grading_date': DateInput(attrs={'type': 'date'}),
+            'grading_datetime': DateInput(attrs={'type': 'datetime-local'}),
         }
 

@@ -1,0 +1,62 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .grading-invitation {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .invitation-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1, h2, h3 {
+        margin: 0;
+    }
+
+    .invitation-details {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .details-label {
+        font-weight: bold;
+    }
+
+    .invitation-footer {
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+<div class="grading-invitation">
+    <div class="invitation-header">
+        <h1>Grading Invitation</h1>
+    </div>
+
+    <div class="invitation-details">
+        <p><span class="details-label">Member:</span> John Doe</p>
+        <p><span class="details-label">Belt:</span> Black Belt</p>
+        <p><span class="details-label">Type of Grading:</span> Taekwondo</p>
+        <p><span class="details-label">Date and Time:</span> January 15, 2024 - 2:00 PM</p>
+        <p><span class="details-label">Cost:</span> $50.00</p>
+        <p><span class="details-label">Payment Due:</span> January 10, 2024</p>
+    </div>
+
+    <div class="invitation-footer">
+        <p>We look forward to your participation!</p>
+    </div>
+</div>
+{% endblock %}
