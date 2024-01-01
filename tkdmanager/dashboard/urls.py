@@ -31,4 +31,13 @@ urlpatterns = [
     path('payment/<int:pk>/update', views.PaymentUpdate.as_view(), name='update-payment'),
     path('payment/<int:pk>/delete', views.PaymentDelete.as_view(), name='delete-payment'),
     path('paymenttype/<int:pk>/get_standard_amount', views.GetStandardAmountView.as_view(), name='payment-get-standard-amount'),
+    path('gradinginvite/<int:pk>/download/', views.pdf_view, name='grading-invite-download'),
+    path('gradinginvite/<int:pk>/', views.GradingInviteDetailView.as_view(), name='grading-invite-detail'),
+    path('gradinginvites/', views.GradingInviteListView.as_view(), name='gradinginvites'),
+    path('gradinginvite/<int:pk>/update/', views.GradingInviteUpdateView.as_view(), name='update-grading-invite'),
+    path('gradinginvite/create/', views.GradingInviteCreateView.as_view(), name='add-grading-invite'),
+    path('gradinginvite/<int:pk>/delete/', views.GradingInviteDeleteView.as_view(), name='delete-grading-invite'),
+    path('gradinginvite/<int:pk>/get_details/', views.GetGradingInviteDetailView.as_view(), name='grading-invite-get-details'),
+    path('member/<int:pk>/get_grading_invites/', views.MemberGetGradingInvites.as_view(), name='member-get-grading-invites'),
+    path('member/<int:pk>/get_payments/', views.MemberGetPayments.as_view(), name='member-get-payments'),
 ]

@@ -8,5 +8,60 @@
     {{ form.as_table }}
   </table>
   <input type="submit" value="Submit" />
+  <!-- Add this script after the  script -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        function updateGradingInviteOptions() {
+            var selectedMember = $('#id_member').val();
+            var gradingInviteField = $('#id_grading_invite');
+
+            $.ajax({
+                url: '/dashboard/member/' + selectedMember + '/get_grading_invites/',
+                dataType: 'json',
+                success: function(data) {
+                    gradingInviteField.empty();
+                    $.each(data, function(index, option) {
+                        gradingInviteField.append($('<option>', {
+                            value: option.value,
+                            text: option.label
+                        }));
+                    });
+
+                    // Trigger the change event on the grading_invite field
+                    gradingInviteField.trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching grading invites:', error);
+                }
+            });
+        }
+
+        function updateGradingInviteDetails() {
+            var selectedGradingInvite = $('#id_grading_invite').val();
+
+            if (selectedGradingInvite) {
+                $.ajax({
+                    url: '/dashboard/gradinginvite/' + selectedGradingInvite + '/get_details/',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Update the form fields with grading invite details
+                        $('#id_forbelt').val(data.forbelt);
+                        $('#id_type').val(data.grading_type);
+                        $('#id_grading_date').val(data.grading_date);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching grading invite details:', error);
+                    }
+                });
+            }
+        }
+
+        $('#id_member').change(updateGradingInviteOptions);
+        $('#id_grading_invite').change(updateGradingInviteDetails);
+
+        // Trigger the functions on page load if member and grading_invite are pre-selected
+    });
+    </script> 
 </form>
 {% endblock %}

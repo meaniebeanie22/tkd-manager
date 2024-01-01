@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading Invitation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .grading-invitation {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #333;
+        }
+
+        .invitation-header {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #e44d26;
+        }
+
+        .invitation-details {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .details-label {
+            font-weight: bold;
+            color: #e44d26;
+        }
+
+        .invitation-footer {
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="grading-invitation">
+        <div class="invitation-header">
+            <h1>Grading Invitation</h1>
+        </div>
+
+        <div class="invitation-details">
+            <p><span class="details-label">Member:</span> {{ gradinginvite.member.first_name }} {{ gradinginvite.member.last_name }}</p>
+            <p><span class="details-label">ID No.:</span> {{ gradinginvite.member.idnumber }}</p>
+            <p><span class="details-label">Belt:</span> {{ gradinginvite.get_forbelt_display }}</p>
+            <p><span class="details-label">Type of Grading:</span> {{ gradinginvite.get_grading_type_display }}</p>
+            <p><span class="details-label">Date and Time:</span> {{ gradinginvite.grading_datetime }}</p>
+            <p><span class="details-label">Cost:</span> ${{ gradinginvite.payment.amount_due }}</p>
+            <p><span class="details-label">Payment Due:</span> {{ gradinginvite.payment.date_due }}</p>
+        </div>
+
+        <div class="invitation-footer">
+            <p>We look forward to your participation!</p>
+        </div>
+    </div>
+</body>
+</html>

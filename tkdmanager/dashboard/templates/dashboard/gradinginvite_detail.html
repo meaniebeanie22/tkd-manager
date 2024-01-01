@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ gradinginvite }}</h1>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><a href="{{ gradinginvite.member.get_absolute_url }}">Member: {{ gradinginvite.member }}</a></li>
+          <li class="list-group-item">For: {{ gradinginvite.get_forbelt_display }}</li>
+          <li class="list-group-item">Type: {{ gradinginvite.get_grading_type_display }} </li>
+          <li class="list-group-item">Grading Date & Time: {{ gradinginvite.grading_datetime }}</li>
+          <li class="list-group-item">Issued by: {{ gradinginvite.issued_by }}</li>
+          {% if gradinginvite.payment %}
+            <li class="list-group-item"><a href="{{ gradinginvite.payment.get_absolute_url }}">Payment: {{ gradinginvite.payment }}</a></li>
+          {% else %}
+            <li class="list-group-item">No payment yet, <a href="{% url 'add-payment' %}">Create a payment</a></li>
+          {% endif %}
+        </ul>
+        <br>
+        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading-invite' gradinginvite.pk %}">Edit</a>
+        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-grading-invite' gradinginvite.pk %}">Delete</a>
+        <a class="btn btn-outline-secondary btn-outline-thicker float-end" href="{% url 'grading-invite-download' gradinginvite.pk %}">Download</a>      
+      </div>
+    </div>
+  </div>
+{% endblock %}

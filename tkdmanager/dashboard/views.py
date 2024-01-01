@@ -1,6 +1,6 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GRADINGS, LETTER_GRADES
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, GRADINGS, LETTER_GRADES
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,9 +10,10 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm
 from django.db.models import Q
 from django.utils import timezone
+from dashboard import renderers
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -309,3 +310,63 @@ class GetStandardAmountView(LoginRequiredMixin, View):
         payment_type = get_object_or_404(PaymentType, pk=pk)
         standard_amount = payment_type.standard_amount
         return JsonResponse({'standard_amount': standard_amount})
+
+class GetGradingInviteDetailView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        grading_invite = get_object_or_404(GradingInvite, pk=pk)
+        response = {
+            'forbelt': grading_invite.forbelt,
+            'grading_type': grading_invite.grading_type,
+            'grading_datetime': grading_invite.grading_datetime,
+        }
+        return JsonResponse(response)
+    
+class MemberGetGradingInvites(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+
+        today = datetime.now().date()
+        six_months_before = today - timedelta(days=6 * 30)
+
+        grading_invites = selected_member.gradinginvite_set.filter(grading_date__gte=six_months_before).all()
+
+        data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
+        return JsonResponse(data, safe=False)
+
+class MemberGetPayments(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+
+        today = datetime.now().date()
+        six_months_before = today - timedelta(days=6 * 30)
+
+        payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all()
+
+        data = [{'value': payment.id, 'label': str(payment)} for payment in payments]
+        return JsonResponse(data, safe=False)
+
+class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
+    model = GradingInvite
+
+class GradingInviteListView(LoginRequiredMixin, generic.ListView):
+    model = GradingInvite
+    paginate_by = 25
+
+class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
+    model = GradingInvite
+    success_url = reverse_lazy("gradinginvites")
+
+class GradingInviteCreateView(LoginRequiredMixin, CreateView):
+    model = GradingInvite
+    form_class = GradingInviteForm
+
+class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
+    model = GradingInvite
+    form_class = GradingInviteForm
+
+@login_required
+def pdf_view(request, pk, **kwargs):
+    data = {
+        'gradinginvite': get_object_or_404(GradingInvite, pk=pk)
+    }
+    return renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data)
