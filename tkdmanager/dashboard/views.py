@@ -309,7 +309,30 @@ class GetStandardAmountView(LoginRequiredMixin, View):
         payment_type = get_object_or_404(PaymentType, pk=pk)
         standard_amount = payment_type.standard_amount
         return JsonResponse({'standard_amount': standard_amount})
+
+class GetGradingInviteDetailView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        grading_invite = get_object_or_404(GradingInvite, pk=pk)
+        response = {
+            'member': grading_invite.member,
+            'forbelt': grading_invite.forbelt,
+            'type': grading_invite.type,
+            'grading_date': grading_invite.grading_date,
+        }
+        return JsonResponse(response)
     
+class MemberGetGradingInvites(View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+
+        today = datetime.now().date()
+        six_months_before = today - timedelta(days=6 * 30)
+
+        grading_invites = selected_member.gradinginvite_set.filter(grading_date__gte=six_months_before).all()
+
+        data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
+        return JsonResponse(data, safe=False)
+
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
     model = GradingInvite
 

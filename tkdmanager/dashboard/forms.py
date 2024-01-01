@@ -9,7 +9,7 @@ class GradingResultUpdateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+        fields = ['member','grading_invite','date','type','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
         }
@@ -20,7 +20,7 @@ class GradingResultCreateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','date','type','forbelt','assessor','comments','award', 'is_letter']
+        fields = ['member','grading_invite','date','type','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
         }
@@ -81,7 +81,7 @@ class AssessmentUnitLetterForm(ModelForm):
 class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
-        fields = ['member', 'forbelt', 'type', 'grading_date', 'issued_by']
+        fields = ['member', 'forbelt', 'grading_type', 'grading_date', 'issued_by', 'payment']
         widgets = {
             'grading_date': DateInput(attrs={'type': 'date'}),
         }

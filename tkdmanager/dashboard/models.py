@@ -134,7 +134,7 @@ class GradingResult(models.Model):
     comments = models.CharField(max_length=200, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
-    grading_invite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True)
+    grading_invite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
     
     class Meta:
         ordering = ['-date', 'type', '-forbelt', 'member__idnumber']
@@ -147,15 +147,15 @@ class GradingResult(models.Model):
         return reverse('grading-result-detail', args=[str(self.id)]) 
     
 class GradingInvite(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE,)
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
-    type = models.CharField(max_length=2, choices=GRADINGS)
+    grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_date = models.DateField()
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.type} on {self.date} for {self.get_forbelt_display}, by {self.member}'
+        return f'{self.grading_type} on {self.grading_date} for {self.get_forbelt_display()}, by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
