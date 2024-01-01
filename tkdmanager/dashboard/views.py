@@ -370,4 +370,4 @@ def pdf_view(request, pk, **kwargs):
     data = {
         'gradinginvite': gi
     }
-    return renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+    return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
