@@ -56,7 +56,6 @@ class GradingResultSearchForm(Form):
     assessor = ModelChoiceField(queryset=Member.objects.all(), required=False)
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
     
-
 class PaymentForm(ModelForm):
     date_created = DateTimeField(disabled=True, initial=timezone.now())
 

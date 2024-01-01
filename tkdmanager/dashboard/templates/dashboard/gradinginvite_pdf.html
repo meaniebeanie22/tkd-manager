@@ -47,12 +47,12 @@
     </div>
 
     <div class="invitation-details">
-        <p><span class="details-label">Member:</span> John Doe</p>
-        <p><span class="details-label">Belt:</span> Black Belt</p>
-        <p><span class="details-label">Type of Grading:</span> Taekwondo</p>
-        <p><span class="details-label">Date and Time:</span> January 15, 2024 - 2:00 PM</p>
-        <p><span class="details-label">Cost:</span> $50.00</p>
-        <p><span class="details-label">Payment Due:</span> January 10, 2024</p>
+        <p><span class="details-label">Member:</span> {{ gradinginvite.member }}</p>
+        <p><span class="details-label">Belt:</span> {{ gradinginvite.get_forbelt_display }}</p>
+        <p><span class="details-label">Type of Grading:</span> {{ gradinginvite.get_grading_type_display }}</p>
+        <p><span class="details-label">Date and Time:</span> {{ gradinginvite.grading_datetime }}</p>
+        <p><span class="details-label">Cost:</span> {{ gradinginvite.payment.amount_due }}</p>
+        <p><span class="details-label">Payment Due:</span> {{ gradinginvite.payment.date_due }}</p>
     </div>
 
     <div class="invitation-footer">

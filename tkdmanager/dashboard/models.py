@@ -150,15 +150,12 @@ class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
     grading_type = models.CharField(max_length=2, choices=GRADINGS)
-    grading_datetime = models.DateTimeField(null=True, blank=True, verbose_name="Grading Date")
+    grading_datetime = models.DateTimeField(verbose_name="Grading Date")
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        if self.grading_datetime:
-            return f'{self.grading_type} on {self.grading_datetime.strftime("%x")} for {self.get_forbelt_display()}, by {self.member}'
-        else:
-            return f'NOTIME {self.grading_type} for {self.get_forbelt_display()}, by {self.member}'
+        return f'{self.get_grading_type_display()} on {self.grading_datetime.strftime("%x")} for {self.get_forbelt_display()}, by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""

@@ -362,3 +362,7 @@ class GradingInviteCreateView(LoginRequiredMixin, CreateView):
 class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
+
+class GradingInviteDownloadView(LoginRequiredMixin, generic.DetailView):
+    model = GradingInvite
+    template_name = 'dashboard/gradinginvite_pdf.html'
