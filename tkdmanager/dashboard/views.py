@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm
 from django.db.models import Q
 from django.utils import timezone
+from dashboard import renderers
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -363,6 +364,9 @@ class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
-class GradingInviteDownloadView(LoginRequiredMixin, generic.DetailView):
-    model = GradingInvite
-    template_name = 'dashboard/gradinginvite_pdf.html'
+@login_required
+def pdf_view(request, pk, **kwargs):
+    data = {
+        'gradinginvite': get_object_or_404(GradingInvite, pk=pk)
+    }
+    return renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data)
