@@ -138,3 +138,5 @@ REST_FRAMEWORK = {
 }
 
 STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
+
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
