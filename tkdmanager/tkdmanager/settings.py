@@ -140,3 +140,9 @@ REST_FRAMEWORK = {
 STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
 
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
