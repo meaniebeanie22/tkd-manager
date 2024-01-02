@@ -132,6 +132,9 @@ class Grading(models.Model):
     grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
 
+    class Meta:
+        ordering = ['-grading_datetime', 'grading_type']
+
     def __str__(self):
         return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%x")}'
     
@@ -150,7 +153,7 @@ class GradingResult(models.Model):
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
     
     class Meta:
-        ordering = ['grading__grading_datetime', 'grading__grading_type', '-forbelt', 'member__idnumber']
+        ordering = ['grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
 
     def __str__(self):
         if self.grading:
@@ -168,6 +171,9 @@ class GradingInvite(models.Model):
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ['grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
 
     def __str__(self):
         if self.grading:
