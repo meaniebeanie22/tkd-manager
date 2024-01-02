@@ -17,4 +17,4 @@ RUN pip install -r requirements.txt
 
 COPY . ./
 
-CMD gunicorn tkdmanager.wsgi --log-file
+CMD gunicorn tkdmanager.wsgi --log-file -
