@@ -40,4 +40,9 @@ urlpatterns = [
     path('gradinginvite/<int:pk>/get_details/', views.GetGradingInviteDetailView.as_view(), name='grading-invite-get-details'),
     path('member/<int:pk>/get_grading_invites/', views.MemberGetGradingInvites.as_view(), name='member-get-grading-invites'),
     path('member/<int:pk>/get_payments/', views.MemberGetPayments.as_view(), name='member-get-payments'),
+    path('gradings/', views.GradingListView.as_view(), name='gradings'),
+    path('grading/<int:pk>/', views.GradingDetailView.as_view(), name='grading-detail'),
+    path('grading/<int:pk>/update/', views.GradingUpdateView.as_view(), name='update-grading'),
+    path('grading/<int:pk>/delete/', views.GradingDeleteView.as_view(), name='delete-grading'),
+    path('grading/create/', views.GradingCreateView.as_view(), name='add-grading'),
 ]

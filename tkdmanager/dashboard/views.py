@@ -1,16 +1,16 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, GRADINGS, LETTER_GRADES
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm
 from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
@@ -371,3 +371,22 @@ def pdf_view(request, pk, **kwargs):
         'gradinginvite': gi
     }
     return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+
+class GradingDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Grading
+
+class GradingListView(LoginRequiredMixin, generic.ListView):
+    model = Grading
+    paginate_by = 25
+
+class GradingDeleteView(LoginRequiredMixin, DeleteView):
+    model = Grading
+    success_url = reverse_lazy("gradings")
+
+class GradingCreateView(LoginRequiredMixin, CreateView):
+    model = Grading
+    form_class = GradingForm
+
+class GradingUpdateView(LoginRequiredMixin, UpdateView):
+    model = Grading
+    form_class = GradingForm

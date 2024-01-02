@@ -61,6 +61,9 @@ TL_INST_RANKS = [
 #FDCC+BB+AA+
 LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
 
+def time_in_a_month():
+    return(timezone.now()+timedelta(days=30))
+
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
@@ -125,22 +128,35 @@ class AssessmentUnit(models.Model):
     def get_letter_rep(self):
         return LETTER_GRADES[self.achieved_pts]          
 
+class Grading(models.Model):
+    grading_type = models.CharField(max_length=2, choices=GRADINGS)
+    grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
+
+    def __str__(self):
+        return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%x")}'
+    
+    def get_absolute_url(self):
+        """Returns the URL to access a detail record for this member's grading results."""
+        return reverse('grading-detail', args=[str(self.id)]) 
+
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
-    date = models.DateField()
-    type = models.CharField(max_length=2, choices=GRADINGS)
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
-    comments = models.CharField(max_length=200, blank=True)
+    comments = models.CharField(max_length=300, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
     grading_invite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
+    grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
     
     class Meta:
-        ordering = ['-date', 'type', '-forbelt', 'member__idnumber']
+        ordering = ['grading__grading_datetime', 'grading__grading_type', '-forbelt', 'member__idnumber']
 
     def __str__(self):
-        return f'{self.type} - {self.date}, by {self.member}'
+        if self.grading:
+            return f'{self.grading.get_grading_type_display()} - {self.grading.grading_datetime.strftime("%x")}, by {self.member}'
+        else:
+            return f'GRADINGRESULT_NULL_GRADING by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
@@ -149,13 +165,15 @@ class GradingResult(models.Model):
 class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
     forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
-    grading_type = models.CharField(max_length=2, choices=GRADINGS)
-    grading_datetime = models.DateTimeField(verbose_name="Grading Date")
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True)
+    payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
+    grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.get_grading_type_display()} on {self.grading_datetime.strftime("%x")} for {self.get_forbelt_display()}, by {self.member}'
+        if self.grading:
+            return f'{self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%x")} for {self.get_forbelt_display()}, by {self.member}'
+        else:
+            return f'GRADINGINVITE_NULL_GRADING for {self.get_forbelt_display()}, by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
@@ -183,7 +201,7 @@ class Payment(models.Model):
     member = models.ForeignKey(Member, help_text='Who needs to pay this?', on_delete=models.PROTECT)
     paymenttype = models.ForeignKey('PaymentType', help_text='What type of payment is this?', null=True, on_delete=models.SET_NULL, verbose_name='Payment type')
     date_created = models.DateTimeField(default=timezone.now)
-    date_due = models.DateTimeField()
+    date_due = models.DateTimeField(default=time_in_a_month)
     date_paid_in_full = models.DateTimeField(null=True, blank=True)
     amount_due = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     amount_paid = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount currently paid, in $', default=0)

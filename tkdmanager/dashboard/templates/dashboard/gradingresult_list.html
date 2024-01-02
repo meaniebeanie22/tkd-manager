@@ -37,8 +37,8 @@
     {% for gr in gradingresult_list %}
       <tr class="content">
         <td><a href="{{ gr.get_absolute_url }}">Link</a></td>
-        <td>{{ gr.type }}</td>
-        <td>{{ gr.date }}</td>
+        <td>{{ gr.grading.get_grading_type_display }}</td>
+        <td>{{ gr.grading.grading_datetime|date:"d/m/y" }}</td>
         <td><a href="{{ gr.member.get_absolute_url }}">{{ gr.member }}</a></td>
         <td>{{ gr.get_forbelt_display }}</td>
         <td>
