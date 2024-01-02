@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "hdsay71298yd8uoayd98qywd")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get("DEBUG") == "False":
@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'tkdmanager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'DjangoTKDManager',
+        'USER': 'postgres',
+        'PASSWORD': "DjangoDB",
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -141,8 +145,8 @@ STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
 
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = not(DEBUG)
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = not(DEBUG)
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = not(DEBUG)
