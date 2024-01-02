@@ -1,6 +1,6 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
-from django.forms.widgets import DateInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
+from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 
 class GradingResultUpdateForm(ModelForm):
@@ -9,10 +9,7 @@ class GradingResultUpdateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading_invite','date','type','forbelt','assessor','comments','award', 'is_letter']
-        widgets = {
-            'date': DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['member','grading_invite','grading','forbelt','assessor','comments','award', 'is_letter']
 
 class GradingResultCreateForm(ModelForm):
     is_letter = BooleanField(required=False)
@@ -20,7 +17,7 @@ class GradingResultCreateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading_invite','date','type','forbelt','assessor','comments','award', 'is_letter']
+        fields = ['member','grading_invite','grading','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
         }
@@ -49,8 +46,6 @@ class ClassForm(ModelForm):
 class GradingResultSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
-    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
-    date = DateField(required=False, widget=TextInput(attrs={'type': 'date'}))
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
     assessor = ModelChoiceField(queryset=Member.objects.all(), required=False)
@@ -80,8 +75,12 @@ class AssessmentUnitLetterForm(ModelForm):
 class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
-        fields = ['member', 'forbelt', 'grading_type', 'grading_datetime', 'issued_by', 'payment']
-        widgets = {
-            'grading_datetime': DateInput(attrs={'type': 'datetime-local'}),
-        }
+        fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
 
+class GradingForm(ModelForm):
+    class Meta:
+        model = Grading
+        fields = ['grading_datetime', 'grading_type']
+        widgets = {
+            'grading_datetime': DateTimeInput(attrs={'type': 'datetime-local'}), 
+        }
