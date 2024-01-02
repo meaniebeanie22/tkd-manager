@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Grading List</h1>
+  {% if grading_list %}
+  <table style="width: 100%;">
+    <tr>
+      <th>Link</th>
+      <th>Type</th>
+      <th>Date & Time</th>
+    </tr>
+    {% for grading in grading_list %}
+      <tr class="content">
+        <td><a href="{{ grading.get_absolute_url }}">Link</a></td>
+        <td>{{ grading.get_grading_type_display }}</td>
+        <td>{{ grading.grading_datetime }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no gradings.</p>
+  {% endif %}
+{% endblock %}

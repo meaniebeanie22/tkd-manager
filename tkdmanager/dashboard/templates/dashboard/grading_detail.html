@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>{{ grading }}</h1>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Details</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Type: {{ grading.get_grading_type_display }} </li>
+          <li class="list-group-item">Grading Date & Time: {{ grading.grading_datetime }}</li>
+        </ul>
+        <br>
+        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading' grading.pk %}">Edit</a>
+        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-grading' grading.pk %}">Delete</a>     
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Grading Invites</h4>
+            <ul class="list-group list-group-flush">
+            {% for invite in grading.gradinginvite_set.all %}
+                <li class="list-group-item"><a href="{{ invite.get_absolute_url }}">{{ invite }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Grading Results</h4>
+            <ul class="list-group list-group-flush">
+            {% for gradingresult in grading.gradingresult_set.all %}
+                <li class="list-group-item"><a href="{{ gradingresult.get_absolute_url }}">{{ gradingresult }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

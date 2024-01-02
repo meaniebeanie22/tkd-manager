@@ -16,6 +16,7 @@
           {% else %}
             <li class="list-group-item">No payment yet, <a href="{% url 'add-payment' %}">Create a payment</a></li>
           {% endif %}
+          <li class="list-group-item"><a href="{{ gradinginvite.grading.get_absolute_url }}">{{ gradinginvite.grading }}</a></li>
         </ul>
         <br>
         <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading-invite' gradinginvite.pk %}">Edit</a>
