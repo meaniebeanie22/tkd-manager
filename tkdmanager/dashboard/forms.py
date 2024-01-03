@@ -79,12 +79,6 @@ class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
-        widgets = {
-            'payment': AddAnotherWidgetWrapper(
-                forms.Select,
-                reverse_lazy('add-payment'),
-            )
-        }
 
 class GradingForm(ModelForm):
     class Meta:
