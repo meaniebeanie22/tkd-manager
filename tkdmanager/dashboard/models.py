@@ -83,7 +83,7 @@ class Member(models.Model):
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
-    belt = models.CharField(max_length=50, choices=BELT_CHOICES, blank=True)
+    belt = models.PositiveIntegerField(choices=BELT_CHOICES, blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
