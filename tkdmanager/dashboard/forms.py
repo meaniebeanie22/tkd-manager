@@ -4,7 +4,7 @@ from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit
 from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
-from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper, AddAnotherWidgetWrapper
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -80,10 +80,9 @@ class GradingInviteForm(ModelForm):
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
         widgets = {
-            'payment': AddAnotherEditSelectedWidgetWrapper(
+            'payment': AddAnotherWidgetWrapper(
                 forms.Select,
                 reverse_lazy('add-payment'),
-                reverse_lazy('update-payment', kwargs={'pk':['__fk__']}),
             )
         }
 
