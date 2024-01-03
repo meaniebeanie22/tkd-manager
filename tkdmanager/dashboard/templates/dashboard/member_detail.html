@@ -74,9 +74,13 @@
             <li class="list-group-item">Hours taught this term: {{ hours_taught }}</li>
             {% endif %}
             <li class="list-group-item">Types of classes attended:
+              {% if member.get_class_types_pretty %}
                 {% for type in member.get_class_types_pretty %}
                   <li class="list-group-item"> - {{ type }}</li>
                 {% endfor %}
+              {% else %}
+                <li class="list-group-item"> - None!</li>
+              {% endif %}
             </li>
           </ul>
         </div>
