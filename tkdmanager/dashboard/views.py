@@ -317,8 +317,7 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
         grading_invite = get_object_or_404(GradingInvite, pk=pk)
         response = {
             'forbelt': grading_invite.forbelt,
-            'grading_type': grading_invite.grading_type,
-            'grading_datetime': grading_invite.grading_datetime,
+            'grading': grading_invite.grading,
         }
         return JsonResponse(response)
     
