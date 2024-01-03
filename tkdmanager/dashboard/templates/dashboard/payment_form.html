@@ -6,9 +6,9 @@
   {% csrf_token %}
   <table>
     {{ form.as_table }}
-    <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
     {{ form.media }}
   </table>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
     $(document).ready(function () {
       function updateAmountDue() {
