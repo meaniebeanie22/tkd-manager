@@ -90,7 +90,7 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ['-belt','idnumber']
+        ordering = ['-belt','last_name']
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.idnumber})'

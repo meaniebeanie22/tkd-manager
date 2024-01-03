@@ -43,6 +43,8 @@ def index(request):
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     paginate_by = 25
+    ordering = ['-belt','last_name']
+
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
