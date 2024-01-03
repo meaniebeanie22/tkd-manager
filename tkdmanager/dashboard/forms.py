@@ -29,7 +29,7 @@ class MemberForm(ModelForm):
         model = Member
         fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
         widgets = {
-            'phone': TextInput(attrs={'type': 'tel'}),
+            'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
         }
 
