@@ -34,11 +34,9 @@
             <li>
               <form action="{% url 'admin:logout' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="dropdown-item">Logout</button>
+                <p><button type="submit" class="link"><span>Logout</span></button></p>
             </form>
             </li>
-            
-            <!-- <li><a href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li> -->
           </ul>
           <hr>
           <ul class="sidebar-nav">
