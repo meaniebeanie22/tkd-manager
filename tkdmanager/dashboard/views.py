@@ -331,7 +331,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         today = datetime.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
-        grading_invites = selected_member.gradinginvite_set.filter(grading_date__gte=six_months_before).all()
+        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).all()
 
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
