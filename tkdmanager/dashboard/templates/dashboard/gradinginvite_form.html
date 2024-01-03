@@ -2,15 +2,15 @@
 
 {% block content %}
 <h4>Add a Grading Invite</h4>
-{{ form.media }}
 <form action="" method="post">
   {% csrf_token %}
   <table>
     {{ form.as_table }}
+    <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+    {{ form.media }}
   </table>
   <input type="submit" value="Submit" />
    <!-- Add this script after the jQuery script -->
-   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
    <script>
    $(document).ready(function() {
        // Function to update grading_invite options based on the selected member
