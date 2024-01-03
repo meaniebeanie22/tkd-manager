@@ -11,7 +11,7 @@ class GradingResultUpdateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading_invite','grading','forbelt','assessor','comments','award', 'is_letter']
+        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
 
 class GradingResultCreateForm(ModelForm):
     is_letter = BooleanField(required=False)
@@ -19,7 +19,7 @@ class GradingResultCreateForm(ModelForm):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading_invite','grading','forbelt','assessor','comments','award', 'is_letter']
+        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
         }

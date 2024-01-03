@@ -149,7 +149,7 @@ class GradingResult(models.Model):
     comments = models.CharField(max_length=300, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
-    grading_invite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
+    gradinginvite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
     
     class Meta:

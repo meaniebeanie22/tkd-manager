@@ -19,5 +19,5 @@ class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = GradingResult
-        fields = ['member','date','type','forbelt','assessor','comments','award', 'assessmentunits']
+        fields = ['member','grading','forbelt','assessor','comments','award', 'assessmentunits','is_letter','gradinginvite']
     

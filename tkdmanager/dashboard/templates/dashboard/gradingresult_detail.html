@@ -5,7 +5,7 @@
   {% if gradingresult.member.date_of_birth %}
     <p>DOB - {{ gradingresult.member.date_of_birth|date:"d/m/y" }} <a href="{% url 'update-grading-result' gradingresult.pk %}">Edit</a> <a href="{% url 'delete-grading-result' gradingresult.pk %}">Delete</a></p>
   {% endif %}
-  <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_type_display }} - <a href="{{ gradingresult.grading_invite.get_absolute_url }}">Invite</a> - <a href="{{ gradingresult.grading.get_absolute_url }}">Grading</a></h4>
+  <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_type_display }} - <a href="{{ gradingresult.gradinginvite.get_absolute_url }}">Invite</a> - <a href="{{ gradingresult.grading.get_absolute_url }}">Grading</a></h4>
   <div style="margin-left:20px;margin-top:20px">
     <h5>Grading Units</h5>
     {% if gradingresult.assessmentunit_set.all %}

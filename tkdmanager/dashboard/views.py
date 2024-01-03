@@ -318,10 +318,10 @@ class GetStandardAmountView(LoginRequiredMixin, View):
 
 class GetGradingInviteDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        grading_invite = get_object_or_404(GradingInvite, pk=pk)
+        gradinginvite = get_object_or_404(GradingInvite, pk=pk)
         response = {
-            'forbelt': grading_invite.forbelt,
-            'grading': grading_invite.grading,
+            'forbelt': gradinginvite.forbelt,
+            'grading': gradinginvite.grading,
         }
         return JsonResponse(response)
     
