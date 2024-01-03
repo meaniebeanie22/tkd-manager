@@ -2,7 +2,9 @@ from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, Mo
 from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput
 from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
-from .widgets import RelatedFieldWidgetCanAdd
+from django import forms 
+from django.urls import reverse_lazy
+from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -73,16 +75,17 @@ class AssessmentUnitLetterForm(ModelForm):
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']
 
-class GradingInviteForm(ModelForm):
-    payment = ModelChoiceField(
-       required=False,
-       queryset=Payment.objects.all(),
-       widget=RelatedFieldWidgetCanAdd(Payment, related_url="add-payment")
-       )
-    
+class GradingInviteForm(ModelForm):   
     class Meta:
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
+        widgets = {
+            'payment': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('add-payment'),
+                reverse_lazy('update-payment', args=['__fk__']),
+            )
+        }
 
 class GradingForm(ModelForm):
     class Meta:

@@ -14,6 +14,7 @@ from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, 
 from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
+from django_addanother.views import UpdatePopupMixin, CreatePopupMixin
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -293,11 +294,11 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
 
-class PaymentCreate(LoginRequiredMixin, CreateView):
+class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Payment
     form_class = PaymentForm
 
-class PaymentUpdate(LoginRequiredMixin, UpdateView):
+class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
 
