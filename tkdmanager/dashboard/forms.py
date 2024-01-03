@@ -4,7 +4,6 @@ from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit
 from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
-from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper, AddAnotherWidgetWrapper
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
