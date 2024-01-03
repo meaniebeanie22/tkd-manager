@@ -175,7 +175,7 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     model = GradingResult
 
     def form_valid(self, form):
-        response = super(GradingResultCreate, self).form_valid(form)
+        response = super(GradingResultUpdate, self).form_valid(form)
         # do something with self.object
         target = self.object.member
         target.belt = target.member2gradings.order_by('-grading__grading_datetime').first().forbelt
