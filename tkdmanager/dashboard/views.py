@@ -118,9 +118,9 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
                 if field_name == 'date':
-                    filters['grading_datetime__date'] = value
+                    filters['grading.grading_datetime__date'] = value
                 elif field_name == 'type':
-                    filters['grading_type__exact'] = value
+                    filters['grading.grading_type__exact'] = value
                 else:
                     if value:
                         filters[field_name] = value
