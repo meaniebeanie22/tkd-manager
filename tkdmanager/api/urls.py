@@ -8,7 +8,7 @@ router.register(r'gradingresults', views.GradingResultViewSet)
 router.register(r'gradinginvites', views.GradingInviteViewSet)
 router.register(r'gradings', views.GradingViewSet)
 router.register(r'payments', views.PaymentViewSet)
-router.register(r'paymenttypes', views.PaymentTypeSerialzer)
+router.register(r'paymenttypes', views.PaymentTypeViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
