@@ -145,7 +145,7 @@ class Grading(models.Model):
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
-    forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=300, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
@@ -167,7 +167,7 @@ class GradingResult(models.Model):
     
 class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
-    forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
