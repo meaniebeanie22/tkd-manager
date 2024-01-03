@@ -33,11 +33,11 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Gradings</h4>
+          <h4 class="card-title">Grading Results</h4>
           <ul class="list-group list-group-flush">
             {% if member.member2gradings.all %}
               {% for gr in member.member2gradings.all %}
-                  <li class="list-group-item"><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }}) - {{ gr.get_forbelt_display }}
+                  <li class="list-group-item"><a href="{{ gr.get_absolute_url }}">{{ gr }}</a>
                   {% if gr.award_set.all %}
                   {% for award in gr.award_set.all %} - {{award}}{% endfor %}
                   {% endif %}            
@@ -48,7 +48,16 @@
             {% endif %}
               <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
-          
+          <h4 class="card-title">Grading Invites</h4>
+          <ul class="list-group list-group-flush">
+            {% if member.gradinginvite_set.all %}
+              {% for gi in member.gradinginvite_set.all %}
+                <li class="list-group-item"><a href="{{ gi.get_absolute_url }}"></a>{{ gi }}</li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">This member has not graded.</li>
+            {% endif %}
+          </ul>
         </div>
       </div>
     </div>
