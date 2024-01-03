@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from dashboard.models import GradingResult, AssessmentUnit
+from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer
+from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -27,4 +27,36 @@ class AssessmentUnitViewSet(viewsets.ModelViewSet):
     """
     queryset = AssessmentUnit.objects.all()
     serializer_class = AssessmentUnitSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GradingInviteViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for gradinginvites
+    """
+    queryset = GradingInvite.objects.all()
+    serializer_class = GradingInviteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GradingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for gradings
+    """
+    queryset = Grading.objects.all()
+    serializer_class = GradingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for payments
+    """
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PaymentTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for payment types
+    """
+    queryset = PaymentType.objects.all()
+    serializer_class = PaymentTypeSerialzer
     permission_classes = [permissions.IsAuthenticated]
