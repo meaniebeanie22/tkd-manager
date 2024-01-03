@@ -7,14 +7,14 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 BELT_CHOICES = [
-                ("White",      (('0', 'White Belt'), ('1', 'White ½'), ('2', 'White 1'), ('3', 'White 1 ½'), ('4', 'White 2'), ('5', 'White 2 ½'), ('6', 'White 3'), ('7', 'White-Orange'))),
-                ("Orange",     (('8', 'Orange Belt'), ('9', 'Orange ½'), ('10', 'Orange 1'), ('11', 'Orange 1 ½'), ('12', 'Orange 2'), ('13', 'Orange 2 ½'), ('14', 'Orange 3'), ('15', 'White-Yellow'))),
-                ("Yellow",     (('16', 'Yellow Belt'), ('17', 'Yellow ½'), ('18', 'Yellow 1'), ('19', 'Yellow 1 ½'), ('20', 'Yellow 2'), ('21', 'Yellow 2 ½'), ('22', 'Yellow 3'), ('23', 'White-Blue'))),
-                ("Blue",       (('24', 'Blue Belt'), ('25', 'Blue ½'), ('26', 'Blue 1'), ('27', 'Blue 1 ½'), ('28', 'Blue 2'), ('29', 'Blue 2 ½'), ('30', 'Blue 3'), ('31', 'White-Red'))),
-                ("Red",        (('32', 'Red Belt'), ('33', 'Red ½'), ('34', 'Red 1'), ('35', 'Red 1 ½'), ('36', 'Red 2'), ('37', 'Red 2 ½'), ('38', 'Red 3'))),
-                ("Cho-Dan Bo", (('39', 'Cho-Dan Bo 1'), ('40', 'Cho-Dan Bo 2'), ('41', 'Cho-Dan Bo 3'), ('42', 'Cho-Dan Bo 4'), ('43', 'Cho-Dan Bo 5'), ('44', 'Cho-Dan Bo 6'), ('45', 'Advanced Cho-Dan Bo'), ('46', 'Probationary Black Belt'))),
-                ("Black Belt", (('47', '1st Dan'), ('48', '2nd Dan'), ('49', '3rd Dan'), ('50', '4th Dan'), ('51', '5th Dan'), ('52', '6th Dan'), ('53', '7th Dan'), ('54', '8th Dan'), ('55', '9th Dan'))),
-                ]
+    ("White",      ((0, 'White Belt'), (1, 'White ½'), (2, 'White 1'), (3, 'White 1 ½'), (4, 'White 2'), (5, 'White 2 ½'), (6, 'White 3'), (7, 'White-Orange'))),
+    ("Orange",     ((8, 'Orange Belt'), (9, 'Orange ½'), (10, 'Orange 1'), (11, 'Orange 1 ½'), (12, 'Orange 2'), (13, 'Orange 2 ½'), (14, 'Orange 3'), (15, 'White-Yellow'))),
+    ("Yellow",     ((16, 'Yellow Belt'), (17, 'Yellow ½'), (18, 'Yellow 1'), (19, 'Yellow 1 ½'), (20, 'Yellow 2'), (21, 'Yellow 2 ½'), (22, 'Yellow 3'), (23, 'White-Blue'))),
+    ("Blue",       ((24, 'Blue Belt'), (25, 'Blue ½'), (26, 'Blue 1'), (27, 'Blue 1 ½'), (28, 'Blue 2'), (29, 'Blue 2 ½'), (30, 'Blue 3'), (31, 'White-Red'))),
+    ("Red",        ((32, 'Red Belt'), (33, 'Red ½'), (34, 'Red 1'), (35, 'Red 1 ½'), (36, 'Red 2'), (37, 'Red 2 ½'), (38, 'Red 3'))),
+    ("Cho-Dan Bo", ((39, 'Cho-Dan Bo 1'), (40, 'Cho-Dan Bo 2'), (41, 'Cho-Dan Bo 3'), (42, 'Cho-Dan Bo 4'), (43, 'Cho-Dan Bo 5'), (44, 'Cho-Dan Bo 6'), (45, 'Advanced Cho-Dan Bo'), (46, 'Probationary Black Belt'))),
+    ("Black Belt", ((47, '1st Dan'), (48, '2nd Dan'), (49, '3rd Dan'), (50, '4th Dan'), (51, '5th Dan'), (52, '6th Dan'), (53, '7th Dan'), (54, '8th Dan'), (55, '9th Dan'))),
+]
 
 ASSESSMENT_UNITS = [
     ('SD','Self Defense'),
@@ -83,14 +83,14 @@ class Member(models.Model):
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
-    belt = models.CharField(max_length=50, choices=BELT_CHOICES, blank=True)
+    belt = models.IntegerField(choices=BELT_CHOICES, blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ['-belt','idnumber']
+        ordering = ['-belt','last_name']
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.idnumber})'
@@ -145,15 +145,15 @@ class Grading(models.Model):
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
-    forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
     comments = models.CharField(max_length=300, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
-    grading_invite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
+    gradinginvite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
     
     class Meta:
-        ordering = ['grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
+        ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
 
     def __str__(self):
         if self.grading:
@@ -167,7 +167,7 @@ class GradingResult(models.Model):
     
 class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
-    forbelt = models.CharField(max_length=50, choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)

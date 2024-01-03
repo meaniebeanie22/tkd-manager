@@ -14,6 +14,7 @@ from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, 
 from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
+from django.forms.models import model_to_dict
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -35,7 +36,7 @@ def index(request):
         'num_members': num_members,
         'num_active_members': num_active_members,
         'belt_labels': ["None","White","Orange","Yellow","Blue","Red","CDB","Black"],
-        'belt_count': [Member.objects.filter(belt__exact='').count(),Member.objects.filter(belt__in=('0','1','2','3','4','5','6','7')).count(),Member.objects.filter(belt__in=('8','9','10','11','12','13','14','15')).count(),Member.objects.filter(belt__in=('16','17','18','19','20','21','22','23')).count(),Member.objects.filter(belt__in=('24','25','26','27','28','29','30','31')).count(),Member.objects.filter(belt__in=('32','33','34','35','36','37','38')).count(),Member.objects.filter(belt__in=('39','40','41','42','43','44','45','46')).count(),Member.objects.filter(belt__in=('47','48','49','50','51','52','53','54','55')).count()]
+        'belt_count': [Member.objects.filter(belt__exact=None).count(),Member.objects.filter(belt__in=tuple(range(8))).count(),Member.objects.filter(belt__in=tuple(range(8,16))).count(),Member.objects.filter(belt__in=tuple(range(16,24))).count(),Member.objects.filter(belt__in=tuple(range(24,32))).count(),Member.objects.filter(belt__in=tuple(range(32,39))).count(),Member.objects.filter(belt__in=tuple(range(39,47))).count(),Member.objects.filter(belt__in=tuple(range(47,56))).count()]
     }
 
     return render(request, 'home.html', context=context)
@@ -43,6 +44,8 @@ def index(request):
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     paginate_by = 25
+    ordering = ['-belt','last_name']
+
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
@@ -115,9 +118,14 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
 
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
-                if value:
-                    filters[field_name] = value
-
+                if field_name == 'date' and value:
+                    filters['grading__grading_datetime__date'] = value
+                elif field_name == 'type' and value:
+                    filters['grading__grading_type__exact'] = value
+                else:
+                    if value:
+                        filters[field_name] = value
+            print(f'Get GradingResult filters: {filters}')
             # Apply all filters to the queryset in a single call
             queryset = queryset.filter(**filters)
 
@@ -149,7 +157,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         response = super(GradingResultCreate, self).form_valid(form)
         # do something with self.object
         target = self.object.member
-        target.belt = target.member2gradings.order_by('-date').first().forbelt
+        target.belt = target.member2gradings.order_by('-grading__grading-datetime').first().forbelt
         target.save()
         return response
 
@@ -166,9 +174,6 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         if member_id:
             i['member'] = member_id
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
-
-
-        i['date'] = date.today()
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
@@ -180,7 +185,7 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
         response = super(GradingResultUpdate, self).form_valid(form)
         # do something with self.object
         target = self.object.member
-        target.belt = target.member2gradings.order_by('-date').first().forbelt
+        target.belt = target.member2gradings.order_by('-grading__grading_datetime').first().forbelt
         target.save()
         return response
     
@@ -313,11 +318,10 @@ class GetStandardAmountView(LoginRequiredMixin, View):
 
 class GetGradingInviteDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        grading_invite = get_object_or_404(GradingInvite, pk=pk)
+        gradinginvite = get_object_or_404(GradingInvite, pk=pk)
         response = {
-            'forbelt': grading_invite.forbelt,
-            'grading_type': grading_invite.grading_type,
-            'grading_datetime': grading_invite.grading_datetime,
+            'forbelt': gradinginvite.forbelt,
+            'grading': gradinginvite.grading,
         }
         return JsonResponse(response)
     
@@ -328,7 +332,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         today = datetime.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
-        grading_invites = selected_member.gradinginvite_set.filter(grading_date__gte=six_months_before).all()
+        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).all()
 
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
@@ -343,6 +347,12 @@ class MemberGetPayments(LoginRequiredMixin, View):
         payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all()
 
         data = [{'value': payment.id, 'label': str(payment)} for payment in payments]
+        return JsonResponse(data, safe=False)
+    
+class MemberGetDetails(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+        data = model_to_dict(selected_member)
         return JsonResponse(data, safe=False)
 
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
@@ -359,6 +369,15 @@ class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
 class GradingInviteCreateView(LoginRequiredMixin, CreateView):
     model = GradingInvite
     form_class = GradingInviteForm
+
+    def get_initial(self):
+        # Autofill the member field based on the 'member_id' parameter in the URL
+        member_id = self.request.GET.get('member_id')
+        i = {}
+        if member_id:
+            i['member'] = member_id
+            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+        return i
 
 class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
     model = GradingInvite

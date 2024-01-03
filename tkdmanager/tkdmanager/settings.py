@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -81,6 +82,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tkdmanager.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ["GOOGLE_EMAIL_ADDRESS"]
+EMAIL_HOST_PASSWORD = os.environ["GOOGLE_APP_PASSWORD"]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -148,11 +155,12 @@ STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
 
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
-#SECURE_SSL_REDIRECT = not(DEBUG)
+SECURE_SSL_REDIRECT = not(DEBUG)
 
-#SESSION_COOKIE_SECURE = not(DEBUG)
+SESSION_COOKIE_SECURE = not(DEBUG)
 
-#CSRF_COOKIE_SECURE = not(DEBUG)
+CSRF_COOKIE_SECURE = not(DEBUG)
 
-#if not(DEBUG):
-#    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if not(DEBUG):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+

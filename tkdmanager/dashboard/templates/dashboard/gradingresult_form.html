@@ -2,6 +2,7 @@
 
 {% block content %}
 <h4>Add Grading Details</h4>
+{{ form.media }}
 <form action="" method="post">
   {% csrf_token %}
   <table>
@@ -28,7 +29,7 @@
                         }));
                     });
 
-                    // Trigger the change event on the grading_invite field
+                    // Trigger the change event on the gradinginvite field
                     gradingInviteField.trigger('change');
                 },
                 error: function(xhr, status, error) {
@@ -47,8 +48,7 @@
                     success: function(data) {
                         // Update the form fields with grading invite details
                         $('#id_forbelt').val(data.forbelt);
-                        $('#id_type').val(data.grading_type);
-                        $('#id_grading_date').val(data.grading_date);
+                        $('#id_grading')
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching grading invite details:', error);
@@ -60,7 +60,7 @@
         $('#id_member').change(updateGradingInviteOptions);
         $('#id_grading_invite').change(updateGradingInviteDetails);
 
-        // Trigger the functions on page load if member and grading_invite are pre-selected
+        // Trigger the functions on page load if member and gradinginvite are pre-selected
     });
     </script> 
 </form>

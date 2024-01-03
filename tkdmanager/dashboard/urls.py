@@ -9,6 +9,7 @@ urlpatterns = [
     path('member/create', views.MemberCreate.as_view(), name='add-member'),
     path('member/<int:pk>/update', views.MemberUpdate.as_view(), name='update-member'),
     path('member/<int:pk>/delete', views.MemberDelete.as_view(), name='delete-member'),
+    path('member/<int:pk>/get-details', views.MemberGetDetails.as_view(), name='member-get-details'),
     path('grading-result/create', views.GradingResultCreate.as_view(), name='add-grading-result'),
     path('grading-result/<int:pk>/update', views.GradingResultUpdate.as_view(), name='update-grading-result'),
     path('grading-result/<int:pk>/update2', views.manageGradingResult, name='update-grading-result2'),

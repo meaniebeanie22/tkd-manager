@@ -23,7 +23,7 @@
             <li class="list-group-item">{% if member.belt %}Belt - {{ member.get_belt_display }}{% else %}No Belt{% endif %}</li>
             <li class="list-group-item">Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
             <li class="list-group-item">Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a></li>
-            <li class="list-group-item">{% if member.address_line_1 and member.address_line_2 and address_line_3 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
+            <li class="list-group-item">{% if member.address_line_1 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
             <li class="list-group-item"><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-member' member.pk %}">Edit</a></li>
           </ul>
         </div>
@@ -33,11 +33,11 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Gradings</h4>
+          <h4 class="card-title">Grading Results</h4>
           <ul class="list-group list-group-flush">
             {% if member.member2gradings.all %}
               {% for gr in member.member2gradings.all %}
-                  <li class="list-group-item"><a href="{{ gr.get_absolute_url }}">{{ gr.date|date:"d/m/y" }}</a> ({{ gr.type }}) - {{ gr.get_forbelt_display }}
+                  <li class="list-group-item"><a href="{{ gr.get_absolute_url }}">{{ gr }}</a>
                   {% if gr.award_set.all %}
                   {% for award in gr.award_set.all %} - {{award}}{% endfor %}
                   {% endif %}            
@@ -48,7 +48,17 @@
             {% endif %}
               <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
-          
+          <h4 class="card-title">Grading Invites</h4>
+          <ul class="list-group list-group-flush">
+            {% if member.gradinginvite_set.all %}
+              {% for gi in member.gradinginvite_set.all %}
+                <li class="list-group-item"><a href="{{ gi.get_absolute_url }}">{{ gi }}</a></li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">This member has not been given a grading invite.</li>
+            {% endif %}
+             <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-invite' %}?member_id={{ member.id|urlencode }}">Add</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -64,9 +74,13 @@
             <li class="list-group-item">Hours taught this term: {{ hours_taught }}</li>
             {% endif %}
             <li class="list-group-item">Types of classes attended:
+              {% if member.get_class_types_pretty %}
                 {% for type in member.get_class_types_pretty %}
                   <li class="list-group-item"> - {{ type }}</li>
                 {% endfor %}
+              {% else %}
+                <li class="list-group-item"> - None!</li>
+              {% endif %}
             </li>
           </ul>
         </div>
