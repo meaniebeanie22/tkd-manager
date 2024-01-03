@@ -167,9 +167,6 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         if member_id:
             i['member'] = member_id
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
-
-
-        i['date'] = date.today()
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
@@ -359,6 +356,15 @@ class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
 class GradingInviteCreateView(LoginRequiredMixin, CreateView):
     model = GradingInvite
     form_class = GradingInviteForm
+
+    def get_initial(self):
+        # Autofill the member field based on the 'member_id' parameter in the URL
+        member_id = self.request.GET.get('member_id')
+        i = {}
+        if member_id:
+            i['member'] = member_id
+            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+        return i
 
 class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
     model = GradingInvite

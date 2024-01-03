@@ -55,8 +55,9 @@
                 <li class="list-group-item"><a href="{{ gi.get_absolute_url }}"></a>{{ gi }}</li>
               {% endfor %}
             {% else %}
-              <li class="list-group-item">This member has not graded.</li>
+              <li class="list-group-item">This member has not been given a grading invite.</li>
             {% endif %}
+             <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-invite' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
         </div>
       </div>
