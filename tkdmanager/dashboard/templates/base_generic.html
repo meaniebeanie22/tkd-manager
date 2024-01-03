@@ -30,8 +30,15 @@
         <ul class="sidebar-nav">
         {% if user.is_authenticated %}
             <li>User: {{ user.get_username }}</li>
+
+            <li>
+              <form action="{% url 'admin:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item">Logout</button>
+            </form>
+            </li>
             
-            <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+            <!-- <li><a href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li> -->
           </ul>
           <hr>
           <ul class="sidebar-nav">
