@@ -117,8 +117,13 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
 
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
-                if value:
-                    filters[field_name] = value
+                if field_name == 'date':
+                    filters['grading_datetime__date'] = value
+                elif field_name == 'type':
+                    filters['grading_type__exact'] = value
+                else:
+                    if value:
+                        filters[field_name] = value
             print(f'Get GradingResult filters: {filters}')
             # Apply all filters to the queryset in a single call
             queryset = queryset.filter(**filters)

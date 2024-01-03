@@ -52,6 +52,10 @@ class GradingResultSearchForm(Form):
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
     assessor = ModelChoiceField(queryset=Member.objects.all(), required=False)
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
+    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
+    date = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd'
+    }))
     
 class PaymentForm(ModelForm):
     date_created = DateTimeField(disabled=True, initial=timezone.now())
