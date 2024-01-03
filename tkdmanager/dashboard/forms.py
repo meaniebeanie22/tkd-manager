@@ -83,7 +83,7 @@ class GradingInviteForm(ModelForm):
             'payment': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('add-payment'),
-                reverse_lazy('update-payment', pk=['__fk__']),
+                reverse_lazy('update-payment', kwargs={'pk':['__fk__']}),
             )
         }
 
