@@ -119,7 +119,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
             for field_name, value in form.cleaned_data.items():
                 if value:
                     filters[field_name] = value
-
+            print(f'Get GradingResult filters: {filters}')
             # Apply all filters to the queryset in a single call
             queryset = queryset.filter(**filters)
 
