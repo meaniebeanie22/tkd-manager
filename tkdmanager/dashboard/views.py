@@ -35,7 +35,7 @@ def index(request):
         'num_members': num_members,
         'num_active_members': num_active_members,
         'belt_labels': ["None","White","Orange","Yellow","Blue","Red","CDB","Black"],
-        'belt_count': [Member.objects.filter(belt__exact='').count(),Member.objects.filter(belt__in=tuple(range(8))).count(),Member.objects.filter(belt__in=tuple(range(8,16))).count(),Member.objects.filter(belt__in=tuple(range(16,24))).count(),Member.objects.filter(belt__in=tuple(range(24,32))).count(),Member.objects.filter(belt__in=tuple(range(32,39))).count(),Member.objects.filter(belt__in=tuple(range(39,47))).count(),Member.objects.filter(belt__in=tuple(range(47,56))).count()]
+        'belt_count': [Member.objects.filter(belt__exact=None).count(),Member.objects.filter(belt__in=tuple(range(8))).count(),Member.objects.filter(belt__in=tuple(range(8,16))).count(),Member.objects.filter(belt__in=tuple(range(16,24))).count(),Member.objects.filter(belt__in=tuple(range(24,32))).count(),Member.objects.filter(belt__in=tuple(range(32,39))).count(),Member.objects.filter(belt__in=tuple(range(39,47))).count(),Member.objects.filter(belt__in=tuple(range(47,56))).count()]
     }
 
     return render(request, 'home.html', context=context)
