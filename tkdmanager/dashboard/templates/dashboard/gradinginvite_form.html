@@ -38,11 +38,32 @@
                }
            });
        }
-   
-       // Bind the function to the change event of the member field
-       $('#id_member').change(updatePaymentOptions);
-   
-       // Trigger the function on page load if a member is pre-selected (e.g., during editing)
+
+           // Function to set the forbelt field value based on the selected member's belt + 1
+    function setForbeltValue() {
+        var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
+        var forbeltField = $('#id_forbelt');  // Assuming 'id_forbelt' is the ID of the forbelt field
+
+        // Make an AJAX request to fetch the selected member's details
+        $.ajax({
+            url: '/dashboard/member/' + selectedMember + '/get_details/',  // Replace with the actual URL to your member details view
+            dataType: 'json',
+            success: function(data) {
+                // Set the forbelt field value to member's belt + 1
+                forbeltField.val(data.belt + 1);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching member details:', error);
+                // Handle error, e.g., display a message to the user
+            }
+        });
+    }
+
+    // Bind the functions to the change event of the member field
+    $('#id_member').change(function() {
+        updatePaymentOptions();
+        setForbeltValue();
+    });
    });
    </script>
 </form>

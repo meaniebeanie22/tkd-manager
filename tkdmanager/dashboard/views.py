@@ -14,6 +14,7 @@ from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, 
 from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
+from django.forms.models import model_to_dict
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -346,6 +347,12 @@ class MemberGetPayments(LoginRequiredMixin, View):
         payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all()
 
         data = [{'value': payment.id, 'label': str(payment)} for payment in payments]
+        return JsonResponse(data, safe=False)
+    
+class MemberGetDetails(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        selected_member = get_object_or_404(Member, pk=pk)
+        data = model_to_dict(selected_member)
         return JsonResponse(data, safe=False)
 
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
