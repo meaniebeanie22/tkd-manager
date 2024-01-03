@@ -52,7 +52,7 @@
           <ul class="list-group list-group-flush">
             {% if member.gradinginvite_set.all %}
               {% for gi in member.gradinginvite_set.all %}
-                <li class="list-group-item"><a href="{{ gi.get_absolute_url }}"></a>{{ gi }}</li>
+                <li class="list-group-item"><a href="{{ gi.get_absolute_url }}">{{ gi }}</a></li>
               {% endfor %}
             {% else %}
               <li class="list-group-item">This member has not been given a grading invite.</li>
