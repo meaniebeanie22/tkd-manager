@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers, fields
-from dashboard.models import GradingResult, AssessmentUnit
+from dashboard.models import GradingResult, AssessmentUnit, GradingInvite
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,5 +19,5 @@ class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading','forbelt','assessor','comments','award', 'assessmentunits','is_letter','gradinginvite']
+        fields = ['member','grading','forbelt','assessor','comments','award', 'assessmentunits','is_letter']
     
