@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Award List</h1>
-  <p><a href="{% url 'add-award' %}">Add</a></p>
+  <p><a href="{% url 'dashboard:add-award' %}">Add</a></p>
   {% if award_list %}
   <ul>
     {% for a in award_list %}

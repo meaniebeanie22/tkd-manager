@@ -14,14 +14,14 @@
           {% if gradinginvite.payment %}
             <li class="list-group-item"><a href="{{ gradinginvite.payment.get_absolute_url }}">Payment: {{ gradinginvite.payment }}</a></li>
           {% else %}
-            <li class="list-group-item">No payment yet, <a href="{% url 'add-payment' %}">Create a payment</a></li>
+            <li class="list-group-item">No payment yet, <a href="{% url 'dashboard:add-payment' %}">Create a payment</a></li>
           {% endif %}
           <li class="list-group-item"><a href="{{ gradinginvite.grading.get_absolute_url }}">{{ gradinginvite.grading }}</a></li>
         </ul>
         <br>
-        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading-invite' gradinginvite.pk %}">Edit</a>
-        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-grading-invite' gradinginvite.pk %}">Delete</a>
-        <a class="btn btn-outline-secondary btn-outline-thicker float-end" href="{% url 'grading-invite-download' gradinginvite.pk %}">Download</a>      
+        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dashboard:update-grading-invite' gradinginvite.pk %}">Edit</a>
+        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dashboard:delete-grading-invite' gradinginvite.pk %}">Delete</a>
+        <a class="btn btn-outline-secondary btn-outline-thicker float-end" href="{% url 'dashboard:grading-invite-download' gradinginvite.pk %}">Download</a>      
       </div>
     </div>
   </div>

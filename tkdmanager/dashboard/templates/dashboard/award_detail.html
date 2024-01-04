@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>{{ award }}</h1>
-  <p><a href="{% url 'update-award' award.pk %}">Edit</a></p>
+  <p><a href="{% url 'dashboard:update-award' award.pk %}">Edit</a></p>
   <h3>Holders</h3>
   {% if award.gradingresult_set.all %}
     <ul>
