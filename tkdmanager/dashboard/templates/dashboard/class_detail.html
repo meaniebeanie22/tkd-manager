@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>{{ class }}</h1>
-  <p><a href="{% url 'dashboard:update-class' class.pk %}">Edit</a> <a href="{% url 'dashboard:delete-class' class.pk %}">Delete</a></p>
+  <p><a href="{% url 'update-class' class.pk %}">Edit</a> <a href="{% url 'delete-class' class.pk %}">Delete</a></p>
   <h3>Instructors ({{ class.instructors.all.count}})</h3>
   <ul>
   {% for instructor in class.instructors.all %}

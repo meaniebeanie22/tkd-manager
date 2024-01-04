@@ -17,14 +17,14 @@
       <div class="col-sm-2">
       {% block sidebar %}
         <ul class="sidebar-nav">
-          <li><a href="{% url 'dashboard:index' %}">Home</a></li>
-          <li><a href="{% url 'dashboard:members' %}">All members</a></li>
-          <li><a href="{% url 'dashboard:gradings' %}">All gradings</a></li>
-          <li><a href="{% url 'dashboard:gradingresults' %}">All grading results</a></li>
-          <li><a href="{% url 'dashboard:gradinginvites' %}">All grading invites</a></li>
-          <li><a href="{% url 'dashboard:awards' %}">All awards</a></li>
-          <li><a href="{% url 'dashboard:classes' %}">All classes</a></li>
-          <li><a href="{% url 'dashboard:payments' %}">All payments</a></li>
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'members' %}">All members</a></li>
+          <li><a href="{% url 'gradings' %}">All gradings</a></li>
+          <li><a href="{% url 'gradingresults' %}">All grading results</a></li>
+          <li><a href="{% url 'gradinginvites' %}">All grading invites</a></li>
+          <li><a href="{% url 'awards' %}">All awards</a></li>
+          <li><a href="{% url 'classes' %}">All classes</a></li>
+          <li><a href="{% url 'payments' %}">All payments</a></li>
         </ul>
         <hr>
         <ul class="sidebar-nav">
@@ -40,13 +40,13 @@
           </ul>
           <hr>
           <ul class="sidebar-nav">
-            <li><a href="{% url 'dashboard:add-member' %}">New member</a></li>
-            <li><a href="{% url 'dashboard:add-grading' %}">New grading</a></li>
-            <li><a href="{% url 'dashboard:add-grading-result' %}">New grading result</a></li>
-            <li><a href="{% url 'dashboard:add-grading-invite' %}">New grading invite</a></li>
-            <li><a href="{% url 'dashboard:add-award' %}">New award</a></li>
-            <li><a href="{% url 'dashboard:add-class' %}">New class</a></li>
-            <li><a href="{% url 'dashboard:add-payment' %}">New payment</a></li>
+            <li><a href="{% url 'add-member' %}">New member</a></li>
+            <li><a href="{% url 'add-grading' %}">New grading</a></li>
+            <li><a href="{% url 'add-grading-result' %}">New grading result</a></li>
+            <li><a href="{% url 'add-grading-invite' %}">New grading invite</a></li>
+            <li><a href="{% url 'add-award' %}">New award</a></li>
+            <li><a href="{% url 'add-class' %}">New class</a></li>
+            <li><a href="{% url 'add-payment' %}">New payment</a></li>
           </ul>
         {% else %}
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>

@@ -17,14 +17,14 @@
             <li class="list-group-item">{% if member.date_of_birth %}
               DOB - {{ member.date_of_birth|date:"d/m/y" }}
             {% else %}
-              No DOB on file - <a href="{% url 'dashboard:update-member' member.pk %}">Fix</a>
+              No DOB on file - <a href="{% url 'update-member' member.pk %}">Fix</a>
             {% endif %}
             </li>
             <li class="list-group-item">{% if member.belt %}Belt - {{ member.get_belt_display }}{% else %}No Belt{% endif %}</li>
             <li class="list-group-item">Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
             <li class="list-group-item">Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a></li>
-            <li class="list-group-item">{% if member.address_line_1 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'dashboard:update-member' member.pk %}">Fix</a>{% endif %}</li>
-            <li class="list-group-item"><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dashboard:update-member' member.pk %}">Edit</a></li>
+            <li class="list-group-item">{% if member.address_line_1 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'update-member' member.pk %}">Fix</a>{% endif %}</li>
+            <li class="list-group-item"><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-member' member.pk %}">Edit</a></li>
           </ul>
         </div>
       </div>
@@ -46,7 +46,7 @@
             {% else %}
               <li class="list-group-item">This member has not graded.</li>
             {% endif %}
-              <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'dashboard:add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></li>
+              <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-result' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
           <h4 class="card-title">Grading Invites</h4>
           <ul class="list-group list-group-flush">
@@ -57,7 +57,7 @@
             {% else %}
               <li class="list-group-item">This member has not been given a grading invite.</li>
             {% endif %}
-             <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'dashboard:add-grading-invite' %}?member_id={{ member.id|urlencode }}">Add</a></li>
+             <li class="list-group-item"><a class="btn btn-outline-success btn-outline-thicker" href="{% url 'add-grading-invite' %}?member_id={{ member.id|urlencode }}">Add</a></li>
           </ul>
         </div>
       </div>

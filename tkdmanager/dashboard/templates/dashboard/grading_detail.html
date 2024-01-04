@@ -12,8 +12,8 @@
           <li class="list-group-item">Grading Date & Time: {{ grading.grading_datetime }}</li>
         </ul>
         <br>
-        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dashboard:update-grading' grading.pk %}">Edit</a>
-        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dashboard:delete-grading' grading.pk %}">Delete</a>     
+        <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-grading' grading.pk %}">Edit</a>
+        <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-grading' grading.pk %}">Delete</a>     
       </div>
     </div>
   </div>
