@@ -15,7 +15,7 @@ class AssessmentUnitSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = AssessmentUnit
-        fields = ['unit','achieved_pts','max_pts','grading_result']
+        fields = ['url','unit','achieved_pts','max_pts','grading_result']
 
 
 class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,33 +24,33 @@ class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = GradingResult
-        fields = ['member','grading','forbelt','assessor','comments','award', 'assessmentunits','is_letter','gradinginvite']
+        fields = ['url','member','grading','forbelt','assessor','comments','award', 'assessmentunits','is_letter','gradinginvite']
 
 class GradingInviteSerializer(serializers.HyperlinkedModelSerializer):
     extra_kwargs = {'url': {'view_name': 'api:gradinginvites-detail'}}
 
     class Meta:
         model = GradingInvite
-        fields = ['member', 'forbelt', 'issued_by', 'payment', 'grading']
+        fields = ['url','member', 'forbelt', 'issued_by', 'payment', 'grading']
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     extra_kwargs = {'url': {'view_name': 'api:payments-detail'}}
 
     class Meta:
         model = Payment
-        fields = ['member','paymenttype','date_created','date_due','date_paid_in_full','amount_due','amount_paid']
+        fields = ['url','member','paymenttype','date_created','date_due','date_paid_in_full','amount_due','amount_paid']
     
 class GradingSerializer(serializers.HyperlinkedModelSerializer):
     extra_kwargs = {'url': {'view_name': 'api:gradings-detail'}}
 
     class Meta:
         model = Grading
-        fields = ['grading_type','grading_datetime']
+        fields = ['url','grading_type','grading_datetime']
 
 class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
     extra_kwargs = {'url': {'view_name': 'api:paymenttypes-detail'}}
 
     class Meta:
         model = PaymentType
-        fields = ['name','standard_amount']
+        fields = ['url','name','standard_amount']
     
