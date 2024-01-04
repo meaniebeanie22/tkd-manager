@@ -5,12 +5,12 @@ from . import views
 app_name = "api"
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'gradingresults', views.GradingResultViewSet)
-router.register(r'gradinginvites', views.GradingInviteViewSet)
-router.register(r'gradings', views.GradingViewSet)
-router.register(r'payments', views.PaymentViewSet)
-router.register(r'paymenttypes', views.PaymentTypeViewSet)
+router.register(r'user', views.UserViewSet)
+router.register(r'gradingresult', views.GradingResultViewSet)
+router.register(r'gradinginvite', views.GradingInviteViewSet)
+router.register(r'grading', views.GradingViewSet)
+router.register(r'payment', views.PaymentViewSet)
+router.register(r'paymenttype', views.PaymentTypeViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
