@@ -163,9 +163,9 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         if self.object.is_letter:
-            return reverse('update-grading-result3', kwargs={'pk':self.object.pk}, current_app='dashboard')
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
         else:
-            return reverse('update-grading-result2', kwargs={'pk':self.object.pk}, current_app='dashboard')
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
     
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
@@ -191,9 +191,9 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self):
         if self.object.is_letter:
-            return reverse('update-grading-result3', kwargs={'pk':self.object.pk}, current_app='dashboard')
+            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
         else:
-            return reverse('update-grading-result2', kwargs={'pk':self.object.pk}, current_app='dashboard')
+            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
 
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
