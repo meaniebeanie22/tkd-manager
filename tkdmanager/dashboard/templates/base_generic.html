@@ -17,6 +17,7 @@
       <div class="col-sm-2">
       {% block sidebar %}
         <ul class="sidebar-nav">
+          <li><a href="{% url 'api:payment-detail' pk=2 %}">TEST NAME</a></li>
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'members' %}">All members</a></li>
           <li><a href="{% url 'gradings' %}">All gradings</a></li>
