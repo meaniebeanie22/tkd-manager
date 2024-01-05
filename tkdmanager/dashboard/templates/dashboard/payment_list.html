@@ -18,11 +18,10 @@
               </div>
           {% endfor %}
       </div>
-      <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
+      <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-add-payment' %}">Add</a>
     </div>
   </form>
 
-  <p><a href="{% url 'dash-add-payment' %}">Add</a></p>
   {% if payment_list %}
   <table>
     <tr>
