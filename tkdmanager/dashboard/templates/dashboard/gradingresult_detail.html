@@ -20,7 +20,7 @@
                     </li>
                   {% endfor %}
                 </ul>
-                <b>{% if gradingresult.is_letter %}Average: {{ average_grade }}{% else %}Total: {{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %}){% endif %}</b>
+                {% if gradingresult.is_letter %}Average: <b>{{ average_grade }}</b>{% else %}Total: <b>{{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %})</b>{% endif %}
               {% else %}
                 <p>This grading has no units.</p>
               {% endif %}
