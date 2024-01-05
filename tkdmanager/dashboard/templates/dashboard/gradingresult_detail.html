@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <div class="container mt-6">
+  <div class="container mt-2">
     <h1><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a> - Grading on {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</h1>
     <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_grading_type_display }}</h4>
     <p><a href="{% url 'dash-update-grading-result' gradingresult.pk %}" class="btn btn-outline-secondary btn-sm">Edit</a> <a href="{% url 'dash-delete-grading-result' gradingresult.pk %}" class="btn btn-outline-danger btn-sm">Delete</a> <a href="{{ gradingresult.gradinginvite.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Invite</a> <a href="{{ gradingresult.grading.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Grading</a></p>
