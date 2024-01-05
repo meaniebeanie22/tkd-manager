@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading Certificate</title>
+    <!-- Add your CSS styles or link to external stylesheets here -->
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        h4 {
+            color: #555;
+        }
+        div {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <h1>Grading Certificate</h1>
+    <p><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a></p>
+    <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
+
+    <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_type_display }}</h4>
+
+    <h5>Grading Units</h5>
+    {% if gradingresult.assessmentunit_set.all %}
+        <ul>
+            {% for au in gradingresult.assessmentunit_set.all %}
+                <li>
+                    <b>{{ au.get_unit_display }}</b> - {% if gradingresult.is_letter %}{{ au.get_letter_rep }}{% else %}{{ au.achieved_pts }} / {{ au.max_pts }}{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        <b>{% if gradingresult.is_letter %}Average: {{ average_grade }}{% else %}Total: {{ total_achieved_pts }}/{{ total_max_pts }} ({{ total_percent }}{% verbatim %}%{% endverbatim %}){% endif %}</b>
+    {% else %}
+        <p>This grading has no units.</p>
+    {% endif %}
+
+    {% if gradingresult.award %}
+        <h5>Awards</h5>
+        <ul>
+            <li>
+                <b>{{ gradingresult.award }}</b>
+            </li>
+        </ul>
+    {% endif %}
+
+    <h5>Assessors</h5>
+    {% if gradingresult.assessor.all %}
+        <ul>
+            {% for as in gradingresult.assessor.all %}
+                <li>
+                    <a href="{{ as.get_absolute_url }}">{{ as }} - <b>{{ as.get_belt_display }}</b></a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>This grading has no assessors.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

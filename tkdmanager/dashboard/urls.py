@@ -32,7 +32,7 @@ urlpatterns = [
     path('payment/<int:pk>/update', views.PaymentUpdate.as_view(), name='dash-update-payment'),
     path('payment/<int:pk>/delete', views.PaymentDelete.as_view(), name='dash-delete-payment'),
     path('paymenttype/<int:pk>/get_standard_amount', views.GetStandardAmountView.as_view(), name='dash-payment-get-standard-amount'),
-    path('gradinginvite/<int:pk>/download/', views.pdf_view, name='dash-grading-invite-download'),
+    path('gradinginvite/<int:pk>/download/', views.gradinginvite_pdf_view, name='dash-grading-invite-download'),
     path('gradinginvite/<int:pk>/', views.GradingInviteDetailView.as_view(), name='dash-grading-invite-detail'),
     path('gradinginvites/', views.GradingInviteListView.as_view(), name='dash-gradinginvites'),
     path('gradinginvite/<int:pk>/update/', views.GradingInviteUpdateView.as_view(), name='dash-update-grading-invite'),
@@ -46,4 +46,5 @@ urlpatterns = [
     path('grading/<int:pk>/update/', views.GradingUpdateView.as_view(), name='dash-update-grading'),
     path('grading/<int:pk>/delete/', views.GradingDeleteView.as_view(), name='dash-delete-grading'),
     path('grading/create/', views.GradingCreateView.as_view(), name='dash-add-grading'),
+    path('gradingresult/<int:pk>/download/', views.gradingresult_pdf_view, name='dash-grading-result-download'),
 ]

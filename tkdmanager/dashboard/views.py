@@ -384,7 +384,7 @@ class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
     form_class = GradingInviteForm
 
 @login_required
-def pdf_view(request, pk, **kwargs):
+def gradinginvite_pdf_view(request, pk, **kwargs):
     gi = get_object_or_404(GradingInvite, pk=pk)
     data = {
         'gradinginvite': gi
@@ -409,3 +409,11 @@ class GradingCreateView(LoginRequiredMixin, CreateView):
 class GradingUpdateView(LoginRequiredMixin, UpdateView):
     model = Grading
     form_class = GradingForm
+
+@login_required
+def gradingresult_pdf_view(request, pk, **kwargs):
+    gr = get_object_or_404(GradingResult, pk=pk)
+    data = {
+        'gradinginvite': gr
+    }
+    return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
