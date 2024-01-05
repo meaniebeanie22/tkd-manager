@@ -3,6 +3,27 @@
 
 {% block content %}
 <h1>Grading Invites</h1>
+
+<form method="get" action="{% url 'dash-gradingresults' %}">
+  <div class="container-md" style="margin-left: 0;">
+    <div class="row row-cols-6">
+        {% for field in search_form %}
+            <div class="col-md-1 mb-3">
+                {{ field.errors }}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+            </div>
+            <div class="col-md-3 mb-3">
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="text-muted" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
+  </div>
+</form>
+
 {% if gradinginvite_list %}
   <table style="width: 100%;">
     <tr>
