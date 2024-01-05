@@ -38,7 +38,7 @@ GRADINGS = [
     ('JD','Juniors/Seniors Beginner-Blue'),
     ('JF','Juniors/Seniors Red-Black'),
     ('PA','TKD Patterns/Grading'),
-    ('BB','Black Belt'),
+    ('BB','Black Belts'),
     ('BJ','BJJ/MMA'),
     ('BO','Boxing'),
     ('BK','BJJ for Kids'),
