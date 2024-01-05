@@ -6,7 +6,7 @@ from dashboard.models import GradingResult, AssessmentUnit, GradingInvite, Payme
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['url', 'username', 'email']
 
 class AssessmentUnitSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
