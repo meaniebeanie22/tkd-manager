@@ -91,7 +91,7 @@ class PaymentForm(ModelForm):
 
 class PaymentSearchForm(Form):
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
-    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False)
+    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, verbose_name='Payment Type')
     date_created = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd'
     }))
