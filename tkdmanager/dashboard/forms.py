@@ -1,5 +1,5 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
-from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput
+from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select
 from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 from django import forms 
@@ -48,9 +48,12 @@ class ClassForm(ModelForm):
 class ClassSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
-    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
+    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False, widget=Select(attrs={
+        'style':'max-width: 175px;'
+    }))
     date = DateField(required=False, widget=TextInput(attrs={
-        'placeholder': 'YYYY-mm-dd'
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
     }))
     instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''), required=False)
     students = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False)
@@ -91,12 +94,16 @@ class PaymentForm(ModelForm):
 
 class PaymentSearchForm(Form):
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
-    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type')
+    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
+        'style':'max-width: 175px;'
+    }))
     date_created = DateField(required=False, widget=TextInput(attrs={
-        'placeholder': 'YYYY-mm-dd'
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
     }))
     date_due = DateField(required=False, widget=TextInput(attrs={
-        'placeholder': 'YYYY-mm-dd'
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
     }))
 
 
