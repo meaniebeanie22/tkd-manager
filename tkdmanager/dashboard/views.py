@@ -416,4 +416,17 @@ def gradingresult_pdf_view(request, pk, **kwargs):
     data = {
         'gradingresult': gr
     }
+    assessmentunits = gr.assessmentunit_set.all()
+    if assessmentunits:
+        maxpts = 0
+        apts = 0
+        for au in assessmentunits:
+            maxpts += au.max_pts
+            apts += au.achieved_pts
+        if gr.is_letter:
+            data['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
+        else:
+            data['total_max_pts'] = maxpts
+            data['total_achieved_pts'] = apts
+            data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
     return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
