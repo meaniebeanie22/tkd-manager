@@ -50,7 +50,7 @@ class GradingResultSearchForm(Form):
 
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
-    assessor = ModelChoiceField(queryset=Member.objects.all(), required=False)
+    assessor = ModelChoiceField(queryset=Member.objects.exclude(team_leader_instructor__exact='').all(), required=False)
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={
