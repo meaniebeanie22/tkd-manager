@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 
+"""
 def convert_forbelt_to_integer(apps, schema_editor):
     YourModel = apps.get_model('dashboard', 'GradingInvite')
     for instance in YourModel.objects.all():
@@ -26,6 +27,7 @@ def convert_forbelt_to_integer(apps, schema_editor):
         else:
             instance.belt = 0
         instance.save()
+"""
 
 class Migration(migrations.Migration):
 
@@ -34,12 +36,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_forbelt_to_integer),
-        migrations.RenameField(
-            model_name='gradingresult',
-            old_name='grading_invite',
-            new_name='gradinginvite',
-        ),
+#       migrations.RunPython(convert_forbelt_to_integer),
+#        migrations.RenameField(
+#            model_name='gradingresult',
+#            old_name='grading_invite',
+#            new_name='gradinginvite',
+#        ),
         migrations.AlterField(
             model_name='gradinginvite',
             name='forbelt',

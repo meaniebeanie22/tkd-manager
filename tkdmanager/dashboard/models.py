@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 BELT_CHOICES = [
-    ("White",      ((None, 'No Belt'), (0, 'White Belt'), (1, 'White ½'), (2, 'White 1'), (3, 'White 1 ½'), (4, 'White 2'), (5, 'White 2 ½'), (6, 'White 3'), (7, 'White-Orange'))),
+    (None, 'No Belt'), 
+    ("White",      ((0, 'White Belt'), (1, 'White ½'), (2, 'White 1'), (3, 'White 1 ½'), (4, 'White 2'), (5, 'White 2 ½'), (6, 'White 3'), (7, 'White-Orange'))),
     ("Orange",     ((8, 'Orange Belt'), (9, 'Orange ½'), (10, 'Orange 1'), (11, 'Orange 1 ½'), (12, 'Orange 2'), (13, 'Orange 2 ½'), (14, 'Orange 3'), (15, 'White-Yellow'))),
     ("Yellow",     ((16, 'Yellow Belt'), (17, 'Yellow ½'), (18, 'Yellow 1'), (19, 'Yellow 1 ½'), (20, 'Yellow 2'), (21, 'Yellow 2 ½'), (22, 'Yellow 3'), (23, 'White-Blue'))),
     ("Blue",       ((24, 'Blue Belt'), (25, 'Blue ½'), (26, 'Blue 1'), (27, 'Blue 1 ½'), (28, 'Blue 2'), (29, 'Blue 2 ½'), (30, 'Blue 3'), (31, 'White-Red'))),
