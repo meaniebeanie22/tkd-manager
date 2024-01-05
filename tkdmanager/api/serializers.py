@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers, fields
-from dashboard.models import GradingResult, AssessmentUnit, GradingInvite, Payment, PaymentType, Grading, Member
+from dashboard.models import GradingResult, AssessmentUnit, GradingInvite, Payment, PaymentType, Grading, Member, Award
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -43,4 +43,9 @@ class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PaymentType
         fields = ['url','name','standard_amount']
+
+class AwardSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Award
+        fields = ['name']
     
