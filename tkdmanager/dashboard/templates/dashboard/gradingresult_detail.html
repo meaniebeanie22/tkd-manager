@@ -6,7 +6,6 @@
     <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_grading_type_display }}</h4>
     <p><a href="{% url 'dash-update-grading-result' gradingresult.pk %}" class="btn btn-outline-secondary btn-sm">Edit</a> <a href="{% url 'dash-delete-grading-result' gradingresult.pk %}" class="btn btn-outline-danger btn-sm">Delete</a> <a href="{{ gradingresult.gradinginvite.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Invite</a> <a href="{{ gradingresult.grading.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Grading</a></p>
 
-    <div class="ms-3 mt-3">
       <div class="col md-3">
         <div class="card">
           <div class="card-body">
@@ -60,7 +59,6 @@
           </div>
         </div>
       </div>
-    </div>
     <a href="{% url 'dash-grading-result-download' gradingresult.pk %}" class="btn btn-outline-secondary mt-3">Download</a>
   </div>
 {% endblock %}
