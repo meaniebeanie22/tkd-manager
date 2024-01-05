@@ -4,6 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'user', views.UserViewSet)
+router.register(r'member', views.MemberViewSet)
 router.register(r'gradingresult', views.GradingResultViewSet)
 router.register(r'gradinginvite', views.GradingInviteViewSet)
 router.register(r'grading', views.GradingViewSet)

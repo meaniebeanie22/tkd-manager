@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType
+from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType, Member
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer
+from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer, MemberSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -59,4 +59,12 @@ class PaymentTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = PaymentType.objects.all()
     serializer_class = PaymentTypeSerialzer
+    permission_classes = [permissions.IsAuthenticated]
+
+class MemberViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for members
+    """
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
     permission_classes = [permissions.IsAuthenticated]
