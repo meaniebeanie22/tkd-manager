@@ -414,6 +414,6 @@ class GradingUpdateView(LoginRequiredMixin, UpdateView):
 def gradingresult_pdf_view(request, pk, **kwargs):
     gr = get_object_or_404(GradingResult, pk=pk)
     data = {
-        'gradinginvite': gr
+        'gradingresult': gr
     }
     return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
