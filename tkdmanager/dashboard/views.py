@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm
 from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
@@ -260,21 +260,27 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        type = self.request.GET.get('type')
-        date_str = self.request.GET.get('date')
-        if not (type or date_str):
-            return Class.objects.all()
-        else:
-            queryset = Class.objects.all()
-            if type:
-                type = type.lower()
-                backwards = {x[1]:x[0] for x in GRADINGS}
-                type = backwards.get(type, type)
-                queryset = queryset.filter(Q(type__icontains=type))
-            if date_str:
-                date = datetime.strptime(date_str, '%Y-%m-%d').date()
-                queryset = queryset.filter(Q(date=date))
-            return queryset           
+        queryset = Class.objects.all()
+
+        # Process form data to filter queryset
+        form = ClassSearchForm(self.request.GET)
+        if form.is_valid():
+            filters = {}
+
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if value:
+                    filters[field_name] = value
+            
+            # Apply all filters to the queryset in a single call
+            queryset = queryset.filter(**filters)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = ClassSearchForm(self.request.GET)
+        return context         
         
 class ClassDetailView(LoginRequiredMixin, generic.DetailView):
     model = Class
@@ -294,6 +300,29 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
     paginate_by = 25
+
+    def get_queryset(self):
+        queryset = Payment.objects.all()
+
+        # Process form data to filter queryset
+        form = PaymentSearchForm(self.request.GET)
+        if form.is_valid():
+            filters = {}
+
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if value:
+                    filters[field_name] = value
+            
+            # Apply all filters to the queryset in a single call
+            queryset = queryset.filter(**filters)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = PaymentSearchForm(self.request.GET)
+        return context  
 
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment

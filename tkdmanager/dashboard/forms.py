@@ -1,6 +1,6 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
 from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
@@ -45,6 +45,16 @@ class ClassForm(ModelForm):
             'end': TimeInput(attrs={'type': 'time'}),
         }
 
+class ClassSearchForm(ModelForm):
+    BLANK_CHOICE = [('', '---------')]
+
+    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
+    date = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd'
+    }))
+    instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''), required=False)
+    students = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False)
+
 class GradingResultSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
@@ -78,6 +88,18 @@ class PaymentForm(ModelForm):
             'date_due': DateInput(attrs={'type': 'date'}),
             'date_paid_in_full': DateInput(attrs={'type':'date'}),
         }
+
+class PaymentSearchForm(ModelForm):
+    member = ModelChoiceField(queryset=Member.objects.all(), required=False)
+    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False)
+    date_created = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd'
+    }))
+    date_due = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd'
+    }))
+
+
 
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
