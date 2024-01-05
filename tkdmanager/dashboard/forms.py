@@ -45,7 +45,7 @@ class ClassForm(ModelForm):
             'end': TimeInput(attrs={'type': 'time'}),
         }
 
-class ClassSearchForm(ModelForm):
+class ClassSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
@@ -89,7 +89,7 @@ class PaymentForm(ModelForm):
             'date_paid_in_full': DateInput(attrs={'type':'date'}),
         }
 
-class PaymentSearchForm(ModelForm):
+class PaymentSearchForm(Form):
     member = ModelChoiceField(queryset=Member.objects.all(), required=False)
     paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False)
     date_created = DateField(required=False, widget=TextInput(attrs={
