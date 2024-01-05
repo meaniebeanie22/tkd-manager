@@ -157,7 +157,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         response = super(GradingResultCreate, self).form_valid(form)
         # do something with self.object
         target = self.object.member
-        target.belt = target.member2gradings.order_by('-grading__grading-datetime').first().forbelt
+        target.belt = target.member2gradings.order_by('-grading__grading_datetime').first().forbelt
         target.save()
         return response
 
