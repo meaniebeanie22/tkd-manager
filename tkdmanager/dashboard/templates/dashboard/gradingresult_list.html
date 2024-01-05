@@ -6,6 +6,7 @@
     <div class="container-md" style="max-width: 75%; margin-left: 0;">
       <div class="row">
           {% for field in search_form %}
+            <div class="col-md-4">
               <div class="col-md-1 mb-3">
                   {{ field.errors }}
                   <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
@@ -16,6 +17,7 @@
                       <small class="text-muted" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</small>
                   {% endif %}
               </div>
+            </div>
           {% endfor %}
       </div>
       <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
