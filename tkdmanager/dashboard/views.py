@@ -373,7 +373,7 @@ class MemberGetPayments(LoginRequiredMixin, View):
         today = datetime.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
-        payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all()
+        payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all().order_by("-date_created")
 
         data = [{'value': payment.id, 'label': str(payment)} for payment in payments]
         return JsonResponse(data, safe=False)

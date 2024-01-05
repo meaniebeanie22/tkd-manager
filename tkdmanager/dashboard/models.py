@@ -137,7 +137,7 @@ class Grading(models.Model):
         ordering = ['-grading_datetime', 'grading_type']
 
     def __str__(self):
-        return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%x")}'
+        return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%d/%m/%Y")}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
@@ -158,7 +158,7 @@ class GradingResult(models.Model):
 
     def __str__(self):
         if self.grading:
-            return f'{self.grading.get_grading_type_display()} - {self.grading.grading_datetime.strftime("%x")}, by {self.member}'
+            return f'GRL {self.grading.get_grading_type_display()} - {self.grading.grading_datetime.strftime("%d/%m/%Y")}, by {self.member}'
         else:
             return f'GRADINGRESULT_NULL_GRADING by {self.member}'
     
@@ -178,7 +178,7 @@ class GradingInvite(models.Model):
 
     def __str__(self):
         if self.grading:
-            return f'{self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%x")} for {self.get_forbelt_display()}, by {self.member}'
+            return f'GI: {self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%d/%m/%Y")} for {self.get_forbelt_display()}, by {self.member}'
         else:
             return f'GRADINGINVITE_NULL_GRADING for {self.get_forbelt_display()}, by {self.member}'
     
@@ -202,7 +202,7 @@ class Class(models.Model):
         return reverse('dash-class-detail', args=[str(self.id)]) 
     
     def __str__(self):
-        return f'{self.get_type_display()}: {self.date.strftime("%x")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
+        return f'{self.get_type_display()}: {self.date.strftime("%d/%m/%Y")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
 
 class Payment(models.Model):
     member = models.ForeignKey(Member, help_text='Who needs to pay this?', on_delete=models.PROTECT)
@@ -220,7 +220,7 @@ class Payment(models.Model):
         return reverse('dash-payment-detail', args=[str(self.id)])
     
     def __str__(self):
-        return f'{self.paymenttype} for {self.member}. Due {self.date_due.strftime("%x")}.'
+        return f'{self.paymenttype} for {self.member}. Due {self.date_due.strftime("%d/%m/%Y")}.'
     
     @property
     def is_past_due(self):
