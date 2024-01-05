@@ -13,6 +13,6 @@
     <li>Amount Due: ${{ payment.amount_due }}</li>
     <li>Amount Paid: ${{ payment.amount_paid }}</li>
 </ul>
-<a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'update-payment' payment.pk %}">Edit</a>
-<a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'delete-payment' payment.pk %}">Delete</a>
+<a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-payment' payment.pk %}">Edit</a>
+<a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-payment' payment.pk %}">Delete</a>
 {% endblock %}

@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Grading Result List</h1>
-  <form method="get" action="{% url 'gradingresults' %}">
+  <form method="get" action="{% url 'dash-gradingresults' %}">
     <div class="container-md" style="max-width: 75%; margin-left: 0;">
       <div class="row">
           {% for field in search_form %}

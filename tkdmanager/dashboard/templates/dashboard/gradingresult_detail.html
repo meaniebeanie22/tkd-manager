@@ -3,7 +3,7 @@
 {% block content %}
   <h1><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a> - Grading on {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</h1>
   {% if gradingresult.member.date_of_birth %}
-    <p>DOB - {{ gradingresult.member.date_of_birth|date:"d/m/y" }} <a href="{% url 'update-grading-result' gradingresult.pk %}">Edit</a> <a href="{% url 'delete-grading-result' gradingresult.pk %}">Delete</a></p>
+    <p>DOB - {{ gradingresult.member.date_of_birth|date:"d/m/y" }} <a href="{% url 'dash-update-grading-result' gradingresult.pk %}">Edit</a> <a href="{% url 'dash-delete-grading-result' gradingresult.pk %}">Delete</a></p>
   {% endif %}
   <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_type_display }} - <a href="{{ gradingresult.gradinginvite.get_absolute_url }}">Invite</a> - <a href="{{ gradingresult.grading.get_absolute_url }}">Grading</a></h4>
   <div style="margin-left:20px;margin-top:20px">

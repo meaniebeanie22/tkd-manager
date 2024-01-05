@@ -73,7 +73,7 @@ class Award(models.Model):
         return self.name 
     
     def get_absolute_url(self):
-        return reverse('award-detail', args=[str(self.id)])
+        return reverse('dash-award-detail', args=[str(self.id)])
 
 class Member(models.Model):
     first_name = models.CharField(max_length=50)
@@ -97,7 +97,7 @@ class Member(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member."""
-        return reverse('member-detail', args=[str(self.id)])
+        return reverse('dash-member-detail', args=[str(self.id)])
 
     def get_class_types_pretty(self):
         today = datetime.now().date()
@@ -140,7 +140,7 @@ class Grading(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
-        return reverse('grading-detail', args=[str(self.id)]) 
+        return reverse('dash-grading-detail', args=[str(self.id)]) 
 
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
@@ -163,7 +163,7 @@ class GradingResult(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
-        return reverse('grading-result-detail', args=[str(self.id)]) 
+        return reverse('dash-grading-result-detail', args=[str(self.id)]) 
     
 class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
@@ -183,7 +183,7 @@ class GradingInvite(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
-        return reverse('grading-invite-detail', args=[str(self.id)]) 
+        return reverse('dash-grading-invite-detail', args=[str(self.id)]) 
 
 class Class(models.Model):
     date = models.DateField()
@@ -198,7 +198,7 @@ class Class(models.Model):
 
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
-        return reverse('class-detail', args=[str(self.id)]) 
+        return reverse('dash-class-detail', args=[str(self.id)]) 
     
     def __str__(self):
         return f'{self.get_type_display()}: {self.date.strftime("%x")}, {self.start.strftime("%X")} - {self.end.strftime("%X")}'
@@ -216,7 +216,7 @@ class Payment(models.Model):
         ordering = ['-date_due', 'paymenttype']
 
     def get_absolute_url(self):
-        return reverse('payment-detail', args=[str(self.id)])
+        return reverse('dash-payment-detail', args=[str(self.id)])
     
     def __str__(self):
         return f'{self.paymenttype} for {self.member}. Due {self.date_due.strftime("%x")}.'

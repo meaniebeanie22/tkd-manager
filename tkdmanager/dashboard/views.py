@@ -146,7 +146,7 @@ class MemberUpdate(LoginRequiredMixin, UpdateView):
 
 class MemberDelete(LoginRequiredMixin, DeleteView):
     model = Member
-    success_url = reverse_lazy("members")
+    success_url = reverse_lazy("dash-members")
 
 class GradingResultCreate(LoginRequiredMixin, CreateView):
     form_class = GradingResultCreateForm
@@ -163,9 +163,9 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         if self.object.is_letter:
-            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+            return reverse('dash-update-grading-result3', kwargs={'pk':self.object.pk})
         else:
-            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+            return reverse('dash-update-grading-result2', kwargs={'pk':self.object.pk})
     
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
@@ -191,13 +191,13 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self):
         if self.object.is_letter:
-            return reverse('update-grading-result3', kwargs={'pk':self.object.pk})
+            return reverse('dash-update-grading-result3', kwargs={'pk':self.object.pk})
         else:
-            return reverse('update-grading-result2', kwargs={'pk':self.object.pk})
+            return reverse('dash-update-grading-result2', kwargs={'pk':self.object.pk})
 
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
-    success_url = reverse_lazy("gradingresults")
+    success_url = reverse_lazy("dash-gradingresults")
 
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
@@ -212,7 +212,7 @@ class AwardUpdate(LoginRequiredMixin, UpdateView):
 
 class AwardDelete(LoginRequiredMixin, DeleteView):
     model = Award
-    success_url = reverse_lazy("awards")
+    success_url = reverse_lazy("dash-awards")
 
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
@@ -289,7 +289,7 @@ class ClassUpdate(LoginRequiredMixin, UpdateView):
 
 class ClassDelete(LoginRequiredMixin, DeleteView):
     model = Class
-    success_url = reverse_lazy("classes")
+    success_url = reverse_lazy("dash-classes")
 
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
@@ -308,7 +308,7 @@ class PaymentUpdate(LoginRequiredMixin, UpdateView):
 
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
-    success_url = reverse_lazy("payments")
+    success_url = reverse_lazy("dash-payments")
 
 class GetStandardAmountView(LoginRequiredMixin, View):
     def get(self, request, pk):
@@ -364,7 +364,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
     model = GradingInvite
-    success_url = reverse_lazy("gradinginvites")
+    success_url = reverse_lazy("dash-gradinginvites")
 
 class GradingInviteCreateView(LoginRequiredMixin, CreateView):
     model = GradingInvite
@@ -400,7 +400,7 @@ class GradingListView(LoginRequiredMixin, generic.ListView):
 
 class GradingDeleteView(LoginRequiredMixin, DeleteView):
     model = Grading
-    success_url = reverse_lazy("gradings")
+    success_url = reverse_lazy("dash-gradings")
 
 class GradingCreateView(LoginRequiredMixin, CreateView):
     model = Grading
