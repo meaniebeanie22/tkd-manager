@@ -3,7 +3,7 @@ from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvi
 from rest_framework import viewsets
 from rest_framework import permissions
 from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer, MemberSerializer, AwardSerializer, ClassSerializer
-from .permissions import APIPermission
+from .permissions import APIAllowed
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -11,7 +11,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class GradingResultViewSet(viewsets.ModelViewSet):
     """
@@ -19,7 +19,7 @@ class GradingResultViewSet(viewsets.ModelViewSet):
     """
     queryset = GradingResult.objects.all()
     serializer_class = GradingResultSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class AssessmentUnitViewSet(viewsets.ModelViewSet):
     """
@@ -27,7 +27,7 @@ class AssessmentUnitViewSet(viewsets.ModelViewSet):
     """
     queryset = AssessmentUnit.objects.all()
     serializer_class = AssessmentUnitSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class GradingInviteViewSet(viewsets.ModelViewSet):
     """
@@ -35,7 +35,7 @@ class GradingInviteViewSet(viewsets.ModelViewSet):
     """
     queryset = GradingInvite.objects.all()
     serializer_class = GradingInviteSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class GradingViewSet(viewsets.ModelViewSet):
     """
@@ -43,7 +43,7 @@ class GradingViewSet(viewsets.ModelViewSet):
     """
     queryset = Grading.objects.all()
     serializer_class = GradingSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class PaymentViewSet(viewsets.ModelViewSet):
     """
@@ -51,7 +51,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     """
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class PaymentTypeViewSet(viewsets.ModelViewSet):
     """
@@ -59,7 +59,7 @@ class PaymentTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = PaymentType.objects.all()
     serializer_class = PaymentTypeSerialzer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class MemberViewSet(viewsets.ModelViewSet):
     """
@@ -67,7 +67,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     """
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class AwardViewSet(viewsets.ModelViewSet):
     """
@@ -75,7 +75,7 @@ class AwardViewSet(viewsets.ModelViewSet):
     """
     queryset = Award.objects.all()
     serializer_class = AwardSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
 
 class ClassViewSet(viewsets.ModelViewSet):
     """
@@ -83,4 +83,4 @@ class ClassViewSet(viewsets.ModelViewSet):
     """
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
-    permission_classes = [APIPermission]
+    permission_classes = [APIAllowed]
