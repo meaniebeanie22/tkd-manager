@@ -16,7 +16,7 @@ class AssessmentUnitSerializer(serializers.HyperlinkedModelSerializer):
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member 
-        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+        fields = ['url','first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
 
 class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
     assessmentunits = AssessmentUnitSerializer(many=True, read_only=True)
@@ -47,5 +47,5 @@ class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
 class AwardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Award
-        fields = ['name']
+        fields = ['url','name']
     
