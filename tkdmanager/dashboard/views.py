@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.utils import timezone
 from dashboard import renderers
 from django.forms.models import model_to_dict
+from rest_framework.authtoken.models import Token
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -40,6 +41,15 @@ def index(request):
     }
 
     return render(request, 'home.html', context=context)
+
+@login_required
+def token_display(request):
+    token = Token.objects.get_or_create(user=request.user)
+    context = {
+        'token': token
+    }
+
+    return render(request, 'token.html', context=context)
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member

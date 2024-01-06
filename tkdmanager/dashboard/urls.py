@@ -47,4 +47,5 @@ urlpatterns = [
     path('grading/<int:pk>/delete/', views.GradingDeleteView.as_view(), name='dash-delete-grading'),
     path('grading/create/', views.GradingCreateView.as_view(), name='dash-add-grading'),
     path('gradingresult/<int:pk>/download/', views.gradingresult_pdf_view, name='dash-grading-result-download'),
+    path('token/', views.token_display, name='dash-get-token')
 ]
