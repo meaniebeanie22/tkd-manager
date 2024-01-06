@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType, Member, Award
+from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType, Member, Award, Class
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer, MemberSerializer, AwardSerializer
+from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer, MemberSerializer, AwardSerializer, ClassSerializer
 from .permissions import APIPermission
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -75,4 +75,12 @@ class AwardViewSet(viewsets.ModelViewSet):
     """
     queryset = Award.objects.all()
     serializer_class = AwardSerializer
+    permission_classes = [APIPermission]
+
+class ClassViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for classes
+    """
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
     permission_classes = [APIPermission]
