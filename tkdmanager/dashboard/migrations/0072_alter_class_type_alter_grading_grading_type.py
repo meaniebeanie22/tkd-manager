@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('dashboard', '0071_rename_grading_invite_gradingresult_gradinginvite'),
+        ('authtoken', '0003_tokenproxy'),
     ]
 
     operations = [
