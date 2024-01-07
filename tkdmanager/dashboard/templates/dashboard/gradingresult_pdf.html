@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grading Certificate</title>
     <!-- Add your CSS styles or link to external stylesheets here -->
     <style>
@@ -10,6 +8,7 @@
         size: a4 portrait;
         @frame header_frame {           /* Static Frame */
             -pdf-frame-content: header_content;
+            -pdf-frame-border: 1;
             left: 50pt; width: 512pt; top: 50pt; height: 40pt;
         }
         @frame content_frame {          /* Content Frame */
