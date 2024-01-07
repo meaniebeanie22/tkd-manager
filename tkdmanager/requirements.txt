@@ -45,3 +45,6 @@ webencodings==0.5.1
 xhtml2pdf==0.2.13
 psycopg2-binary==2.9.9
 whitenoise==6.6.0
+django-appconf==1.0.6
+django-select2==8.1.2
+

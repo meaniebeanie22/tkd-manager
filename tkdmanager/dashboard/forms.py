@@ -4,6 +4,7 @@ from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit
 from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
+from django_select2 import forms as s2forms
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -33,6 +34,20 @@ class MemberForm(ModelForm):
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
         }
 
+class StudentsWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        'first_name__icontains',
+        'last_name__icontains',
+        'idnumber__iexact'
+    ]
+
+class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        'first_name__icontains',
+        'last_name__icontains',
+        'idnumber__iexact'
+    ]
+
 class ClassForm(ModelForm):
     instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
 
@@ -43,6 +58,8 @@ class ClassForm(ModelForm):
             'date': DateInput(attrs={'type': 'date'}),
             'start': TimeInput(attrs={'type': 'time'}),
             'end': TimeInput(attrs={'type': 'time'}),
+            'instructors': InstructorsWidget,
+            'students': StudentsWidget,
         }
 
 class ClassSearchForm(Form):
