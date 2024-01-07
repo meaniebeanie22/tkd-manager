@@ -501,7 +501,7 @@ def gradingresult_pdf_view(request, pk, **kwargs):
     return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
 
 def gradingresult_batch_pdf_view(request, **kwargs):
-    pks = request.GET.get('selected_items')
+    pks = request.GET.getlist('selected_items')
     print(f'request.GET: {request.GET}')
     print(f'PKs to generate pdfs for: {pks}')
     merger = PdfWriter()
