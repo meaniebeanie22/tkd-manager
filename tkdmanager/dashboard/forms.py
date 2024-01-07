@@ -47,9 +47,10 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
         'last_name__icontains',
         'idnumber__iexact'
     ]
+    queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
 
 class ClassForm(ModelForm):
-    instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+    #instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
 
     class Meta:
         model = Class
@@ -58,8 +59,8 @@ class ClassForm(ModelForm):
             'date': DateInput(attrs={'type': 'date'}),
             'start': TimeInput(attrs={'type': 'time'}),
             'end': TimeInput(attrs={'type': 'time'}),
-            'instructors': InstructorsWidget,
-            'students': StudentsWidget,
+            'instructors': InstructorsWidget(),
+            'students': StudentsWidget(),
         }
 
 class ClassSearchForm(Form):
@@ -72,12 +73,12 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''), required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
+    instructors = ChoiceField(required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
         'first_name__icontains',
         'last_name__icontains',
         'idnumber__iexact'
     ]))
-    students = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
+    students = ChoiceField(required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
         'first_name__icontains',
         'last_name__icontains',
         'idnumber__iexact'
