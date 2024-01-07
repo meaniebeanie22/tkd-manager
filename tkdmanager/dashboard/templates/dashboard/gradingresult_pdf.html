@@ -35,20 +35,39 @@
         li {
             margin-bottom: 10px;
         }
-        a {
-            color: #007BFF;
-            text-decoration: none;
+
+        @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
         }
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
     </style>
 </head>
 <body>
 
-<div>
+<div id="header_content">
     <h1>Grading Certificate</h1>
-    <p><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a></p>
+    <p>{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</p>
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
-
+</div>
+<div id="footer_content">
+    <b>Congratulations on your outstanding achievement!</b>
+</div>
+<div>
     <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_grading_type_display }}</h4>
+
+    {% if gradingresult.award %}
+      <h4>{{ gradingresult.award }}</h4>        
+    {% endif %}
 
     <h5>Grading Units</h5>
     {% if gradingresult.assessmentunit_set.all %}
@@ -64,28 +83,18 @@
         <p>This grading has no units.</p>
     {% endif %}
 
-    {% if gradingresult.award %}
-        <h5>Awards</h5>
-        <ul>
-            <li>
-                <b>{{ gradingresult.award }}</b>
-            </li>
-        </ul>
-    {% endif %}
-
     <h5>Assessors</h5>
     {% if gradingresult.assessor.all %}
         <ul>
             {% for as in gradingresult.assessor.all %}
                 <li>
-                    <a href="{{ as.get_absolute_url }}">{{ as }} - <b>{{ as.get_belt_display }}</b></a>
+                    {{ as }} - <b>{{ as.get_belt_display }}</b>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>This grading had no assessors.</p>
     {% endif %}
-    <p><b>Congratulations on your outstanding achievement!</b></p>
 </div>
 
 </body>

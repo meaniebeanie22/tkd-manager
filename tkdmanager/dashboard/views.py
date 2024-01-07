@@ -502,8 +502,6 @@ def gradingresult_pdf_view(request, pk, **kwargs):
 
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
-    print(f'request.GET: {request.GET}')
-    print(f'PKs to generate pdfs for: {pks}')
     merger = PdfWriter()
     buffer = BytesIO()
     for pk in pks:
@@ -533,7 +531,7 @@ def gradingresult_batch_pdf_view(request, **kwargs):
     return response       
 
 def gradinginvite_batch_pdf_view(request, **kwargs):
-    pks = request.GET.get('selected_items')
+    pks = request.GET.getlist('selected_items')
     merger = PdfWriter()
     buffer = BytesIO()
     for pk in pks:
