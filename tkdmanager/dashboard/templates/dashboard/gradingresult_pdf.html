@@ -6,7 +6,22 @@
     <title>Grading Certificate</title>
     <!-- Add your CSS styles or link to external stylesheets here -->
     <style>
-        /* Add your custom styles here */
+        @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+    </style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -35,27 +50,13 @@
         li {
             margin-bottom: 10px;
         }
-
-        @page {
-        size: a4 portrait;
-        @frame header_frame {           /* Static Frame */
-            -pdf-frame-content: header_content;
-            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
-        }
-        @frame content_frame {          /* Content Frame */
-            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
-        }
-        @frame footer_frame {           /* Another static Frame */
-            -pdf-frame-content: footer_content;
-            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
-        }
-    }
+    
     </style>
 </head>
 <body>
 
 <div id="header_content">
-    <h1>Grading Certificate</h1>
+    <h1><font size="6">Grading Certificate</font></h1>
     <p>{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</p>
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
 </div>
