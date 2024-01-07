@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Class List</title>
+{{ form.media.css }}
+{% endblock %}
+
 {% block content %}
 <h1>Class List</h1>
 <form method="get" action="{% url 'dash-classes' %}">
