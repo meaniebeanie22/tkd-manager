@@ -24,6 +24,10 @@ tr.content:hover {
   border-width: 2px;
 }
 
+select {
+  width: 200px;
+}
+
 button.link {
 	font-family: "Verdana" sans-serif;
 	font-size: 1em;
