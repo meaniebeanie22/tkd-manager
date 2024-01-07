@@ -17,4 +17,7 @@ RUN pip install -r requirements.txt
 
 COPY . ./
 
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 CMD gunicorn tkdmanager.wsgi --log-file -
