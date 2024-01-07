@@ -48,7 +48,7 @@
     <p><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a></p>
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
 
-    <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_type_display }}</h4>
+    <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_grading_type_display }}</h4>
 
     <h5>Grading Units</h5>
     {% if gradingresult.assessmentunit_set.all %}
