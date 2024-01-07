@@ -23,8 +23,10 @@
   </form>
 <br>
   {% if gradingresult_list %}
+  <form method="get" action="{% url 'dash-batch-generate-gr-pdf' %}">
   <table style="width: 100%;">
     <tr>
+      <th>Select</th>
       <th>Link</th>
       <th>Type</th>
       <th>Date</th>
@@ -36,6 +38,9 @@
     </tr>
     {% for gr in gradingresult_list %}
       <tr class="content">
+        <td>
+          <input type="checkbox" name="selected_items" value="{{ gr.pk }}">
+        </td>
         <td><a href="{{ gr.get_absolute_url }}">Link</a></td>
         <td>{{ gr.grading.get_grading_type_display }}</td>
         <td>{{ gr.grading.grading_datetime|date:"d/m/y" }}</td>
@@ -52,6 +57,8 @@
       </tr>
     {% endfor %}
   </table>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Generate Certificate PDF for Selected Items</button>
+  </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
   {% endif %}

@@ -497,3 +497,9 @@ def gradingresult_pdf_view(request, pk, **kwargs):
             data['total_achieved_pts'] = apts
             data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
     return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+
+def gradingresult_batch_pdf_view(request, **kwargs):
+    pks = request.GET.get('selected_items')
+
+def gradinginvite_batch_pdf_view(request, **kwargs):
+    pks = request.GET.get('selected_items')

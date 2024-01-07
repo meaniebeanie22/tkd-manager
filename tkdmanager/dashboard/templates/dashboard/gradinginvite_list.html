@@ -25,27 +25,34 @@
 </form>
 <br>
 {% if gradinginvite_list %}
-  <table style="width: 100%;">
-    <tr>
-      <th>Link</th>
-      <th>Type</th>
-      <th>Date & Time</th>
-      <th>Member</th>
-      <th>For Belt</th>
-      <th>Payment</th>
-    </tr>
-    {% for gi in gradinginvite_list %}
-      <tr class="content">
-        <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
-        <td>{{ gi.grading.get_grading_type_display }}</td>
-        <td>{{ gi.grading.grading_datetime }}</td>
-        <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
-        <td>{{ gi.get_forbelt_display }}</td>
-        <td><a href="{{ gi.payment.get_absolute_url }}" {% if gi.payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif gi.payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ gi.payment }}</a></td>
-      </tr>
-    {% endfor %}
-  </table>
+    <form method="get" action="{% url 'dash-batch-generate-gi-pdf' %}">
+      <table style="width: 100%;">
+        <tr>
+          <th>Select</th>
+          <th>Link</th>
+          <th>Type</th>
+          <th>Date & Time</th>
+          <th>Member</th>
+          <th>For Belt</th>
+          <th>Payment</th>
+        </tr>
+        {% for gi in gradinginvite_list %}
+          <tr class="content">
+            <td>
+              <input type="checkbox" name="selected_items" value="{{ gi.pk }}">
+            </td>
+            <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
+            <td>{{ gi.grading.get_grading_type_display }}</td>
+            <td>{{ gi.grading.grading_datetime }}</td>
+            <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
+            <td>{{ gi.get_forbelt_display }}</td>
+            <td><a href="{{ gi.payment.get_absolute_url }}" {% if gi.payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif gi.payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ gi.payment }}</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Generate Invite PDF for Selected Items</button>
+    </form>
   {% else %}
-    <p>There are no grading invites.</p>
+    <p>There are no grading invites that match your current filters.</p>
   {% endif %}
 {% endblock %}
