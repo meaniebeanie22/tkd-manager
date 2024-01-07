@@ -89,8 +89,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ["GOOGLE_EMAIL_ADDRESS"]
-EMAIL_HOST_PASSWORD = os.environ["GOOGLE_APP_PASSWORD"]
+EMAIL_HOST_USER = os.environ.get("GOOGLE_EMAIL_ADDRESS")
+EMAIL_HOST_PASSWORD = os.environ.get("GOOGLE_APP_PASSWORD")
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -98,11 +98,11 @@ EMAIL_HOST_PASSWORD = os.environ["GOOGLE_APP_PASSWORD"]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ["PGDATABASE"],
-        'USER': os.environ["PGUSER"],
-        'PASSWORD': os.environ["PGPASSWORD"],
-        'HOST': os.environ["PGHOST"],
-        'PORT': os.environ["PGPORT"],
+        'NAME': os.environ.get("PGDATABASE"),
+        'USER': os.environ.get("PGUSER"),
+        'PASSWORD': os.environ.get("PGPASSWORD"),
+        'HOST': os.environ.get("PGHOST"),
+        'PORT': os.environ.get("PGPORT"),
     }
 }
 # Password validation

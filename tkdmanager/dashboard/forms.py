@@ -78,10 +78,13 @@ class ClassSearchForm(Form):
         'last_name__icontains',
         'idnumber__iexact'
     ]))
-    students = ChoiceField(required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
-        'first_name__icontains',
-        'last_name__icontains',
-        'idnumber__iexact'
+    students = ChoiceField(required=False, 
+        widget=s2forms.ModelSelect2MultipleWidget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
     ]))
 
 class GradingResultSearchForm(Form):
