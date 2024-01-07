@@ -25,7 +25,6 @@
     <style>
         body {
             text-align: center;
-            background-color: white;
             margin: 0;
             padding:10px;
         }
@@ -36,17 +35,19 @@
         li {
             margin-bottom: 10px;
         }
-    
+        .centered {
+            top: 50%;
+        }
     </style>
 </head>
 <body>
 
 <div id="header_content">
-    <h1><font size="6">Grading Certificate</font></h1>
-    <p>{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</p>
+    <h1><font size="5">Grading Certificate</font></h1>
+    <h1><font size="7">{{ gradingresult.member.first_name }} {{ gradingresult.member.last_name }} ({{ gradingresult.member.idnumber }})</font></h1>
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
 </div>
-<div id="footer_content">
+<div id="footer_content" class="centered">
     <b>Congratulations on your outstanding achievement!</b>
 </div>
 <div>
@@ -56,7 +57,7 @@
       <h4>{{ gradingresult.award }}</h4>        
     {% endif %}
 
-    <h5>Grading Units</h5>
+    <h5><font size="5">Grading Units</font></h5>
     {% if gradingresult.assessmentunit_set.all %}
         <ul>
             {% for au in gradingresult.assessmentunit_set.all %}
@@ -70,7 +71,7 @@
         <p>This grading has no units.</p>
     {% endif %}
 
-    <h5>Assessors</h5>
+    <h5><font size="3">Assessors</font></h5>
     {% if gradingresult.assessor.all %}
         <ul>
             {% for as in gradingresult.assessor.all %}
