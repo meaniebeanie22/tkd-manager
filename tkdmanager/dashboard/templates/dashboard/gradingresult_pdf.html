@@ -9,14 +9,15 @@
         @frame header_frame {           /* Static Frame */
             -pdf-frame-content: header_content;
             -pdf-frame-border: 1;
-            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+            left: 50pt; width: 512pt; top: 50pt; height: 100pt;
         }
         @frame content_frame {          /* Content Frame */
             left: 50pt; width: 512pt; top: 90pt; height: 632pt;
         }
         @frame footer_frame {           /* Another static Frame */
             -pdf-frame-content: footer_content;
-            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            -pdf-frame-border: 1;
+            left: 50pt; width: 512pt; top: 772pt; height: 60pt;
         }
     }
     </style>
