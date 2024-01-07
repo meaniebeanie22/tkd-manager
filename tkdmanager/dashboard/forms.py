@@ -59,8 +59,8 @@ class ClassForm(ModelForm):
             'date': DateInput(attrs={'type': 'date'}),
             'start': TimeInput(attrs={'type': 'time'}),
             'end': TimeInput(attrs={'type': 'time'}),
-            'instructors': InstructorsWidget(),
-            'students': StudentsWidget(),
+            'instructors': InstructorsWidget,
+            'students': StudentsWidget,
         }
 
 class ClassSearchForm(Form):
