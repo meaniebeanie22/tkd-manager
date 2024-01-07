@@ -12,12 +12,13 @@
             left: 50pt; width: 512pt; top: 50pt; height: 100pt;
         }
         @frame content_frame {          /* Content Frame */
-            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            -pdf-frame-border: 1;
+            left: 50pt; width: 512pt; top: 150pt; height: 592pt;
         }
         @frame footer_frame {           /* Another static Frame */
             -pdf-frame-content: footer_content;
             -pdf-frame-border: 1;
-            left: 50pt; width: 512pt; top: 772pt; height: 60pt;
+            left: 50pt; width: 512pt; top: 782pt; height: 50pt;
         }
     }
     </style>
@@ -64,7 +65,7 @@
     <b>Congratulations on your outstanding achievement!</b>
 </div>
 <div>
-    <h4>Graded for {{ gradingresult.get_forbelt_display }} as a {{ gradingresult.grading.get_grading_type_display }}</h4>
+    <h4>Graded for {{ gradingresult.get_forbelt_display }} in {{ gradingresult.grading.get_grading_type_display }}</h4>
 
     {% if gradingresult.award %}
       <h4>{{ gradingresult.award }}</h4>        
