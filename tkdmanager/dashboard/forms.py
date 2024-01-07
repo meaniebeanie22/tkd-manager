@@ -73,19 +73,27 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructors = ChoiceField(required=False, widget=s2forms.ModelSelect2MultipleWidget(model=Member, search_fields = [
-        'first_name__icontains',
-        'last_name__icontains',
-        'idnumber__iexact'
-    ]))
-    students = ChoiceField(required=False, 
+    instructors = ChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2MultipleWidget(
             model=Member, 
             search_fields = [
                 'first_name__icontains',
                 'last_name__icontains',
                 'idnumber__iexact'
-    ]))
+            ]
+        )
+    )
+    students = ChoiceField(required=False, queryset=Member.objects.all(),
+        widget=s2forms.ModelSelect2MultipleWidget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
+            ],
+            queryset=Member.objects.all()
+        )
+    )
 
 class GradingResultSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
