@@ -10,6 +10,7 @@ def PDFResponse(template_src, filename, context_dict={}):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
+"""
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html  = template.render(context_dict)
@@ -17,4 +18,14 @@ def render_to_pdf(template_src, context_dict={}):
     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
     if pdf.err:
         return None
+    return result
+"""
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
+    if pisa_status.err:
+       return None
     return result
