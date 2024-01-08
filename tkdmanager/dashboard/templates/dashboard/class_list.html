@@ -10,7 +10,9 @@
 <form method="get" action="{% url 'dash-classes' %}">
   <div class="container-md" style="margin-left: 0;">
     <div class="row">
-      {{ form.as_table }}        
+      <table>
+        {{ form.as_table }}  
+      </table>      
     <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
   </div>
 </form>
