@@ -303,7 +303,7 @@ class ClassDetailView(LoginRequiredMixin, generic.DetailView):
         context = super(ClassDetailView, self).get_context_data(**kwargs)
         cl = self.get_object()
         url = reverse('dash-batch-create-grading-invite')+'?'
-        for student in cl.students:
+        for student in cl.students.all():
             url += (f'selected_items={student.pk}&')
         url = url.strip('&')
         context['batch_create_grading_invites_url'] = url
