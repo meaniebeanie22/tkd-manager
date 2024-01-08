@@ -8,14 +8,10 @@
 <h1>Class List</h1>
 {{ form.media.css }}
 <form method="get" action="{% url 'dash-classes' %}">
-  <div class="container-md" style="margin-left: 0;">
-    <div class="row">
-      <table>
-        {{ form.as_table }}  
-      </table>
-    </div>      
+    <table>
+      {{ form.as_table }}  
+    </table>     
     <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
-  </div>
 </form>
 {{ form.media.js }}
 
@@ -23,7 +19,7 @@
   {% if class_list %}
   <table style="width: 100%;">
     <tr>
-      <th>Type</th>
+    S  <th>Type</th>
       <th>Date</th>
       <th>Start</th>
       <th>End</th>
