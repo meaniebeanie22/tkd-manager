@@ -17,7 +17,7 @@
     $(document).ready(function() {
         function updateGradingInviteOptions() {
             var selectedMember = $('#id_member').val();
-            var gradingInviteField = $('#id_grading_invite');
+            var gradingInviteField = $('#id_gradinginvite');
 
             $.ajax({
                 url: '/dashboard/member/' + selectedMember + '/get_grading_invites/',
@@ -41,7 +41,7 @@
         }
 
         function updateGradingInviteDetails() {
-            var selectedGradingInvite = $('#id_grading_invite').val();
+            var selectedGradingInvite = $('#id_gradinginvite').val();
 
             if (selectedGradingInvite) {
                 $.ajax({
@@ -60,7 +60,7 @@
         }
 
         $('#id_member').change(updateGradingInviteOptions);
-        $('#id_grading_invite').change(updateGradingInviteDetails);
+        $('#id_gradinginvite').change(updateGradingInviteDetails);
         $('.django-select2').djangoSelect2();
         // Trigger the functions on page load if member and gradinginvite are pre-selected
     });
