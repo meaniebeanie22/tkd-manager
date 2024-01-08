@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>TKD Manager - Payment List</title>
-{{ form.media.css }}
+{{ search_form.media.css }}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
       <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button> <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-add-payment' %}">Add</a>
     </div>
   </form>
-  {{ form.media.js }}
+  {{ search_form.media.js }}
 <br>
   {% if payment_list %}
   <table>
