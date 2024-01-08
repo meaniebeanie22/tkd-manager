@@ -300,7 +300,7 @@ class ClassDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
-        context = super(MemberDetailView, self).get_context_data(**kwargs)
+        context = super(ClassDetailView, self).get_context_data(**kwargs)
         cl = self.get_object()
         url = reverse('dash-batch-create-grading-invite')+'?'
         for student in cl.students:
