@@ -86,7 +86,8 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         # Find overdue payments + those for the next 6 months
         today = datetime.now().date()
         six_months_later = today + timedelta(days=6 * 30)
-        recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=today) & Q(date_due__date__lte=six_months_later)).all()
+        six_months_before = today - timedelta(days=6 * 30)
+        recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=six_months_before) & Q(date_due__date__lte=six_months_later)).all()
         payments = self.get_object().payment_set.all()
         overdue_payments = [p for p in payments if p.get_payment_status() == "Overdue"]
         context['relevant_payments'] = list(recent_payments) + overdue_payments
