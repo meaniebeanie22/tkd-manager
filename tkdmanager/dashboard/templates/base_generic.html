@@ -20,6 +20,9 @@
       {% block sidebar %}
         <ul class="sidebar-nav">
           <li><a href="{% url 'dash-index' %}">Home</a></li>
+        </ul>
+        <hr>
+        <ul class="sidebar-nav">
           <li><a href="{% url 'dash-members' %}">All members</a></li>
           <li><a href="{% url 'dash-gradings' %}">All gradings</a></li>
           <li><a href="{% url 'dash-gradingresults' %}">All grading results</a></li>
@@ -32,7 +35,6 @@
         <ul class="sidebar-nav">
         {% if user.is_authenticated %}
             <li>User: {{ user.get_username }}</li>
-
             <li>
               <form action="{% url 'admin:logout' %}" method="post">
                 {% csrf_token %}
