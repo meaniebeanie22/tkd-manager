@@ -30,7 +30,6 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
-    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
 
     class Meta:
         model = GradingResult
@@ -42,7 +41,6 @@ class GradingResultUpdateForm(ModelForm):
 
 class GradingResultCreateForm(ModelForm):
     is_letter = BooleanField(required=False)
-    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
 
     class Meta:
         model = GradingResult
@@ -83,7 +81,7 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructors = ModelChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
+    instructor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
@@ -93,7 +91,7 @@ class ClassSearchForm(Form):
             ]
         )
     )
-    students = ModelChoiceField(required=False, queryset=Member.objects.all(),
+    student = ModelChoiceField(required=False, queryset=Member.objects.all(),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
@@ -101,7 +99,6 @@ class ClassSearchForm(Form):
                 'last_name__icontains',
                 'idnumber__iexact'
             ],
-            queryset=Member.objects.all()
         )
     )
 
@@ -115,12 +112,11 @@ class GradingResultSearchForm(Form):
                 'first_name__icontains',
                 'last_name__icontains',
                 'idnumber__iexact'
-            ],
-            queryset=Member.objects.all()
+            ]
         )
     )
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
-    assesor = ModelChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
+    assesor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
@@ -147,7 +143,6 @@ class GradingInviteSearchForm(Form):
                 'last_name__icontains',
                 'idnumber__iexact'
             ],
-            queryset=Member.objects.all()
         )
     )
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
@@ -156,7 +151,6 @@ class GradingInviteSearchForm(Form):
         'placeholder': 'YYYY-mm-dd'
     }))
 
-    
 class PaymentForm(ModelForm):
     date_created = DateTimeField(disabled=True, initial=timezone.now())
 
@@ -178,7 +172,6 @@ class PaymentSearchForm(Form):
                 'last_name__icontains',
                 'idnumber__iexact'
             ],
-            queryset=Member.objects.all()
         )
     )
     paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
@@ -192,8 +185,6 @@ class PaymentSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-
-
 
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
