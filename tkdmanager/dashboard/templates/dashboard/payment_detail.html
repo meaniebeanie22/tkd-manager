@@ -1,22 +1,29 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>TKD Manager - TKD Manager - Payment Details</title>
+<title>TKD Manager - Payment Details</title>
 {% endblock %}
 
 {% block content %}
 {% now "Y-m-d H:i:s" as today %}
-<h4>Payment Details</h4>
-<ul>
-    <li>Member: <a href="{{ payment.member.get_absolute_url }}">{{ payment.member }}</a></li>
-    <li>Type: {{ payment.paymenttype }}</li>
-    <li{% if payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>Status: {{ payment.get_payment_status }}</li>
-    <li>Date Created: {{ payment.date_created|date:"d/m/y" }}</li>
-    <li{% if payment.is_past_due %}{% if payment.date_paid_in_full is None %} style="color:red;"{% endif %}{% endif %}>Date Due: {{ payment.date_due|date:"d/m/y" }}</li>
-    <li>Date Paid in Full: {{ payment.date_paid_in_full|date:"d/m/y" }}</li>
-    <li>Amount Due: ${{ payment.amount_due }}</li>
-    <li>Amount Paid: ${{ payment.amount_paid }}</li>
-</ul>
-<a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-payment' payment.pk %}">Edit</a>
-<a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-payment' payment.pk %}">Delete</a>
+<h1>Payment Details</h1>
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <ul>
+                <li class="list-group-item">Member: <a href="{{ payment.member.get_absolute_url }}">{{ payment.member }}</a></li>
+                <li class="list-group-item">Type: {{ payment.paymenttype }}</li>
+                <li class="list-group-item"{% if payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>Status: {{ payment.get_payment_status }}</li>
+                <li class="list-group-item">Date Created: {{ payment.date_created|date:"d/m/y" }}</li>
+                <li class="list-group-item"{% if payment.is_past_due %}{% if payment.date_paid_in_full is None %} style="color:red;"{% endif %}{% endif %}>Date Due: {{ payment.date_due|date:"d/m/y" }}</li>
+                <li class="list-group-item">Date Paid in Full: {{ payment.date_paid_in_full|date:"d/m/y" }}</li>
+                <li class="list-group-item">Amount Due: ${{ payment.amount_due }}</li>
+                <li class="list-group-item">Amount Paid: ${{ payment.amount_paid }}</li>
+            </ul>
+            <br>
+            <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-payment' payment.pk %}">Edit</a>
+            <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-payment' payment.pk %}">Delete</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
