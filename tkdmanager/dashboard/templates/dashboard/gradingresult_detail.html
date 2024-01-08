@@ -1,5 +1,9 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Grading Result Details</title>
+{% endblock %}
+
 {% block content %}
   <div class="container mt-2">
     <h1><a href="{{ gradingresult.member.get_absolute_url }}">{{ gradingresult.member.last_name }}, {{ gradingresult.member.first_name }} ({{ gradingresult.member.idnumber }})</a> - Grading on {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</h1>

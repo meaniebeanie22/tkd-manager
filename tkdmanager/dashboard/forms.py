@@ -6,35 +6,14 @@ from django import forms
 from django.urls import reverse_lazy
 from django_select2 import forms as s2forms
 
-class GradingResultUpdateForm(ModelForm):
-    is_letter = BooleanField(disabled=True, required=False)
-    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+class MembersWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        'first_name__icontains',
+        'last_name__icontains',
+        'idnumber__iexact'
+    ]
 
-    class Meta:
-        model = GradingResult
-        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
-
-class GradingResultCreateForm(ModelForm):
-    is_letter = BooleanField(required=False)
-    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
-
-    class Meta:
-        model = GradingResult
-        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
-        widgets = {
-            'date': DateInput(attrs={'type': 'date'}),
-        }
-
-class MemberForm(ModelForm):
-    class Meta:
-        model = Member
-        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
-        widgets = {
-            'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
-            'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
-        }
-
-class StudentsWidget(s2forms.ModelSelect2MultipleWidget):
+class MemberWidget(s2forms.ModelSelect2Widget):
     search_fields = [
         'first_name__icontains',
         'last_name__icontains',
@@ -49,9 +28,40 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
     ]
     queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
 
-class ClassForm(ModelForm):
-    #instructors = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+class GradingResultUpdateForm(ModelForm):
+    is_letter = BooleanField(disabled=True, required=False)
+    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
 
+    class Meta:
+        model = GradingResult
+        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
+        widgets = {
+            'member': MemberWidget,
+            'assessor': InstructorsWidget,
+        }
+
+class GradingResultCreateForm(ModelForm):
+    is_letter = BooleanField(required=False)
+    assessor = ModelMultipleChoiceField(queryset=Member.objects.all().exclude(team_leader_instructor__exact=''))
+
+    class Meta:
+        model = GradingResult
+        fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
+        widgets = {
+            'member': MemberWidget,
+            'assessor': InstructorsWidget,
+        }
+
+class MemberForm(ModelForm):
+    class Meta:
+        model = Member
+        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+        widgets = {
+            'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
+            'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+        }
+
+class ClassForm(ModelForm):
     class Meta:
         model = Class
         fields = ['type','date','start','end','instructors','students']
@@ -60,7 +70,7 @@ class ClassForm(ModelForm):
             'start': TimeInput(attrs={'type': 'time'}),
             'end': TimeInput(attrs={'type': 'time'}),
             'instructors': InstructorsWidget,
-            'students': StudentsWidget,
+            'students': MembersWidget,
         }
 
 class ClassSearchForm(Form):
@@ -98,9 +108,28 @@ class ClassSearchForm(Form):
 class GradingResultSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
-    member = ModelChoiceField(queryset=Member.objects.all(), required=False)
+    member = ModelChoiceField(required=False, queryset=Member.objects.all(),
+        widget=s2forms.ModelSelect2Widget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
+            ],
+            queryset=Member.objects.all()
+        )
+    )
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
-    assessor = ModelChoiceField(queryset=Member.objects.exclude(team_leader_instructor__exact='').all(), required=False)
+    assesor = ModelChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
+        widget=s2forms.ModelSelect2Widget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
+            ]
+        )
+    )
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={
@@ -110,7 +139,17 @@ class GradingResultSearchForm(Form):
 class GradingInviteSearchForm(Form):
     BLANK_CHOICE = [('', '---------')]
 
-    member = ModelChoiceField(queryset=Member.objects.all(), required=False)
+    member = ModelChoiceField(required=False, queryset=Member.objects.all(),
+        widget=s2forms.ModelSelect2Widget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
+            ],
+            queryset=Member.objects.all()
+        )
+    )
     forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={
@@ -127,10 +166,21 @@ class PaymentForm(ModelForm):
         widgets = {
             'date_due': DateInput(attrs={'type': 'date'}),
             'date_paid_in_full': DateInput(attrs={'type':'date'}),
+            'member': MemberWidget,
         }
 
 class PaymentSearchForm(Form):
-    member = ModelChoiceField(queryset=Member.objects.all(), required=False)
+    member = ModelChoiceField(required=False, queryset=Member.objects.all(),
+        widget=s2forms.ModelSelect2Widget(
+            model=Member, 
+            search_fields = [
+                'first_name__icontains',
+                'last_name__icontains',
+                'idnumber__iexact'
+            ],
+            queryset=Member.objects.all()
+        )
+    )
     paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
         'style':'max-width: 175px;'
     }))
@@ -159,6 +209,9 @@ class GradingInviteForm(ModelForm):
     class Meta:
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
+        widgets = {
+            'member': MemberWidget,
+        }
 
 class GradingForm(ModelForm):
     class Meta:

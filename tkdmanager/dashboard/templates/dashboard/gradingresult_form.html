@@ -1,8 +1,12 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Add/Update Grading Result</title>
+{{ form.media.css }}
+{% endblock %}
+
 {% block content %}
-<h4>Add Grading Details</h4>
-{{ form.media }}
+<h4>Add Grading Result Details</h4>
 <form action="" method="post">
   {% csrf_token %}
   <table>
@@ -63,4 +67,5 @@
     });
     </script> 
 </form>
+{{ form.media.js }}
 {% endblock %}

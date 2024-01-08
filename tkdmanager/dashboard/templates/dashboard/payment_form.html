@@ -1,12 +1,16 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Add/Update a Payment</title>
+{{ form.media.css }}
+{% endblock %}
+
 {% block content %}
-<h4>Add a Payment</h4>
+<h4>Add/Update a Payment</h4>
 <form action="" method="post">
   {% csrf_token %}
   <table>
     {{ form.as_table }}
-    {{ form.media }}
   </table>
   <script>
     $(document).ready(function () {
@@ -29,4 +33,5 @@
   </script>
   <input type="submit" value="Submit" />
 </form>
+{{ form.media.js }}
 {% endblock %}

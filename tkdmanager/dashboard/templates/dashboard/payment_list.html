@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Payment List</title>
+{{ form.media.css }}
+{% endblock %}
+
 {% block content %}
   <h1>Payment List</h1>
   <form method="get" action="{% url 'dash-payments' %}">
@@ -21,6 +26,7 @@
       <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button> <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-add-payment' %}">Add</a>
     </div>
   </form>
+  {{ form.media.js }}
 <br>
   {% if payment_list %}
   <table>

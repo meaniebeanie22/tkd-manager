@@ -1,5 +1,9 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Award Detail</title>
+{% endblock %}
+
 {% block content %}
   <h1>{{ award }}</h1>
   <p><a href="{% url 'dash-update-award' award.pk %}">Edit</a></p>

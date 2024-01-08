@@ -1,5 +1,9 @@
 {% extends 'base_generic.html' %}
 
+{% block title %}
+<title>Grading Invite List</title>
+{{ search_form.media.css }}
+{% endblock %}
 
 {% block content %}
 <h1>Grading Invites</h1>
@@ -23,6 +27,7 @@
     <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button>
   </div>
 </form>
+{{ search_form.media.js }}
 <br>
 {% if gradinginvite_list %}
     <form method="get" action="{% url 'dash-batch-generate-gi-pdf' %}">

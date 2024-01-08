@@ -1,11 +1,14 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Member List</title>
+{% endblock %}
+
 {% block content %}
 <h1>Member List</h1>
 <form method="get">
   <input type="text" name="q" placeholder="Search">
   <button type="submit">Search</button>
-  
 </form>
 <br>
   {% if member_list %}

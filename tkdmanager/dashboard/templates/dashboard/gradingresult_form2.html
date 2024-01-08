@@ -1,7 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+<title>Add/Update Assessment Units</title>
+{% endblock %}
+
 {% block content %}
-<h4>Add Assessment Units</h4>
+<h4>Add/Update Assessment Units</h4>
 <form method="post">
   {% csrf_token %}
   {{ formset.management_form }}
