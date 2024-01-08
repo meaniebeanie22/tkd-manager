@@ -62,6 +62,12 @@ TL_INST_RANKS = [
 #FDCC+BB+AA+
 LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
 
+def determine_belt_type(id):
+    if id > 39: # is x id a blackbelt or not (for gradings)
+        return 'Black'
+    else:
+        return 'Color'
+
 def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 

@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Batch Revise Grading Invites</title>
+{% endblock %}
+
+{% block content %}
+<h4>Batch Revise Grading Invites</h4>
+<table>
+    <tr>
+        <th>Member</th>
+        <th>For Belt</th>
+        <th>Grading</th>
+        <th>Edit GI</th>
+        <th>Payment Type</th>
+        <th>Payment Due</th>
+        <th>Amount Due</th>
+        <th>Edit Payment</th>
+    </tr>
+    {% for gi in gradinginvites %}
+    <tr>
+        <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
+        <td>{{ gi.get_forbelt_display }}</td>
+        <td><a href="{{ gi.grading.get_absolute_url }}">{{ gi.grading }}</a></td>
+        <td><a href="{% url 'dash-update-grading-invite' gi.pk %}" class="btn btn-outline-secondary">Edit</a></td>
+        <td>{{ gi.payment.paymenttype }}</td>
+        <td>{{ gi.payment.date_due|date:"d/m/y" }}</td>
+        <td>${{ gi.payment.amount_due }}</td>
+        <td><a href="{% url 'dash-update-payment' gi.payment.pk %}" class="btn btn-outline-secondary">Edit</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

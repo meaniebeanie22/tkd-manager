@@ -1,6 +1,6 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
-from django.forms import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm
 from django.db.models import Q
 from django.utils import timezone
@@ -298,6 +298,17 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
 class ClassDetailView(LoginRequiredMixin, generic.DetailView):
     model = Class
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(MemberDetailView, self).get_context_data(**kwargs)
+        cl = self.get_object()
+        url = reverse('dash-batch-create-grading-invite')+'?'
+        for student in cl.students:
+            url += (f'selected_items={student.pk}&')
+        url = url.strip('&')
+        context['batch_create_grading_invites_url'] = url
+        return context
+
 class ClassCreate(LoginRequiredMixin, CreateView):
     model = Class
     form_class = ClassForm
@@ -553,3 +564,52 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         return response  
     else:
         return HttpResponse(status=204)
+
+class GradingSelectForm(Form):
+    grading = ModelChoiceField(queryset=Grading.objects.all())
+
+@login_required  
+def gradinginvite_batch_create(request, **kwargs):
+    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt'])
+
+    if request.method == "POST":
+        formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
+        gradingselectform = GradingSelectForm(prefix="miscselect")
+        if formset.is_valid() and gradingselectform.is_valid():
+            # ADD ISSUED_BY AND GRADING AND CREATE/ADD PAYMENTS
+            gi_pks = []
+            for form in formset:
+                gi = form.save(commit=False)
+                gi.issued_by = request.user
+                gi.grading = get_object_or_404(Grading, gradingselectform.grading)
+                belt = determine_belt_type(gi.forbelt)
+                # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
+                if belt == 'Black':
+                    pt=13
+                else:
+                    pt=12
+                p = Payment(member=form.member, paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
+                p.save()
+                gi.payment = p
+                gi.save()
+                gi_pks.append(gi.pk)
+
+            formset.save()
+
+            # TODO add a querystring to this so the revise view shows a list of all the created GIs and the created Payments for the user to review to make sure there are no booboos (and an edit button next to each to fix em if there are)
+            qd = QueryDict()
+            for pk in gi_pks:
+                qd.update({'selected_items': pk})
+            return HttpResponseRedirect(reverse('dash-batch-revise-grading-invite') + '?' + qd.urlencode())
+    else:
+        # GET request
+        pks = request.GET.getlist('selected_items')
+        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks])
+        gradingselectform = GradingSelectForm(prefix="miscselect")
+    return render(request, "gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
+
+@login_required
+def batch_gradinginvite_revise(request, **kwargs):
+    pks = request.GET.getlist('selected_items')
+    gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
+    return render(request, "gradinginvite_batch_revise.html", {'gradinginvites': gis})

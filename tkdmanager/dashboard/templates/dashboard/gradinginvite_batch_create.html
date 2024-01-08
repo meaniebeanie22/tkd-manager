@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Batch Create Grading Invites</title>
+{% endblock %}
+
+{% block content %}
+<h4>Batch Create Grading Invites</h4>
+{{ form.media }}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ miscform }}
+    <hr>
+    {{ formset }}
+    <input type="submit" value="Submit"/>
+</form>
+{% endblock %}
