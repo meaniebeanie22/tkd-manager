@@ -73,8 +73,8 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructors = ModelMultipleChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
-        widget=s2forms.ModelSelect2MultipleWidget(
+    instructors = ModelChoiceField(required=False, queryset = Member.objects.all().exclude(team_leader_instructor__exact=''),
+        widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
                 'first_name__icontains',
@@ -83,8 +83,8 @@ class ClassSearchForm(Form):
             ]
         )
     )
-    students = ModelMultipleChoiceField(required=False, queryset=Member.objects.all(),
-        widget=s2forms.ModelSelect2MultipleWidget(
+    students = ModelChoiceField(required=False, queryset=Member.objects.all(),
+        widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
                 'first_name__icontains',
