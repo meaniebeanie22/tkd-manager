@@ -606,10 +606,10 @@ def gradinginvite_batch_create(request, **kwargs):
         pks = request.GET.getlist('selected_items')
         formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks])
         gradingselectform = GradingSelectForm(prefix="miscselect")
-    return render(request, "gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
+    return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
 
 @login_required
 def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist('selected_items')
     gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
-    return render(request, "gradinginvite_batch_revise.html", {'gradinginvites': gis})
+    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis})
