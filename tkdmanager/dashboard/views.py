@@ -502,47 +502,53 @@ def gradingresult_pdf_view(request, pk, **kwargs):
 
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
-    merger = PdfWriter()
-    buffer = BytesIO()
-    for pk in pks:
-        gr = get_object_or_404(GradingResult, pk=pk)
-        data = {
-            'gradingresult': gr
-        }
-        assessmentunits = gr.assessmentunit_set.all()
-        if assessmentunits:
-            maxpts = 0
-            apts = 0
-            for au in assessmentunits:
-                maxpts += au.max_pts
-                apts += au.achieved_pts
-            if gr.is_letter:
-                data['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
-            else:
-                data['total_max_pts'] = maxpts
-                data['total_achieved_pts'] = apts
-                data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
-        merger.append(PdfReader(renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data)))
-    merger.write(buffer)
-    merger.close()
+    if pks:
+        merger = PdfWriter()
+        buffer = BytesIO()
+        for pk in pks:
+            gr = get_object_or_404(GradingResult, pk=pk)
+            data = {
+                'gradingresult': gr
+            }
+            assessmentunits = gr.assessmentunit_set.all()
+            if assessmentunits:
+                maxpts = 0
+                apts = 0
+                for au in assessmentunits:
+                    maxpts += au.max_pts
+                    apts += au.achieved_pts
+                if gr.is_letter:
+                    data['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
+                else:
+                    data['total_max_pts'] = maxpts
+                    data['total_achieved_pts'] = apts
+                    data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
+            merger.append(PdfReader(renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data)))
+        merger.write(buffer)
+        merger.close()
 
-    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="GradingResults_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
-    return response       
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="GradingResults_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        return response
+    else:
+        return HttpResponse()   
 
 def gradinginvite_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
-    merger = PdfWriter()
-    buffer = BytesIO()
-    for pk in pks:
-        gi = get_object_or_404(GradingInvite, pk=pk)
-        data = {
-            'gradinginvite': gi
-        }
-        merger.append(PdfReader(renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data)))
-    merger.write(buffer)
-    merger.close()
+    if pks:
+        merger = PdfWriter()
+        buffer = BytesIO()
+        for pk in pks:
+            gi = get_object_or_404(GradingInvite, pk=pk)
+            data = {
+                'gradinginvite': gi
+            }
+            merger.append(PdfReader(renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data)))
+        merger.write(buffer)
+        merger.close()
 
-    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="GradingInvites_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
-    return response  
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="GradingInvites_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        return response  
+    else:
+        return HttpResponse()
