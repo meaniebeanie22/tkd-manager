@@ -531,7 +531,7 @@ def gradingresult_batch_pdf_view(request, **kwargs):
         response['Content-Disposition'] = f'attachment; filename="GradingResults_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response
     else:
-        return HttpResponse()   
+        return HttpResponse(status=204)   
 
 def gradinginvite_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
@@ -551,4 +551,4 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         response['Content-Disposition'] = f'attachment; filename="GradingInvites_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response  
     else:
-        return HttpResponse()
+        return HttpResponse(status=204)
