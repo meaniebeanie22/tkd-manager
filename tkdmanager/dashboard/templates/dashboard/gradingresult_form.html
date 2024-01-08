@@ -13,7 +13,6 @@
     {{ form.as_table }}
   </table>
   <input type="submit" value="Submit" />
-  <!-- Add this script after the  script -->
     <script>
     $(document).ready(function() {
         function updateGradingInviteOptions() {
@@ -62,7 +61,7 @@
 
         $('#id_member').change(updateGradingInviteOptions);
         $('#id_grading_invite').change(updateGradingInviteDetails);
-
+        $('.django-select2').djangoSelect2();
         // Trigger the functions on page load if member and gradinginvite are pre-selected
     });
     </script> 
