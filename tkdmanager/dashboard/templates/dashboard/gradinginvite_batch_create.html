@@ -11,7 +11,21 @@
     {% csrf_token %}
     {{ miscform }}
     <hr>
-    {{ formset }}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {# Include the visible fields #}
+        <div>
+        {% for field in form.visible_fields %}
+            <span class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </span>
+        {% endfor %}
+        </div>
+    {% endfor %}
     <input type="submit" value="Submit"/>
 </form>
 {% endblock %}
