@@ -591,7 +591,8 @@ def gradinginvite_batch_create(request, **kwargs):
         print(f'Post request: {request.POST}')
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
-        if formset.is_valid() and gradingselectform.is_valid():
+        if formset.is_valid():
+            print('Formset Valid')
             # ADD ISSUED_BY AND CREATE/ADD PAYMENTS
             gi_pks = []
             for form in formset:
