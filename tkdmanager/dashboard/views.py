@@ -570,7 +570,7 @@ class GradingSelectForm(Form):
 
 @login_required  
 def gradinginvite_batch_create(request, **kwargs):
-    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'], queryset=GradingInvite.objects.none())
+    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'])
 
     if request.method == "POST":
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
@@ -603,7 +603,7 @@ def gradinginvite_batch_create(request, **kwargs):
     else:
         # GET request
         pks = request.GET.getlist('selected_items')
-        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks])
+        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks], queryset=GradingInvite.objects.none())
         gradingselectform = GradingSelectForm(prefix="miscselect")
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
 
