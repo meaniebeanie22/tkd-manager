@@ -596,7 +596,7 @@ def gradinginvite_batch_create(request, **kwargs):
             # ADD ISSUED_BY AND CREATE/ADD PAYMENTS
             gi_pks = []
             for form in formset:
-                if form.select:
+                if form.cleaned_data['select']:
                     gi = form.save(commit=False)
                     gi.issued_by = request.user
                     belt = determine_belt_type(gi.forbelt)
