@@ -28,4 +28,16 @@
     {% endfor %}
     <input type="submit" value="Submit"/>
 </form>
+<script>
+    $(document).ready(function() {
+      // Bind change event to #miscselect-grading
+      $('#miscselect-grading').on('change', function() {
+        // Get the selected value
+        var selectedGrading = $(this).val();
+  
+        // Update all grading fields
+        $('select[id^="form-"][id$="-grading"]').val(selectedGrading);
+      });
+    });
+  </script>
 {% endblock %}
