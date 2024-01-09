@@ -573,7 +573,14 @@ class GradingInviteBulkForm(ModelForm):
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading']
     
-    select = BooleanField(required=False)
+    select = BooleanField(required=False, initial=True)
+
+    def has_changed(self):
+        """
+        Permit saving initial data
+        """
+        changed_data = super(ModelForm, self).has_changed()
+        return bool(self.initial or changed_data)
 
 @login_required  
 def gradinginvite_batch_create(request, **kwargs):
