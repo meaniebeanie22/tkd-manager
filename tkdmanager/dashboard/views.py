@@ -630,4 +630,9 @@ def gradinginvite_batch_create(request, **kwargs):
 def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist('selected_items')
     gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
-    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis})
+
+    url = reverse('dash-batch-generate-gi-pdf')+'?'
+    for pk in pks:
+        url += (f'selected_items={pk}&')
+    url = url.strip('&')
+    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'batch_download_grading_invites_url': url})
