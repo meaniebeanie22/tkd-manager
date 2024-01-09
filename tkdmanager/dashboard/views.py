@@ -605,7 +605,7 @@ def gradinginvite_batch_create(request, **kwargs):
                         pt=13
                     else:
                         pt=12
-                    p = Payment(member=form.member, paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
+                    p = Payment(member=form.cleaned_data['member'], paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
                     p.save()
                     gi.payment = p
                     gi.save()
