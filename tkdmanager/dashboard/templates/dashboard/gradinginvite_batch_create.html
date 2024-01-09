@@ -31,12 +31,12 @@
 <script>
     $(document).ready(function() {
       // Bind change event to #miscselect-grading
-      $('#miscselect-grading').on('change', function() {
+      $('#id_miscselect-grading').on('change', function() {
         // Get the selected value
         var selectedGrading = $(this).val();
   
         // Update all grading fields
-        $('select[id^="form-"][id$="-grading"]').val(selectedGrading);
+        $('select[id^="id_form-"][id$="-grading"]').val(selectedGrading);
       });
     });
   </script>
