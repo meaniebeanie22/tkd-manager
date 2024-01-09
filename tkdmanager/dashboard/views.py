@@ -570,7 +570,7 @@ class GradingSelectForm(Form):
 
 @login_required  
 def gradinginvite_batch_create(request, **kwargs):
-    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'])
+    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'], queryset=GradingInvite.objects.none())
 
     if request.method == "POST":
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
