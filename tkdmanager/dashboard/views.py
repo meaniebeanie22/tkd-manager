@@ -569,6 +569,7 @@ class GradingSelectForm(Form):
     grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
 
 class GradingInviteBulkForm(ModelForm):
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
     class Meta:
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading']
