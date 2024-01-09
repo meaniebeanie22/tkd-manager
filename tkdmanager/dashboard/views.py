@@ -587,6 +587,7 @@ def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=0)
 
     if request.method == "POST":
+        print(f'Post request: {request.POST}')
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
         if formset.is_valid() and gradingselectform.is_valid():
