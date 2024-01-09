@@ -180,7 +180,7 @@ class GradingInvite(models.Model):
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
 
     class Meta:
-        ordering = ['grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
+        ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
 
     def __str__(self):
         if self.grading:
