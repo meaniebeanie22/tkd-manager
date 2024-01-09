@@ -612,7 +612,7 @@ def gradinginvite_batch_create(request, **kwargs):
                     gi_pks.append(gi.pk)
 
             instances = formset.save(commit=False)
-            qd = QueryDict()
+            qd = QueryDict(mutable=True)
             for pk in gi_pks:
                 qd.update({'selected_items': pk})
             return HttpResponseRedirect(reverse('dash-batch-revise-grading-invite') + '?' + qd.urlencode())
