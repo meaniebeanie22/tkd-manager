@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
-from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField
+from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm
 from django.db.models import Q
@@ -568,6 +568,13 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
 class GradingSelectForm(Form):
     grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
 
+class GradingInviteBulkForm(ModelForm):
+    class Meta:
+        model = GradingInvite
+        fields = ['member', 'forbelt', 'grading']
+    
+    select = BooleanField(required=False)
+
 @login_required  
 def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'])
@@ -576,26 +583,24 @@ def gradinginvite_batch_create(request, **kwargs):
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
         if formset.is_valid() and gradingselectform.is_valid():
-            # ADD ISSUED_BY AND GRADING AND CREATE/ADD PAYMENTS
+            # ADD ISSUED_BY AND CREATE/ADD PAYMENTS
             gi_pks = []
             for form in formset:
-                gi = form.save(commit=False)
-                gi.issued_by = request.user
-                belt = determine_belt_type(gi.forbelt)
-                # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
-                if belt == 'Black':
-                    pt=13
-                else:
-                    pt=12
-                p = Payment(member=form.member, paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
-                p.save()
-                gi.payment = p
-                gi.save()
-                gi_pks.append(gi.pk)
+                if form.select:
+                    gi = form.save(commit=False)
+                    gi.issued_by = request.user
+                    belt = determine_belt_type(gi.forbelt)
+                    # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
+                    if belt == 'Black':
+                        pt=13
+                    else:
+                        pt=12
+                    p = Payment(member=form.member, paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
+                    p.save()
+                    gi.payment = p
+                    gi.save()
+                    gi_pks.append(gi.pk)
 
-            formset.save()
-
-            # TODO add a querystring to this so the revise view shows a list of all the created GIs and the created Payments for the user to review to make sure there are no booboos (and an edit button next to each to fix em if there are)
             qd = QueryDict()
             for pk in gi_pks:
                 qd.update({'selected_items': pk})
