@@ -566,11 +566,11 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         return HttpResponse(status=204)
 
 class GradingSelectForm(Form):
-    grading = ModelChoiceField(queryset=Grading.objects.all())
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
 
 @login_required  
 def gradinginvite_batch_create(request, **kwargs):
-    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt'])
+    GradingInviteFormSet = modelformset_factory(GradingInvite, fields=['member', 'forbelt', 'grading'])
 
     if request.method == "POST":
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
@@ -581,7 +581,6 @@ def gradinginvite_batch_create(request, **kwargs):
             for form in formset:
                 gi = form.save(commit=False)
                 gi.issued_by = request.user
-                gi.grading = get_object_or_404(Grading, gradingselectform.grading)
                 belt = determine_belt_type(gi.forbelt)
                 # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
                 if belt == 'Black':
