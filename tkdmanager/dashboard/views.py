@@ -593,7 +593,6 @@ def gradinginvite_batch_create(request, **kwargs):
         if formset.is_valid() and gradingselectform.is_valid():
             # ADD ISSUED_BY AND CREATE/ADD PAYMENTS
             gi_pks = []
-            instances = formset.save(commit=False)
             for form in formset:
                 if form.select:
                     gi = form.save(commit=False)
@@ -610,6 +609,7 @@ def gradinginvite_batch_create(request, **kwargs):
                     gi.save()
                     gi_pks.append(gi.pk)
 
+            instances = formset.save(commit=False)
             qd = QueryDict()
             for pk in gi_pks:
                 qd.update({'selected_items': pk})
