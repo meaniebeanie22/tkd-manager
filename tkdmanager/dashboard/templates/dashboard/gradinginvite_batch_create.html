@@ -13,10 +13,6 @@
     <hr>
     {{ formset.management_form }}
     {% for form in formset %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {# Include the visible fields #}
         <div style="padding: 5px;">
         {% for field in form.visible_fields %}
             <span class="fieldWrapper" style="padding: 5px;">
