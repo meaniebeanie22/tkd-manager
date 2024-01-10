@@ -4,7 +4,7 @@ from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
@@ -230,7 +230,7 @@ class AwardDelete(LoginRequiredMixin, DeleteView):
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
 
-@login_required 
+@permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
     AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, fields=['unit','achieved_pts','max_pts'], extra=10-gradingresult.assessmentunit_set.all().count())
@@ -245,7 +245,7 @@ def manageGradingResult(request, **kwargs):
         formset = AssessmentUnitInlineFormSet(instance=gradingresult)
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
-@login_required
+@permission_required("dashboard.change_gradingresult")
 def manageGradingResultLetter(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
     AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
@@ -581,7 +581,7 @@ class GradingInviteBulkForm(ModelForm):
         changed_data = super(ModelForm, self).has_changed()
         return bool(self.initial or changed_data)
 
-@login_required  
+@permission_required("dashboard.add_gradingresult")
 def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=0)
 
