@@ -15,9 +15,4 @@ class BlocklistPermission(permissions.BasePermission):
 class APIAllowed(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        print(f'{user} tried to access the api with {user.groups.all()} groups.')
-        if user.groups.filter(name='APIAllowed').exists():
-            print('Permission Granted')
-        else:
-            print('Permission Denied')
         return user.groups.filter(name='APIAllowed').exists()

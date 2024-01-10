@@ -255,9 +255,7 @@ def manageGradingResultLetter(request, **kwargs):
         if formset.is_valid():
             for form in formset:
                 unit = form.cleaned_data.get('unit')
-                print(f'Unit: {unit}')
                 if form.cleaned_data.get('unit'):
-                    print("Saved!")
                     form.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
@@ -588,11 +586,9 @@ def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=0)
 
     if request.method == "POST":
-        print(f'Post request: {request.POST}')
         formset = GradingInviteFormSet(request.POST, request.FILES, prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
         if formset.is_valid():
-            print('Formset Valid')
             # ADD ISSUED_BY AND CREATE/ADD PAYMENTS
             gi_pks = []
             for form in formset:
@@ -619,8 +615,6 @@ def gradinginvite_batch_create(request, **kwargs):
     else:
         # GET request
         pks = request.GET.getlist('selected_items')
-        print(f'PKs sent to Formset: {pks}')
-        print(f'Initial value sent to formset: {[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks]}')
         GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=len(pks))
         formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
