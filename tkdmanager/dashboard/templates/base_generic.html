@@ -36,7 +36,7 @@
         {% if user.is_authenticated %}
             <li>User: {{ user.get_username }}</li>
             <li>
-              <form action="{% url 'admin:logout' %}" method="post">
+              <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <p><button type="submit" class="link"><span>Logout</span></button></p>
             </form>
