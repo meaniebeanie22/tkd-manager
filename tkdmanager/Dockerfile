@@ -20,4 +20,4 @@ COPY . ./
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-CMD gunicorn tkdmanager.wsgi --log-file -
+CMD sleep 3 && gunicorn tkdmanager.wsgi --log-file -
