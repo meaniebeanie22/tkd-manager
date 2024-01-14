@@ -20,7 +20,7 @@
             var gradingInviteField = $('#id_gradinginvite');
 
             $.ajax({
-                url: '/dashboard/member/' + selectedMember + '/get_grading_invites/',
+                url: '/dashboard/member/' + selectedMember + '/get_grading_invites',
                 dataType: 'json',
                 success: function(data) {
                     gradingInviteField.empty();
@@ -45,7 +45,7 @@
 
             if (selectedGradingInvite) {
                 $.ajax({
-                    url: '/dashboard/gradinginvite/' + selectedGradingInvite + '/get_details/',
+                    url: '/dashboard/grading-invite/' + selectedGradingInvite + '/get_details',
                     dataType: 'json',
                     success: function(data) {
                         // Update the form fields with grading invite details

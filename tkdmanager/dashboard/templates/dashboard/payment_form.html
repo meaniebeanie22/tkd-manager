@@ -17,7 +17,7 @@
       function updateAmountDue() {
         var pk = $('#id_paymenttype').val();
         $.ajax({
-          url: '/dashboard/paymenttype/' + pk + '/get_standard_amount',
+          url: '/dashboard/payment-type/' + pk + '/get_standard_amount',
           success: function (data) {
             $('#id_amount_due').val(data.standard_amount);
           },

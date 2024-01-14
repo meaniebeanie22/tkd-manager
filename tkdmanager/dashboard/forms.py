@@ -48,20 +48,12 @@ class GradingResultUpdateForm(ModelForm):
                 reverse_lazy('dash-add-award'),
                 reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
             ),
+            'grading': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-grading'),
+                reverse_lazy('dash-update-grading',kwargs={'pk': '__fk__'}),
+            ),
         }
-
-"""
-            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
-                forms.Select,
-                reverse_lazy('dash-add-grading-invite'),
-                reverse_lazy('dash-update-grading-invite',kwargs={'pk': '__fk__'}),
-            ),
-            'award': AddAnotherEditSelectedWidgetWrapper(
-                forms.Select,
-                reverse_lazy('dash-add-award'),
-                reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
-            ),
-"""
 
 class GradingResultCreateForm(ModelForm):
     is_letter = BooleanField(required=False)
@@ -80,20 +72,12 @@ class GradingResultCreateForm(ModelForm):
                 reverse_lazy('dash-add-award'),
                 reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
             ),
+            'grading': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-grading'),
+                reverse_lazy('dash-update-grading',kwargs={'pk': '__fk__'}),
+            ),
         }
-
-"""
-            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
-                forms.Select,
-                reverse_lazy('dash-add-grading-invite'),
-                reverse_lazy('dash-update-grading-invite',kwargs={'pk': '__fk__'}),
-            ),
-            'award': AddAnotherEditSelectedWidgetWrapper(
-                forms.Select,
-                reverse_lazy('dash-add-award'),
-                reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
-            ),
-"""
 
 class MemberForm(ModelForm):
     class Meta:
@@ -252,16 +236,13 @@ class GradingInviteForm(ModelForm):
                 reverse_lazy('dash-add-payment'),
                 reverse_lazy('dash-update-payment',kwargs={'pk': '__fk__'}),
             ),
-            
-        }
-
-"""
-'payment': AddAnotherEditSelectedWidgetWrapper(
+            'grading': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
-                reverse_lazy('dash-add-payment'),
-                reverse_lazy('dash-update-payment',kwargs={'pk': '__fk__'}),
-            ),
-"""
+                reverse_lazy('dash-add-grading'),
+                reverse_lazy('dash-update-grading',kwargs={'pk': '__fk__'}),
+            ), 
+        }
+        
 class GradingForm(ModelForm):
     class Meta:
         model = Grading

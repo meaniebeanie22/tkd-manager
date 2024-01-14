@@ -23,7 +23,7 @@
    
            // Make an AJAX request to fetch the filtered grading invites
            $.ajax({
-               url: '/dashboard/member/' + selectedMember + '/get_payments/',  // Replace with the actual URL to your filtering view
+               url: '/dashboard/member/' + selectedMember + '/get_payments',  // Replace with the actual URL to your filtering view
                dataType: 'json',
                success: function(data) {
                    // Clear existing options and add new options
