@@ -38,13 +38,15 @@ class GradingResultUpdateForm(ModelForm):
         widgets = {
             'member': MemberWidget,
             'assessor': InstructorsWidget,
-            'gradinginvite': AddAnotherWidgetWrapper(
+            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-grading-invite'),
+                reverse_lazy('dash-update-grading-invite',kwargs={'pk': '__fk__'}),
             ),
-            'award': AddAnotherWidgetWrapper(
+            'award': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-award'),
+                reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
             ),
         }
 
@@ -68,15 +70,15 @@ class GradingResultCreateForm(ModelForm):
         model = GradingResult
         fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
-            'member': MemberWidget,
-            'assessor': InstructorsWidget,
-            'gradinginvite': AddAnotherWidgetWrapper(
+            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-grading-invite'),
+                reverse_lazy('dash-update-grading-invite',kwargs={'pk': '__fk__'}),
             ),
-            'award': AddAnotherWidgetWrapper(
+            'award': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-award'),
+                reverse_lazy('dash-update-award',kwargs={'pk': '__fk__'}),
             ),
         }
 
@@ -245,9 +247,10 @@ class GradingInviteForm(ModelForm):
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
         widgets = {
             'member': MemberWidget,
-            'payment': AddAnotherWidgetWrapper(
+            'payment': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
-                reverse_lazy('dash-add-payment')
+                reverse_lazy('dash-add-payment'),
+                reverse_lazy('dash-update-payment',kwargs={'pk': '__fk__'}),
             ),
             
         }

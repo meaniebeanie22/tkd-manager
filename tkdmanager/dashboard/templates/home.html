@@ -20,6 +20,7 @@
 <script>
   const ctx = document.getElementById('myChart');
   var barColors = ["grey", "cornsilk", "orange", "yellow", "blue", "red", "black", "black"];
+  const border_colors = ["black"];
 
   new Chart(ctx, {
     type: 'bar',
@@ -29,6 +30,7 @@
       {
         label: 'Members by Belt Rank',
         backgroundColor: barColors,
+        borderColor: border_colors,
         data: {{belt_count}},
         borderWidth: 1
       }
