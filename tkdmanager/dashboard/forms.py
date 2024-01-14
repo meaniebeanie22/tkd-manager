@@ -5,6 +5,7 @@ from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
 from django_select2 import forms as s2forms
+from django_addanother.widgets import AddAnotherWidgetWrapper, AddAnotherEditSelectedWidgetWrapper
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
@@ -37,6 +38,16 @@ class GradingResultUpdateForm(ModelForm):
         widgets = {
             'member': MemberWidget,
             'assessor': InstructorsWidget,
+            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-grading-invite'),
+                reverse_lazy('dash-update-grading-invite',args=['__fk__']),
+            ),
+            'award': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-award'),
+                reverse_lazy('dash-update-award',args=['__fk__']),
+            ),
         }
 
 class GradingResultCreateForm(ModelForm):
@@ -48,6 +59,16 @@ class GradingResultCreateForm(ModelForm):
         widgets = {
             'member': MemberWidget,
             'assessor': InstructorsWidget,
+            'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-grading-invite'),
+                reverse_lazy('dash-update-grading-invite',args=['__fk__']),
+            ),
+            'award': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-award'),
+                reverse_lazy('dash-update-award',args=['__fk__']),
+            ),
         }
 
 class MemberForm(ModelForm):
@@ -202,6 +223,11 @@ class GradingInviteForm(ModelForm):
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
         widgets = {
             'member': MemberWidget,
+            'payment': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-payment'),
+                reverse_lazy('dash-update-payment',args=['__fk__']),
+            ),
         }
 
 class GradingForm(ModelForm):

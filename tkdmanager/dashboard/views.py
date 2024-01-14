@@ -12,12 +12,12 @@ from django.forms import inlineformset_factory, modelformset_factory, Form, Mode
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm
 from django.db.models import Q
-from django.utils import timezone
 from dashboard import renderers
 from django.forms.models import model_to_dict
 from rest_framework.authtoken.models import Token
 from io import BytesIO
 from pypdf import PdfWriter, PdfReader
+from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -215,11 +215,11 @@ class GradingResultDelete(LoginRequiredMixin, DeleteView):
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
-class AwardCreate(LoginRequiredMixin, CreateView):
+class AwardCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Award
     fields = ['name']
 
-class AwardUpdate(LoginRequiredMixin, UpdateView):
+class AwardUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Award
     fields = ['name']
 
@@ -349,11 +349,11 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
 
-class PaymentCreate(LoginRequiredMixin, CreateView):
+class PaymentCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Payment
     form_class = PaymentForm
 
-class PaymentUpdate(LoginRequiredMixin, UpdateView):
+class PaymentUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Payment
     form_class = PaymentForm
 
@@ -445,7 +445,7 @@ class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
     model = GradingInvite
     success_url = reverse_lazy("dash-gradinginvites")
 
-class GradingInviteCreateView(LoginRequiredMixin, CreateView):
+class GradingInviteCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -458,7 +458,7 @@ class GradingInviteCreateView(LoginRequiredMixin, CreateView):
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
         return i
 
-class GradingInviteUpdateView(LoginRequiredMixin, UpdateView):
+class GradingInviteUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -481,11 +481,11 @@ class GradingDeleteView(LoginRequiredMixin, DeleteView):
     model = Grading
     success_url = reverse_lazy("dash-gradings")
 
-class GradingCreateView(LoginRequiredMixin, CreateView):
+class GradingCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Grading
     form_class = GradingForm
 
-class GradingUpdateView(LoginRequiredMixin, UpdateView):
+class GradingUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Grading
     form_class = GradingForm
 

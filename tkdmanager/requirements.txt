@@ -47,4 +47,5 @@ psycopg2-binary==2.9.9
 whitenoise==6.6.0
 django-appconf==1.0.6
 django-select2==8.1.2
+django_addanother==2.2.2
 
