@@ -1,3 +1,4 @@
+from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type
@@ -352,6 +353,11 @@ class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
 class PaymentCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Payment
     form_class = PaymentForm
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        print(f'Context: {c}')
+        return c
 
 class PaymentUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Payment
