@@ -16,6 +16,7 @@
 <body>
   <div class="container-fluid">
     <div class="row">
+      {% if not popup %}
       <div class="col-sm-2">
       {% block sidebar %}
         <ul class="sidebar-nav">
@@ -59,6 +60,7 @@
         <hr>
      {% endblock %}
       </div>
+      {% endif %}
       <div class="col-sm-10 mb-3">{% block content %}{% endblock %}
         {% block pagination %}
           {% if is_paginated %}

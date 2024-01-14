@@ -220,9 +220,21 @@ class AwardCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Award
     fields = ['name']
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
+
 class AwardUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Award
     fields = ['name']
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
 
 class AwardDelete(LoginRequiredMixin, DeleteView):
     model = Award
@@ -356,13 +368,19 @@ class PaymentCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         c = super().get_context_data(**kwargs)
-        print(f'GET Req: {self.request.GET}')
-        print(f'Context: {c}')
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
         return c
 
 class PaymentUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Payment
     form_class = PaymentForm
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
 
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
@@ -456,6 +474,12 @@ class GradingInviteCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = GradingInvite
     form_class = GradingInviteForm
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
+
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
         member_id = self.request.GET.get('member_id')
@@ -468,6 +492,12 @@ class GradingInviteCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
 class GradingInviteUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = GradingInvite
     form_class = GradingInviteForm
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
 
 @login_required
 def gradinginvite_pdf_view(request, pk, **kwargs):
@@ -492,9 +522,21 @@ class GradingCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
     model = Grading
     form_class = GradingForm
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
+
 class GradingUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
     model = Grading
     form_class = GradingForm
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
 
 @login_required
 def gradingresult_pdf_view(request, pk, **kwargs):
