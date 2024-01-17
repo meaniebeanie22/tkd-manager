@@ -11,8 +11,8 @@
   <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-  <script type="text/javascript" src="/admin/jsi18n/"></script>
-  <script src="{% static jquery %}"></script>
+  <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+  {% block extrahead %}{% endblock %}
 </head>
 <body>
   <div class="container-fluid">
