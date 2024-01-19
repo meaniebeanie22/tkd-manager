@@ -518,7 +518,7 @@ class GradingDeleteView(LoginRequiredMixin, DeleteView):
     model = Grading
     success_url = reverse_lazy("dash-gradings")
 
-class GradingCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
+class GradingCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Grading
     form_class = GradingForm
 
@@ -528,7 +528,7 @@ class GradingCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
         c['popup'] = popup
         return c
 
-class GradingUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
+class GradingUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Grading
     form_class = GradingForm
 
