@@ -50,31 +50,4 @@
     }
   });
 </script>
-
-<!--
-<script>
-var barColors = ["grey", "cyan", "blue", "orange", "green", "black"];
-
-new Chart("myChart", {
-  type: "bar",
-  data: {
-    labels: {{belt_labels | safe}},
-    datasets: [{
-      backgroundColor: barColors,
-      data: {{belt_count}},
-      borderColor: "black",
-      borderWidth: 1
-    }]
-  },
-  options: {
-    legend: {display: false},
-    title: {
-      display: true,
-      text: "Members by belt rank."
-    }
-  }
-});
-
-</script>
--->
 {% endblock %}
