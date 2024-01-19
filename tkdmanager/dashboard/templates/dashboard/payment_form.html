@@ -5,6 +5,11 @@
 <title>TKD Manager - Add/Update Payment</title>
 {% endblock %}
 
+{% block extrahead %}
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media }}
+{% endblock %}
+
 {% block content %}
 <h4>Add/Update a Payment</h4>
 <form action="" method="post">
