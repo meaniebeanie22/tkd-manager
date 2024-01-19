@@ -1,13 +1,8 @@
-{% extends "admin/base_site.html" %}
+{% extends "base_generic.html" %}
 
-{% block branding %}
+{% block title %}
 <title>TKD Manager - Add/Update Grading Invite</title>
-{% endblock %}
-{% load static %}
-
-{% block extrahead %}
-<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-{{ form.media }}
+{{ form.media.css }}
 {% endblock %}
 
 {% block content %}
@@ -76,4 +71,5 @@
    });
    </script>
 </form>
+{{ form.media.js }}
 {% endblock %}

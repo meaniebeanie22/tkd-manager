@@ -1,13 +1,8 @@
-{% extends "admin/base_site.html" %}
-{% load static %}
+{% extends "base_generic.html" %}
 
-{% block branding %}
+{% block title %}
 <title>TKD Manager - Add/Update Payment</title>
-{% endblock %}
-
-{% block extrahead %}
-<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-{{ form.media }}
+{{ form.media.css }}
 {% endblock %}
 
 {% block content %}

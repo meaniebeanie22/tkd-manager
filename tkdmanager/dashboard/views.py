@@ -216,7 +216,7 @@ class GradingResultDelete(LoginRequiredMixin, DeleteView):
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
-class AwardCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
+class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Award
     fields = ['name']
 
@@ -226,7 +226,7 @@ class AwardCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
         c['popup'] = popup
         return c
 
-class AwardUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
+class AwardUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Award
     fields = ['name']
 
@@ -362,7 +362,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Payment
 
-class PaymentCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
+class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Payment
     form_class = PaymentForm
 
@@ -372,7 +372,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView, CreatePopupMixin):
         c['popup'] = popup
         return c
 
-class PaymentUpdate(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
+class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
 
@@ -470,7 +470,7 @@ class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
     model = GradingInvite
     success_url = reverse_lazy("dash-gradinginvites")
 
-class GradingInviteCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
+class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -489,7 +489,7 @@ class GradingInviteCreateView(LoginRequiredMixin, CreateView, CreatePopupMixin):
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
         return i
 
-class GradingInviteUpdateView(LoginRequiredMixin, UpdateView, UpdatePopupMixin):
+class GradingInviteUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
