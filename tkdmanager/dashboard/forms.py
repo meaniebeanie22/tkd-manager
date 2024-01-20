@@ -11,21 +11,21 @@ class MembersWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
         'first_name__icontains',
         'last_name__icontains',
-        'idnumber__iexact'
+        'idnumber__istartswith'
     ]
 
 class MemberWidget(s2forms.ModelSelect2Widget):
     search_fields = [
         'first_name__icontains',
         'last_name__icontains',
-        'idnumber__iexact'
+        'idnumber__istartswith'
     ]
 
 class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
         'first_name__icontains',
         'last_name__icontains',
-        'idnumber__iexact'
+        'idnumber__istartswith'
     ]
     queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
 
