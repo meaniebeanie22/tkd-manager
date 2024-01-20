@@ -56,7 +56,6 @@ def token_display(request):
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
-    paginate_by = 25
     ordering = ['-belt','last_name']
 
     def get_queryset(self):
@@ -120,7 +119,6 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
     
 class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
-    paginate_by = 25
 
     def get_queryset(self):
         queryset = GradingResult.objects.all()
@@ -281,7 +279,6 @@ def manageGradingResultLetter(request, **kwargs):
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
-    paginate_by = 25
 
     def get_queryset(self):
         queryset = Class.objects.all()
@@ -334,7 +331,6 @@ class ClassDelete(LoginRequiredMixin, DeleteView):
 
 class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
-    paginate_by = 25
 
     def get_queryset(self):
         queryset = Payment.objects.all()
@@ -436,7 +432,6 @@ class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
 
 class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
-    paginate_by = 25
 
     def get_queryset(self):
         queryset = GradingInvite.objects.all()
@@ -512,7 +507,6 @@ class GradingDetailView(LoginRequiredMixin, generic.DetailView):
 
 class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
-    paginate_by = 25
 
 class GradingDeleteView(LoginRequiredMixin, DeleteView):
     model = Grading
