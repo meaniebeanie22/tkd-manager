@@ -47,6 +47,7 @@
     function setForbeltValue() {
         var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
         var forbeltField = $('#id_forbelt');  // Assuming 'id_forbelt' is the ID of the forbelt field
+        console.log(selectedMember)
         console.log('Tring to fetch member details');
         // Make an AJAX request to fetch the selected member's details
         $.ajax({
