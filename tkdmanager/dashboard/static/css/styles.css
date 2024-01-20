@@ -47,3 +47,8 @@ button.link:hover span,
 button.link:focus span {
 	color: black;
 }
+
+.stickysidebar {
+  position: sticky;
+  top: 0;
+}
