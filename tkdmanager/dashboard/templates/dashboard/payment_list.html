@@ -42,7 +42,7 @@
         <th>Amount Paid</th>
     </tr>
     {% for p in payment_list %}
-      <tr>
+      <tr class="content">
         <td><a href="{{ p.get_absolute_url }}">Link</a></td>
         <td><a href="{{ p.member.get_absolute_url }}">{{ p.member }}</a></td>
         <td{% if p.get_payment_status == 'Overdue' %} style="color:red;"{% elif p.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>{{ p.get_payment_status }}</td>
