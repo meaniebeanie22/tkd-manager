@@ -62,6 +62,8 @@ class GradingResultCreateForm(ModelForm):
         model = GradingResult
         fields = ['member','gradinginvite','grading','forbelt','assessor','comments','award', 'is_letter']
         widgets = {
+            'member': MemberWidget,
+            'assessor': InstructorsWidget,
             'gradinginvite': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-grading-invite'),
