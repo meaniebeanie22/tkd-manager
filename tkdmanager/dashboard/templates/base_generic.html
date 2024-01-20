@@ -19,7 +19,6 @@
 <body>
   {% if not popup %}
   <nav class="navbar sticky-top navbar-light bg-light p-0">
-    <div class="col-sm-2">
     {% block sidebar %}
         <ul class="sidebar-nav">
           <li><a href="{% url 'dash-index' %}">Home</a></li>
@@ -39,9 +38,9 @@
           {% if user.is_authenticated %}
             <li>User: {{ user.get_username }}</li>
             <li>
-                <form action="{% url 'logout' %}" method="post">
-                  {% csrf_token %}
-                  <p><button type="submit" class="link"><span>Logout</span></button></p>
+              <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <p><button type="submit" class="link"><span>Logout</span></button></p>
               </form>
             </li>
           </ul>
@@ -61,7 +60,6 @@
       </ul>
       <hr>
     {% endblock %}
-    </div>
   </nav>
   {% endif %}
   <div class="row">
