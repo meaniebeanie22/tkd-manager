@@ -21,7 +21,7 @@
        function updatePaymentOptions() {
            var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
            var paymentField = $('#id_payment');  // Assuming 'id_grading_invite' is the ID of the gradinginvite field
-   
+           console.log('Tring to fetch member payments');
            // Make an AJAX request to fetch the filtered grading invites
            $.ajax({
                url: '/dashboard/member/' + selectedMember + '/get_payments',  // Replace with the actual URL to your filtering view
