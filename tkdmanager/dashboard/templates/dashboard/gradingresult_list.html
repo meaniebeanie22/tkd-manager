@@ -33,7 +33,8 @@
     $(document).ready(function() {
         $('#email-pdfs-button').click(function() {
             const form = $('#selecteditemsform');  // Replace 'your-form-id' with the actual ID of your form
-            
+            console.log(FormData(form))
+            console.log(FormData(form[0]))
             $.ajax({
                 url: "{% url 'dash-batch-email-gr-pdf' %}",
                 type: form.attr('method'),
@@ -110,47 +111,3 @@
     <p>There are no grading results that match your filters.</p>
   {% endif %}
 {% endblock %}
-
-<!--
-
-    <script type="text/javascript">
-    function OnSubmitForm()
-    {
-      if(document.pressed == 'gen')
-      {
-       document.selecteditems.action = "{% url 'dash-batch-generate-gr-pdf' %}";
-      }
-      else
-      if(document.pressed == 'email')
-      {
-        document.selecteditems.action = "{% url 'dash-batch-email-gr-pdf' %}";
-      }
-      return true;
-    }
-    </script>
-
-
-<script type="text/javascript">
-function OnSubmitForm()
-{
-  if(document.pressed == 'Insert')
-  {
-   document.myform.action ="insert.html";
-  }
-  else
-  if(document.pressed == 'Update')
-  {
-    document.myform.action ="update.html";
-  }
-  return true;
-}
-</script>
-
-<form name="myform" onsubmit="return onsubmitform();">
-
-<input type="submit" name="operation" onclick="document.pressed=this.value" value="insert" />
-
-<input type="submit" name="operation" onclick="document.pressed=this.value" value="update" />
-
-</form>
--->
