@@ -105,7 +105,7 @@
     {% endfor %}
   </table>
   <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
-  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
+  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-email-gr-pdf' %}">Send Certificate PDFs for Selected Items to Members</button>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
