@@ -681,6 +681,7 @@ def gradingresult_batch_email_view(request, **kwargs):
     View that sends emails with the GR PDF attached to the email the assessed member has on file
     GRs to be sent are specified by the selected_items query key
     """
+    print('Email send request for gradingresults')
     pks = request.GET.getlist('selected_items')
     if pks:
         messages = []
@@ -709,8 +710,10 @@ def gradingresult_batch_email_view(request, **kwargs):
                 f'{gr.member.email}',
                 attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data), 'application/pdf')]
             )
+            print(f'EmailMessage: {message}')
             messages.append(message)
         connection = mail.get_connection()  # Use default email connection
         connection.send_messages(messages)
+        return HttpResponseRedirect(reverse('dash-gradingresults'))
     else:
         return HttpResponse(status=204) 
