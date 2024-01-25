@@ -19,6 +19,7 @@ from rest_framework.authtoken.models import Token
 from io import BytesIO
 from pypdf import PdfWriter, PdfReader
 from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from django.core import mail
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -673,3 +674,43 @@ def batch_gradinginvite_revise(request, **kwargs):
         url += (f'selected_items={pk}&')
     url = url.strip('&')
     return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'batch_download_grading_invites_url': url})
+
+@login_required
+def gradingresult_batch_email_view(request, **kwargs):
+    """
+    View that sends emails with the GR PDF attached to the email the assessed member has on file
+    GRs to be sent are specified by the selected_items query key
+    """
+    pks = request.GET.getlist('selected_items')
+    if pks:
+        messages = []
+        for pk in pks:
+            gr = get_object_or_404(GradingResult, pk=pk)
+            data = {
+                'gradingresult': gr
+            }
+            assessmentunits = gr.assessmentunit_set.all()
+            if assessmentunits:
+                maxpts = 0
+                apts = 0
+                for au in assessmentunits:
+                    maxpts += au.max_pts
+                    apts += au.achieved_pts
+                if gr.is_letter:
+                    data['average_grade'] = LETTER_GRADES[round(apts/(len(assessmentunits)))]
+                else:
+                    data['total_max_pts'] = maxpts
+                    data['total_achieved_pts'] = apts
+                    data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
+            message = mail.EmailMessage(
+                f'Grading Certificate for {gr.member}',
+                'Please see attached your Grading Certificate.\n TKD Manager.',
+                'beaniemcc1@gmail.com',
+                f'{gr.member.email}',
+                attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data), 'application/pdf')]
+            )
+            messages.append(message)
+        connection = mail.get_connection()  # Use default email connection
+        connection.send_messages(messages)
+    else:
+        return HttpResponse(status=204) 

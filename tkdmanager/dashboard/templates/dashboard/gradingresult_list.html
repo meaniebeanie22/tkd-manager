@@ -29,7 +29,22 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
-  <form method="get" action="{% url 'dash-batch-generate-gr-pdf' %}">
+  <script type="text/javascript">
+    function OnSubmitForm()
+    {
+      if(document.pressed == 'gen')
+      {
+       document.selecteditems.action = "{% url 'dash-batch-generate-gr-pdf' %}";
+      }
+      else
+      if(document.pressed == 'email')
+      {
+        document.selecteditems.action = "{% url 'dash-batch-email-gr-pdf' %}";
+      }
+      return true;
+    }
+    </script>
+  <form name="selecteditems" method="get" onsubmit="return onsubmitform();">
   <table style="width: 100%;">
     <tr>
       <th>Select</th>
@@ -63,9 +78,36 @@
       </tr>
     {% endfor %}
   </table>
-  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Generate Certificate PDF for Selected Items</button>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" name="operation" onclick="document.pressed='gen'">Generate Certificate PDF for Selected Items</button>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" name="operation" onclick="document.pressed='email'">Send Certificate PDFs for Selected Items to Members</button>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
   {% endif %}
 {% endblock %}
+
+<!--
+<script type="text/javascript">
+function OnSubmitForm()
+{
+  if(document.pressed == 'Insert')
+  {
+   document.myform.action ="insert.html";
+  }
+  else
+  if(document.pressed == 'Update')
+  {
+    document.myform.action ="update.html";
+  }
+  return true;
+}
+</script>
+
+<form name="myform" onsubmit="return onsubmitform();">
+
+<input type="submit" name="operation" onclick="document.pressed=this.value" value="insert" />
+
+<input type="submit" name="operation" onclick="document.pressed=this.value" value="update" />
+
+</form>
+-->
