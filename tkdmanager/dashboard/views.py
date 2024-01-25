@@ -682,7 +682,11 @@ def gradingresult_batch_email_view(request, **kwargs):
     GRs to be sent are specified by the selected_items query key
     """
     print('Email send request for gradingresults')
-    pks = request.GET.getlist('selected_items')
+    try:
+        pks = request.GET.getlist('selected_items')
+    except:
+        response_data = {'success': False, 'message': 'No items selected for email sending.'}
+        return JsonResponse(response_data, status=204)
     if pks:
         messages = []
         for pk in pks:

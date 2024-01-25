@@ -29,6 +29,12 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
+  <style>
+    /* Additional styling for the fixed banner */
+    .fixed-top {
+        z-index: 1000; /* Adjust z-index to ensure the banner appears above other elements */
+    }
+  </style>
   <script>
     $(document).ready(function() {
         $('#email-pdfs-button').click(function(event) {
@@ -49,7 +55,7 @@
                     const alertStyle = data.success ? 'alert-success' : 'alert-danger';
 
                     // Create Bootstrap 5 alert
-                    const alert = $('<div class="alert alert-dismissible fade show ' + alertStyle + '" role="alert"></div>').text(data.message);
+                    const alert = $('<div class="alert alert-dismissible fade show fixed-top sticky-top ' + alertStyle + '" role="alert"></div>').text(data.message);
                     const closeBtn = $('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
                     alert.append(closeBtn);
 
