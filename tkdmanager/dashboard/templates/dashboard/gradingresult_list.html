@@ -29,7 +29,54 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
-  <form method="get" action="{% url 'dash-batch-generate-gr-pdf' %}">
+  <style>
+    /* Additional styling for the fixed banner */
+    .fixed-top {
+        z-index: 1000; /* Adjust z-index to ensure the banner appears above other elements */
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+        $('#email-pdfs-button').click(function(event) {
+            event.preventDefault();
+            const form = $('#selecteditemsform');  // Replace 'your-form-id' with the actual ID of your form
+            console.log(form.serialize())
+            $.ajax({
+                url: "{% url 'dash-batch-email-gr-pdf' %}",
+                type: form.attr('method'),
+                data: form.serialize(),
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                success: function(data) {
+                    // Determine Bootstrap 5 alert style based on success status
+                    const alertStyle = data.success ? 'alert-success' : 'alert-danger';
+
+                    // Create Bootstrap 5 alert
+                    const alert = $('<div class="alert alert-dismissible fade show fixed-top sticky-top ' + alertStyle + '" role="alert"></div>').text(data.message);
+                    const closeBtn = $('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+                    alert.append(closeBtn);
+
+                    // Append the alert to the body
+                    $('body').prepend(alert);
+
+                    // Auto-dismiss after 5 seconds for success alerts
+                    if (data.success) {
+                        setTimeout(function() {
+                            alert.alert('close');
+                        }, 5000);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+  <form id="selecteditemsform" name="selecteditems">
   <table style="width: 100%;">
     <tr>
       <th>Select</th>
@@ -63,7 +110,8 @@
       </tr>
     {% endfor %}
   </table>
-  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Generate Certificate PDF for Selected Items</button>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
+  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
