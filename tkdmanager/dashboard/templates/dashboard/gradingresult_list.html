@@ -33,12 +33,11 @@
     $(document).ready(function() {
         $('#email-pdfs-button').click(function() {
             const form = $('#selecteditemsform');  // Replace 'your-form-id' with the actual ID of your form
-            console.log(FormData(form))
-            console.log(FormData(form[0]))
+            console.log(form.serialize())
             $.ajax({
                 url: "{% url 'dash-batch-email-gr-pdf' %}",
                 type: form.attr('method'),
-                data: new FormData(form[0]),
+                data: form.serialize(),
                 processData: false,
                 contentType: false,
                 headers: {
