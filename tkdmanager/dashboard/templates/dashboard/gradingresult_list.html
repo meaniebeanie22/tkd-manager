@@ -29,7 +29,47 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
-  <form name="selecteditems">
+  <script>
+    $(document).ready(function() {
+        $('#email-pdfs-button').click(function() {
+            const form = $('#selecteditemsform');  // Replace 'your-form-id' with the actual ID of your form
+            
+            $.ajax({
+                url: "{% url 'dash-batch-email-gr-pdf' %}",
+                type: form.attr('method'),
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                success: function(data) {
+                    // Determine Bootstrap 5 alert style based on success status
+                    const alertStyle = data.success ? 'alert-success' : 'alert-danger';
+
+                    // Create Bootstrap 5 alert
+                    const alert = $('<div class="alert alert-dismissible fade show ' + alertStyle + '" role="alert"></div>').text(data.message);
+                    const closeBtn = $('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+                    alert.append(closeBtn);
+
+                    // Append the alert to the body
+                    $('body').prepend(alert);
+
+                    // Auto-dismiss after 5 seconds for success alerts
+                    if (data.success) {
+                        setTimeout(function() {
+                            alert.alert('close');
+                        }, 5000);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+  <form id="selecteditemsform" name="selecteditems">
   <table style="width: 100%;">
     <tr>
       <th>Select</th>
@@ -64,7 +104,7 @@
     {% endfor %}
   </table>
   <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
-  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-email-gr-pdf' %}">Send Certificate PDFs for Selected Items to Members</button>
+  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-email-gr-pdf' %}">Send Certificate PDFs for Selected Items to Members</button>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>

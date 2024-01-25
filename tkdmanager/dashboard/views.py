@@ -714,6 +714,8 @@ def gradingresult_batch_email_view(request, **kwargs):
             messages.append(message)
         connection = mail.get_connection()  # Use default email connection
         connection.send_messages(messages)
-        return HttpResponseRedirect(reverse('dash-gradingresults'))
+        response_data = {'success': True, 'message': 'Emails sent successfully!'}
+        return JsonResponse(response_data)
     else:
-        return HttpResponse(status=204) 
+        response_data = {'success': False, 'message': 'No items selected for email sending.'}
+        return JsonResponse(response_data, status=204)
