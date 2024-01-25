@@ -707,7 +707,7 @@ def gradingresult_batch_email_view(request, **kwargs):
                 f'Grading Certificate for {gr.member}',
                 'Please see attached your Grading Certificate.\n TKD Manager.',
                 'beaniemcc1@gmail.com',
-                f'{gr.member.email}',
+                (f'{gr.member.email}',),
                 attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
