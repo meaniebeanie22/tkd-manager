@@ -31,7 +31,8 @@
   {% if gradingresult_list %}
   <script>
     $(document).ready(function() {
-        $('#email-pdfs-button').click(function() {
+        $('#email-pdfs-button').click(function(event) {
+            event.preventDefault();
             const form = $('#selecteditemsform');  // Replace 'your-form-id' with the actual ID of your form
             console.log(form.serialize())
             $.ajax({
