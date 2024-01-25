@@ -29,22 +29,7 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
-  <script type="text/javascript">
-    function OnSubmitForm()
-    {
-      if(document.pressed == 'gen')
-      {
-       document.selecteditems.action = "{% url 'dash-batch-generate-gr-pdf' %}";
-      }
-      else
-      if(document.pressed == 'email')
-      {
-        document.selecteditems.action = "{% url 'dash-batch-email-gr-pdf' %}";
-      }
-      return true;
-    }
-    </script>
-  <form name="selecteditems" method="get" onsubmit="return onsubmitform();">
+  <form name="selecteditems">
   <table style="width: 100%;">
     <tr>
       <th>Select</th>
@@ -78,8 +63,8 @@
       </tr>
     {% endfor %}
   </table>
-  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" name="operation" onclick="document.pressed='gen'">Generate Certificate PDF for Selected Items</button>
-  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" name="operation" onclick="document.pressed='email'">Send Certificate PDFs for Selected Items to Members</button>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
+  <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-email-gr-pdf' %}">Send Certificate PDFs for Selected Items to Members</button>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
@@ -87,6 +72,24 @@
 {% endblock %}
 
 <!--
+
+    <script type="text/javascript">
+    function OnSubmitForm()
+    {
+      if(document.pressed == 'gen')
+      {
+       document.selecteditems.action = "{% url 'dash-batch-generate-gr-pdf' %}";
+      }
+      else
+      if(document.pressed == 'email')
+      {
+        document.selecteditems.action = "{% url 'dash-batch-email-gr-pdf' %}";
+      }
+      return true;
+    }
+    </script>
+
+
 <script type="text/javascript">
 function OnSubmitForm()
 {
