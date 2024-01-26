@@ -93,6 +93,7 @@
             <td>
               {% with prim=gi.pk %}
               <input type="checkbox" name="selected_items" value="{{ prim }}" checked="{{ selected.prim }}">
+              {% endwith %}
             </td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
             <td>{{ gi.grading.get_grading_type_display }}</td>
