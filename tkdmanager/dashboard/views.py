@@ -462,14 +462,12 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context['search_form'] = GradingInviteSearchForm(self.request.GET)
         # get initial values for the checkboxes
         selected_pks = self.request.GET.getlist('selected_items')
+        pks = [int(pk) for pk in selected_pks]
         gradinginviteobjectlist = context['gradinginvite_list'].iterator()
-        gradinginvitelist = []
+        selected = {}
         for giobj in gradinginviteobjectlist:
-            gi = giobj.__dict__
-            print(gi)
-            gi['selected'] = (gi['pk'] in selected_pks)
-            gradinginvitelist.append(gi)
-        context['gradinginvite_list'] = gradinginvitelist
+            selected[giobj.pk] = (giobj.pk in pks)
+        context['selected'] = selected
         return context
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):

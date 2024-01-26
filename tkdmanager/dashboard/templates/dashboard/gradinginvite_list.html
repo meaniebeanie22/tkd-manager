@@ -91,7 +91,8 @@
         {% for gi in gradinginvite_list %}
           <tr class="content">
             <td>
-              <input type="checkbox" name="selected_items" value="{{ gi.pk }}" checked="">
+              {% with prim=gi.pk %}
+              <input type="checkbox" name="selected_items" value="{{ prim }}" checked="{{ selected.prim }}">
             </td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
             <td>{{ gi.grading.get_grading_type_display }}</td>
