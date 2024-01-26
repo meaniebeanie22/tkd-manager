@@ -92,6 +92,7 @@
           <tr class="content">
             <td>
               {% with prim=gi.pk %}
+              <p>Prim: {{ selected.prim }} Canary: {% if selected.prim %}checked{% endif %}</p>
               <input type="checkbox" name="selected_items" value="{{ prim }}" {% if selected.prim %}checked{% endif %}>
               {% endwith %}
             </td>
