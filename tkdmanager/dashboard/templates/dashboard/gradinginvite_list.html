@@ -89,13 +89,10 @@
           <th>For Belt</th>
           <th>Payment</th>
         </tr>
-        {% for gi in gradinginvite_list %}
+        {% for selected, gi in uselist %}
           <tr class="content">
             <td>
-              {% with prim=gi.pk %}
-              <p>selectedprim: {{ selected.prim }} prim: {{ prim }} Canary: {% if selected.prim %}checked{% endif %}</p>
-              <input type="checkbox" name="selected_items" value="{{ prim }}" {% if selected.prim %}checked{% endif %}>
-              {% endwith %}
+              <input type="checkbox" name="selected_items" value="{{ gi.pk }}" {% if selected %}checked{% endif %}>
             </td>
             <td>{{ gi.pk }}</td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>

@@ -464,11 +464,10 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         selected_pks = self.request.GET.getlist('selected_items')
         pks = [int(pk) for pk in selected_pks]
         gradinginviteobjectlist = context['gradinginvite_list'].iterator()
-        selected = {}
+        selected = []
         for giobj in gradinginviteobjectlist:
-            selected[giobj.pk] = (giobj.pk in pks)
-            print(f'selectedgiobjpk: {selected[giobj.pk]}')
-        context['selected'] = selected
+            selected.append(giobj.pk in pks)
+        context['uselist'] = zip(selected, gradinginviteobjectlist)
         print(f'Context: {context}')
         return context
 
