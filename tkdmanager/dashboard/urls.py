@@ -52,5 +52,6 @@ urlpatterns = [
     path('gradingresult/batchdownload', views.gradingresult_batch_pdf_view, name='dash-batch-generate-gr-pdf'),
     path('gradinginvite/batch_create', views.gradinginvite_batch_create, name='dash-batch-create-grading-invite'),
     path('gradinginvite/batch_create/review', views.batch_gradinginvite_revise, name='dash-batch-revise-grading-invite'),
-    path('gradingresult/batchemail', views.gradingresult_batch_email_view, name='dash-batch-email-gr-pdf')
+    path('gradingresult/batchemail', views.gradingresult_batch_email_view, name='dash-batch-email-gr-pdf'),
+    path('gradinginvite/batchemail', views.gradinginvite_batch_email_view, name='dash-batch-email-gi-pdf')
 ]
