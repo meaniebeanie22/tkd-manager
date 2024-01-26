@@ -92,7 +92,7 @@
           <tr class="content">
             <td>
               {% with prim=gi.pk %}
-              <input type="checkbox" name="selected_items" value="{{ prim }}" checked={{ selected.prim }}>
+              <input type="checkbox" name="selected_items" value="{{ prim }}" {% if selected.prim %}checked{% endif %}>
               {% endwith %}
             </td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
