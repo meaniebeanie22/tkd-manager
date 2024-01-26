@@ -467,7 +467,9 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         selected = {}
         for giobj in gradinginviteobjectlist:
             selected[giobj.pk] = (giobj.pk in pks)
+            print(f'selectedgiobjpk: {selected[giobj.pk]}')
         context['selected'] = selected
+        print(f'Context: {context}')
         return context
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
