@@ -77,12 +77,10 @@
         });
     });
   </script>
-  {{ uselist }}
     <form id="selecteditemsform" method="get">
       <table style="width: 100%;">
         <tr>
           <th>Select</th>
-          <th>PK</th>
           <th>Link</th>
           <th>Type</th>
           <th>Date & Time</th>
@@ -90,12 +88,11 @@
           <th>For Belt</th>
           <th>Payment</th>
         </tr>
-        {% for selected, gi in uselist %}
+        {% for selected,gi in uselist %}
           <tr class="content">
             <td>
               <input type="checkbox" name="selected_items" value="{{ gi.pk }}" {% if selected %}checked{% endif %}>
             </td>
-            <td>{{ gi.pk }}</td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
             <td>{{ gi.grading.get_grading_type_display }}</td>
             <td>{{ gi.grading.grading_datetime }}</td>
