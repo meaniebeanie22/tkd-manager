@@ -461,7 +461,11 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['search_form'] = GradingInviteSearchForm(self.request.GET)
         # get initial values for the checkboxes
-        print(context['gradinginvite_list'])
+        selected_pks = self.request.GET.getlist('selected_items')
+        gradinginvitelist = context['gradinginvite_list'].iterator()
+        for gi in gradinginvitelist:
+            gi['selected'] = (gi.pk in selected_pks)
+        context['gradinginvite_list'] = gradinginvitelist
         return context
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
@@ -671,11 +675,11 @@ def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist('selected_items')
     gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
 
-    url = reverse('dash-batch-generate-gi-pdf')+'?'
+    url = reverse('dash-gradinginvites')+'?'
     for pk in pks:
         url += (f'selected_items={pk}&')
     url = url.strip('&')
-    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'batch_download_grading_invites_url': url})
+    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'grading_invites_url': url})
 
 @login_required
 def gradingresult_batch_email_view(request, **kwargs):
