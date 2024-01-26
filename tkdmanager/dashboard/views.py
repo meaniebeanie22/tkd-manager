@@ -466,6 +466,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         gradinginvitelist = []
         for giobj in gradinginviteobjectlist:
             gi = giobj.__dict__
+            print(gi)
             gi['selected'] = (gi['pk'] in selected_pks)
             gradinginvitelist.append(gi)
         context['gradinginvite_list'] = gradinginvitelist
