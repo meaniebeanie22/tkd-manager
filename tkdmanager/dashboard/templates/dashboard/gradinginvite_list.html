@@ -81,6 +81,7 @@
       <table style="width: 100%;">
         <tr>
           <th>Select</th>
+          <th>PK</th>
           <th>Link</th>
           <th>Type</th>
           <th>Date & Time</th>
@@ -96,6 +97,7 @@
               <input type="checkbox" name="selected_items" value="{{ prim }}" {% if selected.prim %}checked{% endif %}>
               {% endwith %}
             </td>
+            <td>{{ gi.pk }}</td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
             <td>{{ gi.grading.get_grading_type_display }}</td>
             <td>{{ gi.grading.grading_datetime }}</td>
