@@ -75,8 +75,8 @@
             });
         });
     });
-</script>
-  <form id="selecteditemsform" name="selecteditems">
+  </script>
+  <form id="selecteditemsform" name="selecteditems" method="get">
   <table style="width: 100%;">
     <tr>
       <th>Select</th>
@@ -111,7 +111,21 @@
     {% endfor %}
   </table>
   <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
-  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
+  <button type="button" class="btn btn-outline-secondary btn-outline-thicker" data-bs-toggle="modal" data-bs-target="#emailConfirmModal">Send Certificate PDFs for Selected Items to Members</button>
+  <div class="modal fade" id="emailConfirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailConfirmModalLabel">Are you sure you want to send these emails?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-outline-thicker" data-bs-dismiss="modal">No</button>
+          <button id="email-pdfs-button" type="submit" class="btn btn-outline-danger btn-outline-thicker" data-bs-dismiss="modal">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>

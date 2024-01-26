@@ -709,10 +709,47 @@ def gradingresult_batch_email_view(request, **kwargs):
                     data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
             message = mail.EmailMessage(
                 f'Grading Certificate for {gr.member}',
-                'Please see attached your Grading Certificate.\n TKD Manager.',
+                'Please see attached your Grading Certificate.\n - TKD Manager.',
                 'beaniemcc1@gmail.com',
                 (f'{gr.member.email}',),
                 attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
+            )
+            print(f'EmailMessage: {message}')
+            messages.append(message)
+        connection = mail.get_connection()  # Use default email connection
+        connection.send_messages(messages)
+        response_data = {'success': True, 'message': 'Emails sent successfully!'}
+        return JsonResponse(response_data)
+    else:
+        response_data = {'success': False, 'message': 'No items selected for email sending.'}
+        return JsonResponse(response_data, status=204)
+    
+@login_required
+def gradinginvite_batch_email_view(request, **kwargs):
+    """
+    View that sends emails with the GI PDF attached to the email the assessed member has on file
+    GIs to be sent are specified by the selected_items query key
+    """
+    print('Email send request for gradingresults')
+    try:
+        pks = request.GET.getlist('selected_items')
+    except:
+        response_data = {'success': False, 'message': 'No items selected for email sending.'}
+        return JsonResponse(response_data, status=204)
+    if pks:
+        messages = []
+        for pk in pks:
+            gi = get_object_or_404(GradingInvite, pk=pk)
+            data = {
+                'gradinginvite': gi
+            }
+            # renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+            message = mail.EmailMessage(
+                f'Grading Invite for {gi.member}',
+                'Please see attached your Grading Invite.\n - TKD Manager.',
+                'beaniemcc1@gmail.com',
+                (f'{gi.member.email}',),
+                attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
             messages.append(message)
