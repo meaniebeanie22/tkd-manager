@@ -111,9 +111,54 @@
     {% endfor %}
   </table>
   <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
-  <button id="email-pdfs-button" type="submit" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
+  <button type="button" data-toggle="modal" data-target="#emailConfirmModal" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
+  <div class="modal fade" id="emailConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailConfirmModalLabel">Are you sure you want to send these emails?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          This will send x emails.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-outline-thicker" data-dismiss="modal">No</button>
+          <button id="email-pdfs-button" type="submit" class="btn btn-outline-danger btn-outline-thicker" data-dismiss="modal">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </form>
   {% else %}
     <p>There are no grading results that match your filters.</p>
   {% endif %}
 {% endblock %}
+
+<!--
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+-->
