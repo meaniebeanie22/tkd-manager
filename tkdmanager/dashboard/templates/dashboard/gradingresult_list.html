@@ -111,9 +111,9 @@
     {% endfor %}
   </table>
   <button type="submit" class="btn btn-outline-secondary btn-outline-thicker" formaction="{% url 'dash-batch-generate-gr-pdf' %}">Generate Certificate PDF for Selected Items</button>
-  <button type="button" data-toggle="modal" data-target="#emailConfirmModal" class="btn btn-outline-secondary btn-outline-thicker">Send Certificate PDFs for Selected Items to Members</button>
-  <div class="modal fade" id="emailConfirmModal" tabindex="-1">
-    <div class="modal-dialog">
+  <button type="button" class="btn btn-outline-secondary btn-outline-thicker" data-toggle="modal" data-target="#emailConfirmModal">Send Certificate PDFs for Selected Items to Members</button>
+  <div class="modal fade" id="emailConfirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="emailConfirmModalLabel">Are you sure you want to send these emails?</h5>
