@@ -469,6 +469,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
             selected.append(giobj.pk in pks)
         context['uselist'] = zip(selected, gradinginviteobjectlist)
         print(f'uselist {context['uselist']}')
+        print(f'selected {selected} giobjlist {gradinginviteobjectlist}')
         for selected, gi in context['uselist']:
             print(f'selected {selected} gi {gi}')
         print(f'Context: {context}')
