@@ -91,7 +91,7 @@
           <th>For Belt</th>
           <th>Payment</th>
         </tr>
-        {% for selected,gi in uselist %}
+        {% for selected, gi in uselist %}
           <tr class="content">
             <td>
               <input type="checkbox" name="selected_items" value="{{ gi.pk }}" {% if selected %}checked{% endif %}>
