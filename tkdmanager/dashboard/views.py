@@ -461,6 +461,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['search_form'] = GradingInviteSearchForm(self.request.GET)
         # get initial values for the checkboxes
+        context['potato'] = 'potato'
         selected_pks = self.request.GET.getlist('selected_items')
         pks = [int(pk) for pk in selected_pks]
         gradinginviteobjectlist = list(context['gradinginvite_list'].iterator())
