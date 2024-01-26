@@ -463,7 +463,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         # get initial values for the checkboxes
         selected_pks = self.request.GET.getlist('selected_items')
         pks = [int(pk) for pk in selected_pks]
-        gradinginviteobjectlist = context['gradinginvite_list'].iterator()
+        gradinginviteobjectlist = list(context['gradinginvite_list'].iterator())
         selected = []
         for giobj in gradinginviteobjectlist:
             selected.append(giobj.pk in pks)
