@@ -92,7 +92,9 @@
             console.log('id_member changed');
             updateGradingInviteOptions();
         });
-        $('#id_gradinginvite').change(updateGradingInviteDetails);
+        $('#id_gradinginvite').on('change', function(e) {
+            updateGradingInviteDetails();
+        });
     });
     </script> 
 </form>
