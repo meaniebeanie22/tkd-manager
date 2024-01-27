@@ -410,6 +410,12 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
 
+class GetGradingsJSON(LoginRequiredMixin, View):
+    def get(self, request):
+        gradings = Grading.objects.all()
+        data = [{'value': grading.id, 'label': str(grading)} for grading in gradings]
+        return JsonResponse(data, safe=False)
+
 class MemberGetPayments(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)

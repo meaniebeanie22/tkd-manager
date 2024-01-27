@@ -43,6 +43,7 @@
 
         function updateGradingInviteDetails() {
             var selectedGradingInvite = $('#id_gradinginvite').val();
+            var gradingField = $('#id_grading');
 
             if (selectedGradingInvite) {
                 $.ajax({
@@ -58,6 +59,28 @@
                     }
                 });
             }
+        }
+
+        function getGradings() {
+            var gradingField = $('#id_grading');
+            $.ajax({
+                url: "{% url 'dash-gradings-json' %}",
+                dataType: 'json',
+                success: function(data) {
+                    gradingField.empty();
+                    $.each(data, function(index, option) {
+                        gradingField.append($('<option>', {
+                            value: option.value,
+                            text: option.label
+                        }));
+                    });
+                    // Trigger the change event on the gradinginvite field
+                    gradingField.trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching grading invite details:', error);
+                }
+            });
         }
 
         $('#id_member').change(updateGradingInviteOptions);

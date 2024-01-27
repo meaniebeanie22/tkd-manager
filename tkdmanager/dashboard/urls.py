@@ -42,6 +42,7 @@ urlpatterns = [
     path('member/<str:pk>/get_grading_invites', views.MemberGetGradingInvites.as_view(), name='dash-member-get-grading-invites'),
     path('member/<str:pk>/get_payments', views.MemberGetPayments.as_view(), name='dash-member-get-payments'),
     path('gradings', views.GradingListView.as_view(), name='dash-gradings'),
+    path('gradings-json', views.GetGradingsJSON.as_view(), name='dash-gradings-json'),
     path('grading/detail/<str:pk>', views.GradingDetailView.as_view(), name='dash-grading-detail'),
     path('grading/<str:pk>/update', views.GradingUpdateView.as_view(), name='dash-update-grading'),
     path('grading/<str:pk>/delete', views.GradingDeleteView.as_view(), name='dash-delete-grading'),
