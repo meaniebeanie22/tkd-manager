@@ -84,7 +84,10 @@
             });
         }
 
-        $('#id_member').change(updateGradingInviteOptions);
+        // Bind the functions to the change event of the member field
+        $('#id_member').on("select2:select", function() {
+            updateGradingInviteOptions();
+        });
         $('#id_gradinginvite').change(updateGradingInviteDetails);
     });
     </script> 
