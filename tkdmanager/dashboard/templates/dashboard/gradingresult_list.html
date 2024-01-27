@@ -92,7 +92,7 @@
     {% for gr in gradingresult_list %}
       <tr class="content">
         <td>
-          <input type="checkbox" name="selected_items" value="{{ gr.pk }}" checked="{{ gi.selected }}">
+          <input type="checkbox" name="selected_items" value="{{ gr.pk }}">
         </td>
         <td><a href="{{ gr.get_absolute_url }}">Link</a></td>
         <td>{{ gr.grading.get_grading_type_display }}</td>
