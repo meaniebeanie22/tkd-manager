@@ -461,7 +461,6 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['search_form'] = GradingInviteSearchForm(self.request.GET)
         # get initial values for the checkboxes
-        context['potato'] = 'potato'
         selected_pks = self.request.GET.getlist('selected_items')
         pks = [int(pk) for pk in selected_pks]
         gradinginviteobjectlist = list(context['gradinginvite_list'].iterator())
@@ -469,11 +468,6 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         for giobj in gradinginviteobjectlist:
             selected.append(giobj.pk in pks)
         context['uselist'] = zip(selected, gradinginviteobjectlist)
-        print(f'uselist {context['uselist']}')
-        print(f'selected {selected} giobjlist {gradinginviteobjectlist}')
-        for selected, gi in context['uselist']:
-            print(f'selected {selected} gi {gi}')
-        print(f'Context: {context}')
         return context
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
