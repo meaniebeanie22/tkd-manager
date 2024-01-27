@@ -98,7 +98,7 @@
             <td>{{ gi.grading.grading_datetime }}</td>
             <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
             <td>{{ gi.get_forbelt_display }}</td>
-            <td><a href="{{ gi.payment.get_absolute_url }}" {% if gi.payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif gi.payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ gi.payment }}</a></td>
+            <td><a href="{{ gi.payment.get_absolute_url }}" {% if p.get_payment_status == 'Overdue' %} style="color:red;"{% elif p.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.get_payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ gi.payment }}</a></td>
           </tr>
         {% endfor %}
       </table>
