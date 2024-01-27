@@ -89,7 +89,8 @@
         }
 
         // Bind the functions to the change event of the member field
-        $('#id_member').on("select2:select", function() {
+        $('#id_member').on("select2:select", function(e) {
+            console.log('id_member changed');
             updateGradingInviteOptions();
         });
         $('#id_gradinginvite').change(updateGradingInviteDetails);
