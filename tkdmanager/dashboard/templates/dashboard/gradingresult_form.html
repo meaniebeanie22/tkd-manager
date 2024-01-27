@@ -50,6 +50,7 @@
                     url: '/dashboard/grading-invite/' + selectedGradingInvite + '/get_details',
                     dataType: 'json',
                     success: function(data) {
+                        getGradings() // update the gradings before setting them
                         // Update the form fields with grading invite details
                         $('#id_forbelt').val(data.forbelt);
                         $('#id_grading').val(data.gradingpk)
