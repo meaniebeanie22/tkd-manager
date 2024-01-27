@@ -1,5 +1,5 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField
-from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select
+from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField, MultipleChoiceField
+from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select, CheckboxSelectMultiple
 from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
 from django.utils import timezone
 from django import forms 
@@ -216,6 +216,7 @@ class PaymentSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
+    selected_statuses = MultipleChoiceField(choices=(('Paid Late', 'Paid Late'),('Paid On Time', 'Paid On Time'),('Overdue', 'Overdue'),('Awaiting Payment', 'Awaiting Payment')), required=False))
 
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
