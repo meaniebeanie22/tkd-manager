@@ -19,6 +19,7 @@
         function updateGradingInviteOptions() {
             var selectedMember = $('#id_member').val();
             var gradingInviteField = $('#id_gradinginvite');
+            console.log('updateGradingInviteOptions');
 
             $.ajax({
                 url: '/dashboard/member/' + selectedMember + '/get_grading_invites',
@@ -44,6 +45,7 @@
         function updateGradingInviteDetails() {
             var selectedGradingInvite = $('#id_gradinginvite').val();
             var gradingField = $('#id_grading');
+            console.log('updateGradingInviteDetails');
 
             if (selectedGradingInvite) {
                 $.ajax({
@@ -64,6 +66,8 @@
 
         function getGradings() {
             var gradingField = $('#id_grading');
+            console.log('getGradings');
+
             $.ajax({
                 url: "{% url 'dash-gradings-json' %}",
                 dataType: 'json',
