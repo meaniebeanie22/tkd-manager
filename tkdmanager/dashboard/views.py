@@ -351,13 +351,10 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
             queryset_db = manager.filter(**filters).all()
             if form.cleaned_data.get("selected_statuses"):
                 payment_list = [payment for payment in queryset_db if payment.payment_status in form.cleaned_data.get("selected_statuses")]
-                return payment_list
+                return QuerySet(payment_list)
             return queryset_db
         return manager.all()
             
-
-        
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = PaymentSearchForm(self.request.GET)
