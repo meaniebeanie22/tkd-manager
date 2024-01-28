@@ -217,10 +217,10 @@ class PaymentSearchForm(Form):
         'size': 10
     }))
     selected_statuses = MultipleChoiceField(choices=(
-            ('Paid Late', 'Paid Late'),
-            ('Paid On Time', 'Paid On Time'),
             ('Overdue', 'Overdue'),
             ('Awaiting Payment', 'Awaiting Payment'),
+            ('Paid Late', 'Paid Late'),
+            ('Paid On Time', 'Paid On Time'),            
         ),
         required=False,
         widget=CheckboxSelectMultiple()
