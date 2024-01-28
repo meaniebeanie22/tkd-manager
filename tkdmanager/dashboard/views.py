@@ -347,6 +347,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
                     filters[field_name] = value
             
             # Apply all filters to the queryset in a single call
+            print(f'Filters: {filters}')
             queryset = queryset.filter(**filters)
 
         return queryset
