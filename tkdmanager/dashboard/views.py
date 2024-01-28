@@ -351,7 +351,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
             queryset_db = manager.filter(**filters).all()
             if form.cleaned_data.get("selected_statuses"):
                 payment_list = [payment for payment in queryset_db if payment.payment_status in form.cleaned_data.get("selected_statuses")]
-                return QuerySet(payment_list)
+                return manager.filter(pk__in=[payment.pk for payment in payment_list]).all()
             return queryset_db
         return manager.all()
             
