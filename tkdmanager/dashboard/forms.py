@@ -222,7 +222,8 @@ class PaymentSearchForm(Form):
             ('Overdue', 'Overdue'),
             ('Awaiting Payment', 'Awaiting Payment'),
         ),
-        required=False
+        required=False,
+        widget=CheckboxSelectMultiple()
     )
 
 class AssessmentUnitLetterForm(ModelForm):
