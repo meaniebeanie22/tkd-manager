@@ -90,7 +90,7 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         six_months_before = today - timedelta(days=6 * 30)
         recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=six_months_before) & Q(date_due__date__lte=six_months_later)).all()
         payments = self.get_object().payment_set.all()
-        overdue_payments = [p for p in payments if p.get_payment_status() == "Overdue"]
+        overdue_payments = [p for p in payments if p.payment_status == "Overdue"]
         context['relevant_payments'] = list(recent_payments) + overdue_payments
         return context
 
@@ -334,7 +334,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
 
     def get_queryset(self):
-        queryset = Payment.objects.all()
+        manager = Payment.objects
 
         # Process form data to filter queryset
         form = PaymentSearchForm(self.request.GET)
@@ -344,13 +344,19 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
                 if value:
-                    filters[field_name] = value
-            
-            # Apply all filters to the queryset in a single call
-            print(f'Filters: {filters}')
-            queryset = queryset.filter(**filters)
+                    if field_name != "selected_statuses": # we want to do this LAST because it requires loading all the objects rather than using a DB filter
+                        filters[field_name] = value
 
-        return queryset
+            print(f'Filters: {filters}')
+            queryset_db = manager.filter(**filters).all()
+            if form.cleaned_data.get("selected_statuses"):
+                payment_list = [payment for payment in queryset_db if payment.payment_status in form.cleaned_data.get("selected_statuses")]
+                return payment_list
+            return queryset_db
+        return manager.all()
+            
+
+        
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
