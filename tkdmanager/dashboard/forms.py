@@ -216,7 +216,14 @@ class PaymentSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    selected_statuses = MultipleChoiceField(choices=(('Paid Late', 'Paid Late'),('Paid On Time', 'Paid On Time'),('Overdue', 'Overdue'),('Awaiting Payment', 'Awaiting Payment')), required=False))
+    selected_statuses = MultipleChoiceField(choices=(
+            ('Paid Late', 'Paid Late'),
+            ('Paid On Time', 'Paid On Time'),
+            ('Overdue', 'Overdue'),
+            ('Awaiting Payment', 'Awaiting Payment'),
+        ),
+        required=False
+    )
 
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
