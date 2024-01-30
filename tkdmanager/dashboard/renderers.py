@@ -4,7 +4,6 @@ from django.template.loader import get_template
 from requests import session, get, post
 from xhtml2pdf import pisa
 from sys import stderr
-from time import sleep
 import os
 
 def PDFResponse(template_src, filename, context_dict={}):
@@ -43,7 +42,6 @@ def render_to_pdf(template_src, context_dict):
         print('Weasyprint API did not return HEALTH, using xhtml builtin instead.', file=stderr)
         return base_render_to_pdf(template_src, context_dict)
     s.headers['X-API-KEY'] = os.environ.get('WEASYPRINT_API_KEY')
-    sleep(0.01)
     response = s.post(os.environ.get('WEASYPRINT_API_DOMAIN') + '/api/v1.0/print', {'html': html})
     if response.status_code != 200:
         print('Weasyprint API did not return 200 on print, using xhtml builtin instead.', file=stderr)
