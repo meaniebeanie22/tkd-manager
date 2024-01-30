@@ -55,6 +55,9 @@ def token_display(request):
 
     return render(request, 'token.html', context=context)
 
+def health(request):
+    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': datetime.now()})
+
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ['-belt','last_name']
