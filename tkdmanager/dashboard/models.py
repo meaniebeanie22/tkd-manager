@@ -248,6 +248,7 @@ class Payment(models.Model):
 class PaymentType(models.Model):
     name = models.CharField(max_length=200)
     standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)
+    recurring = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
@@ -259,6 +260,7 @@ class RecurringPayment(models.Model):
     interval = models.DurationField()
     amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     next_due = models.GeneratedField(db_persist=True, output_field=models.DateTimeField(), expression=(F('last_payment_date') + F('interval')))
+    paymenttype = models.ForeignKey(PaymentType, help_text='Payment Type', on_delete=models.PROTECT)
 
     def __str__(self):
         return f'Recurring Payment for {self.member}, ${self.amount} per {self.interval}'
