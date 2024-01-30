@@ -263,3 +263,6 @@ class RecurringPayment(models.Model):
 
     def __str__(self):
         return f'Recurring Payment for {self.member}, ${self.amount} per {self.interval}'
+    
+    def get_absolute_url(self):
+        return reverse('dash-rpayment-detail', args=[str(self.id)])

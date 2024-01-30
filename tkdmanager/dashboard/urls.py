@@ -57,5 +57,7 @@ urlpatterns = [
     path('gradingresult/batchemail', views.gradingresult_batch_email_view, name='dash-batch-email-gr-pdf'),
     path('gradinginvite/batchemail', views.gradinginvite_batch_email_view, name='dash-batch-email-gi-pdf'),
     path('recurringpayment/detail/<str:pk>', views.RecurringPaymentDetailView.as_view(), name='dash-rpayment-detail'),
-    path('recurringpayments', views.RecurringPaymentListView.as_view(), name='dash-rpayments')
+    path('recurringpayments', views.RecurringPaymentListView.as_view(), name='dash-rpayments'),
+    path('recurringpayment/create', views.RecurringPaymentCreateView.as_view(), name='dash-create-rpayment'),
+    path('recurringpayment/<str:pk>/update', views.RecurringPaymentUpdateView.as_view(), name='dash-update-rpayment'),
 ]
