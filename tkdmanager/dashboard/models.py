@@ -232,7 +232,8 @@ class Payment(models.Model):
     def is_past_due(self):
         return self.date_due < timezone.now()
     
-    def get_payment_status(self):
+    @property
+    def payment_status(self):
         if self.is_past_due and self.date_paid_in_full == None:
             return "Overdue"
         elif self.date_paid_in_full:

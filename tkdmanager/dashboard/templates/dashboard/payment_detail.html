@@ -13,7 +13,7 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Member: <a href="{{ payment.member.get_absolute_url }}">{{ payment.member }}</a></li>
                 <li class="list-group-item">Type: {{ payment.paymenttype }}</li>
-                <li class="list-group-item"{% if payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% endif %}>Status: {{ payment.get_payment_status }}</li>
+                <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>Status: {{ payment.payment_status }}</li>
                 <li class="list-group-item">Date Created: {{ payment.date_created|date:"d/m/y" }}</li>
                 <li class="list-group-item"{% if payment.is_past_due %}{% if payment.date_paid_in_full is None %} style="color:red;"{% endif %}{% endif %}>Date Due: {{ payment.date_due|date:"d/m/y" }}</li>
                 <li class="list-group-item">Date Paid in Full: {{ payment.date_paid_in_full|date:"d/m/y" }}</li>

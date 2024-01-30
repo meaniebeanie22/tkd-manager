@@ -88,17 +88,17 @@
           <th>For Belt</th>
           <th>Payment</th>
         </tr>
-        {% for gi in gradinginvite_list %}
+        {% for selected, gi in uselist %}
           <tr class="content">
             <td>
-              <input type="checkbox" name="selected_items" value="{{ gi.pk }}">
+              <input type="checkbox" name="selected_items" value="{{ gi.pk }}" {% if selected %}checked{% endif %}>
             </td>
             <td><a href="{{ gi.get_absolute_url }}">Link</a></td>
             <td>{{ gi.grading.get_grading_type_display }}</td>
             <td>{{ gi.grading.grading_datetime }}</td>
             <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
             <td>{{ gi.get_forbelt_display }}</td>
-            <td><a href="{{ gi.payment.get_absolute_url }}" {% if gi.payment.get_payment_status == 'Overdue' %} style="color:red;"{% elif gi.payment.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ gi.payment }}</a></td>
+            <td><a href="{{ gi.payment.get_absolute_url }}" {% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ gi.payment }}</a></td>
           </tr>
         {% endfor %}
       </table>

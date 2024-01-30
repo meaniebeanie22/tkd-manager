@@ -14,11 +14,11 @@
   </table>
   <input type="submit" value="Submit" />
     <script>
-    const $ = django.jQuery;
     $(document).ready(function() {
         function updateGradingInviteOptions() {
             var selectedMember = $('#id_member').val();
             var gradingInviteField = $('#id_gradinginvite');
+            console.log('updateGradingInviteOptions');
 
             $.ajax({
                 url: '/dashboard/member/' + selectedMember + '/get_grading_invites',
@@ -43,15 +43,18 @@
 
         function updateGradingInviteDetails() {
             var selectedGradingInvite = $('#id_gradinginvite').val();
+            var gradingField = $('#id_grading');
+            console.log('updateGradingInviteDetails');
 
             if (selectedGradingInvite) {
                 $.ajax({
                     url: '/dashboard/grading-invite/' + selectedGradingInvite + '/get_details',
                     dataType: 'json',
                     success: function(data) {
+                        getGradings(); // update the gradings before setting them
                         // Update the form fields with grading invite details
                         $('#id_forbelt').val(data.forbelt);
-                        $('#id_grading').val(data.gradingpk)
+                        $('#id_grading').val(data.gradingpk);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching grading invite details:', error);
@@ -60,8 +63,38 @@
             }
         }
 
-        $('#id_member').change(updateGradingInviteOptions);
-        $('#id_gradinginvite').change(updateGradingInviteDetails);
+        function getGradings() {
+            var gradingField = $('#id_grading');
+            console.log('getGradings');
+
+            $.ajax({
+                url: "{% url 'dash-gradings-json' %}",
+                dataType: 'json',
+                success: function(data) {
+                    gradingField.empty();
+                    $.each(data, function(index, option) {
+                        gradingField.append($('<option>', {
+                            value: option.value,
+                            text: option.label
+                        }));
+                    });
+                    // Trigger the change event on the gradinginvite field
+                    gradingField.trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching grading invite details:', error);
+                }
+            });
+        }
+
+        // Bind the functions to the change event of the member field
+        $('#id_member').on("select2:select", function(e) {
+            console.log('id_member changed');
+            updateGradingInviteOptions();
+        });
+        $('#id_gradinginvite').on('change', function(e) {
+            updateGradingInviteDetails();
+        });
     });
     </script> 
 </form>

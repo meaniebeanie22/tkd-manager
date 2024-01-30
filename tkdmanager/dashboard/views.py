@@ -6,7 +6,7 @@ from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
@@ -55,6 +55,9 @@ def token_display(request):
 
     return render(request, 'token.html', context=context)
 
+def health(request):
+    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': datetime.now()})
+
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ['-belt','last_name']
@@ -90,7 +93,7 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         six_months_before = today - timedelta(days=6 * 30)
         recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=six_months_before) & Q(date_due__date__lte=six_months_later)).all()
         payments = self.get_object().payment_set.all()
-        overdue_payments = [p for p in payments if p.get_payment_status() == "Overdue"]
+        overdue_payments = [p for p in payments if p.payment_status == "Overdue"]
         context['relevant_payments'] = list(recent_payments) + overdue_payments
         return context
 
@@ -334,7 +337,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
     model = Payment
 
     def get_queryset(self):
-        queryset = Payment.objects.all()
+        manager = Payment.objects
 
         # Process form data to filter queryset
         form = PaymentSearchForm(self.request.GET)
@@ -344,13 +347,17 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
                 if value:
-                    filters[field_name] = value
+                    if field_name != "selected_statuses": # we want to do this LAST because it requires loading all the objects rather than using a DB filter
+                        filters[field_name] = value
+
+            print(f'Filters: {filters}')
+            queryset_db = manager.filter(**filters).all()
+            if form.cleaned_data.get("selected_statuses"):
+                payment_list = [payment for payment in queryset_db if payment.payment_status in form.cleaned_data.get("selected_statuses")]
+                return manager.filter(pk__in=[payment.pk for payment in payment_list]).all()
+            return queryset_db
+        return manager.all()
             
-            # Apply all filters to the queryset in a single call
-            queryset = queryset.filter(**filters)
-
-        return queryset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = PaymentSearchForm(self.request.GET)
@@ -410,6 +417,12 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
 
+class GetGradingsJSON(LoginRequiredMixin, View):
+    def get(self, request):
+        gradings = Grading.objects.all()
+        data = [{'value': grading.id, 'label': str(grading)} for grading in gradings]
+        return JsonResponse(data, safe=False)
+
 class MemberGetPayments(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
@@ -460,6 +473,14 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = GradingInviteSearchForm(self.request.GET)
+        # get initial values for the checkboxes
+        selected_pks = self.request.GET.getlist('selected_items')
+        pks = [int(pk) for pk in selected_pks]
+        gradinginviteobjectlist = list(context['gradinginvite_list'].iterator())
+        selected = []
+        for giobj in gradinginviteobjectlist:
+            selected.append(giobj.pk in pks)
+        context['uselist'] = zip(selected, gradinginviteobjectlist)
         return context
 
 class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
@@ -669,11 +690,11 @@ def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist('selected_items')
     gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
 
-    url = reverse('dash-batch-generate-gi-pdf')+'?'
+    url = reverse('dash-gradinginvites')+'?'
     for pk in pks:
         url += (f'selected_items={pk}&')
     url = url.strip('&')
-    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'batch_download_grading_invites_url': url})
+    return render(request, "dashboard/gradinginvite_batch_revise.html", {'gradinginvites': gis, 'grading_invites_url': url})
 
 @login_required
 def gradingresult_batch_email_view(request, **kwargs):

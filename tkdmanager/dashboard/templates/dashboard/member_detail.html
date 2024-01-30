@@ -98,7 +98,7 @@
           <ul class="list-group list-group-flush">
             {% if relevant_payments %}
               {% for payment in relevant_payments %}
-                <li class="list-group-item"><a href="{{ payment.get_absolute_url }}"{% if p.get_payment_status == 'Overdue' %} style="color:red;"{% elif p.get_payment_status == 'Paid Late' %} style="color:#d0d000;"{% else %} style="color:lime;"{% endif %}>{{ payment }}</a></li>
+                <li class="list-group-item"><a href="{{ payment.get_absolute_url }}"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ payment }}</a></li>
               {% endfor %}
             {% else %}
               <li class="list-group-item">No overdue or upcoming payments.</li>
