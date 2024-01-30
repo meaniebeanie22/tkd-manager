@@ -1,7 +1,7 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type
+from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type, RecurringPayment
 from django.views import generic, View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm, RecurringPaymentForm
 from django.db.models import Q
 from dashboard import renderers
 from django.forms.models import model_to_dict
@@ -781,3 +781,17 @@ def gradinginvite_batch_email_view(request, **kwargs):
     else:
         response_data = {'success': False, 'message': 'No items selected for email sending.'}
         return JsonResponse(response_data, status=204)
+    
+class RecurringPaymentDetailView(LoginRequiredMixin, generic.DetailView):
+    model = RecurringPayment
+
+class RecurringPaymentListView(LoginRequiredMixin, generic.DetailView):
+    model = RecurringPayment
+
+class RecurringPaymentCreateView(LoginRequiredMixin, generic.DetailView):
+    model = RecurringPayment
+    form_class = RecurringPaymentForm
+
+class RecurringPaymentUpdateView(LoginRequiredMixin, generic.DetailView):
+    model = RecurringPayment
+    form_class = RecurringPaymentForm
