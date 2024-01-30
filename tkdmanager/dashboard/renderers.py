@@ -42,5 +42,6 @@ def render_to_pdf(template_src, context_dict):
         print('Weasyprint API did not return HEALTH, using xhtml builtin instead.', file=stderr)
         return base_render_to_pdf(template_src, context_dict)
     s.headers['X_API_KEY'] = os.environ.get('WEASYPRINT_API_KEY')
-    result = BytesIO(s.post(os.environ.get('WEASYPRINT_API_DOMAIN') + '/api/v1.0/print', {'html': html}))
-    return result
+    response = s.post(os.environ.get('WEASYPRINT_API_DOMAIN') + '/api/v1.0/print', {'html': html})
+    pdf = BytesIO(response.content)
+    return pdf
