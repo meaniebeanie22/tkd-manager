@@ -284,6 +284,10 @@ class RecurringPaymentSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
+    next_due = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
+    }))
     paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
         'style':'max-width: 175px;'
     }))
