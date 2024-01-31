@@ -277,4 +277,14 @@ class RecurringPaymentForm(ModelForm):
                 'size': 10,
             }),
         }
+
+class RecurringPaymentSearchForm(Form):
+    member = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False, widget=MemberWidget)
+    last_payment_date = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
+    }))
+    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
+        'style':'max-width: 175px;'
+    }))
         

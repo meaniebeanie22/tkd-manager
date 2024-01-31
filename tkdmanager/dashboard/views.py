@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm, RecurringPaymentForm
+from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm, RecurringPaymentForm, RecurringPaymentSearchForm
 from django.db.models import Q
 from dashboard import renderers
 from django.forms.models import model_to_dict
@@ -350,7 +350,6 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
                     if field_name != "selected_statuses": # we want to do this LAST because it requires loading all the objects rather than using a DB filter
                         filters[field_name] = value
 
-            print(f'Filters: {filters}')
             queryset_db = manager.filter(**filters).all()
             if form.cleaned_data.get("selected_statuses"):
                 payment_list = [payment for payment in queryset_db if payment.payment_status in form.cleaned_data.get("selected_statuses")]
@@ -787,6 +786,28 @@ class RecurringPaymentDetailView(LoginRequiredMixin, generic.DetailView):
 
 class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
     model = RecurringPayment
+
+    def get_queryset(self):
+        manager = RecurringPayment.objects
+
+        # Process form data to filter queryset
+        form = RecurringPaymentSearchForm(self.request.GET)
+        if form.is_valid():
+            filters = {}
+
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if value:
+                    filters[field_name] = value
+
+            queryset_db = manager.filter(**filters).all()
+            return queryset_db
+        return manager.all()
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = RecurringPaymentSearchForm(self.request.GET)
+        return context 
 
 class RecurringPaymentCreateView(LoginRequiredMixin, generic.DetailView):
     model = RecurringPayment
