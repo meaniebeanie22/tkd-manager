@@ -785,7 +785,7 @@ def gradinginvite_batch_email_view(request, **kwargs):
 class RecurringPaymentDetailView(LoginRequiredMixin, generic.DetailView):
     model = RecurringPayment
 
-class RecurringPaymentListView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
     model = RecurringPayment
 
 class RecurringPaymentCreateView(LoginRequiredMixin, generic.DetailView):
