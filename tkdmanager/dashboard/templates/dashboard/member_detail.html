@@ -104,6 +104,12 @@
               <li class="list-group-item">No overdue or upcoming payments.</li>
             {% endif %}
           </ul>
+          <h4 class="card-title">Recurring Payments</h4>
+          <ul class="list-group list-group-flush">
+            {% for rp in member.relevantpayment_set.all %}
+              <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
