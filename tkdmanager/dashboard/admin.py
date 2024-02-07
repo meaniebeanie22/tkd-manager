@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Award, Member, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading
+from .models import Award, Member, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, RecurringPayment
 
 admin.site.register(Award)
 admin.site.register(Member)
@@ -12,3 +12,4 @@ admin.site.register(Payment)
 admin.site.register(PaymentType)
 admin.site.register(GradingInvite)
 admin.site.register(Grading)
+admin.site.register(RecurringPayment)

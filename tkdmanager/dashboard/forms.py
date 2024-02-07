@@ -1,6 +1,6 @@
 from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField, MultipleChoiceField
 from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select, CheckboxSelectMultiple
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS
+from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS, RecurringPayment
 from django.utils import timezone
 from django import forms 
 from django.urls import reverse_lazy
@@ -261,3 +261,34 @@ class GradingForm(ModelForm):
         widgets = {
             'grading_datetime': DateTimeInput(attrs={'type': 'datetime-local'}), 
         }
+
+class RecurringPaymentForm(ModelForm):
+    class Meta:
+        model = RecurringPayment
+        fields = ['member','payments','last_payment_date','interval','amount','paymenttype']
+        widgets = {
+            'member': MemberWidget,
+            'payments': AddAnotherWidgetWrapper(
+                forms.SelectMultiple,
+                reverse_lazy('dash-add-payment'),
+            ),
+            'last_payment_date': TextInput(attrs={
+                'placeholder': 'YYYY-mm-dd',
+                'size': 10,
+            }),
+        }
+
+class RecurringPaymentSearchForm(Form):
+    member = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False, widget=MemberWidget)
+    last_payment_date = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
+    }))
+    next_due = DateField(required=False, widget=TextInput(attrs={
+        'placeholder': 'YYYY-mm-dd',
+        'size': 10
+    }))
+    paymenttype = ModelChoiceField(queryset=PaymentType.objects.all(), required=False, label='Payment Type', widget=Select(attrs={
+        'style':'max-width: 175px;'
+    }))
+        

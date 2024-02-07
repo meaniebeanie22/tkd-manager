@@ -19,6 +19,11 @@
                 <li class="list-group-item">Date Paid in Full: {{ payment.date_paid_in_full|date:"d/m/y" }}</li>
                 <li class="list-group-item">Amount Due: ${{ payment.amount_due }}</li>
                 <li class="list-group-item">Amount Paid: ${{ payment.amount_paid }}</li>
+                {% if payment.rpayment_set.all %}
+                    {% with payment.rpayment_set.all|first as rp %}
+                        <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
+                    {% endwith %}
+                {% endif %}
             </ul>
             <br>
             <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-payment' payment.pk %}">Edit</a>
