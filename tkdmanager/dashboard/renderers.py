@@ -23,7 +23,7 @@ def render_to_pdf(template_src, context_dict):
     s.headers['X_API_KEY'] = os.environ.get('WEASYPRINT_API_KEY')
     response = s.post(os.environ.get('WEASYPRINT_API_DOMAIN') + '/api/v1.0/print', {'html': html})
     if response.status_code != 200:
-        print('Weasyprint API did not return 200 on print, using xhtml builtin instead.', file=stderr)
-        return base_render_to_pdf(template_src, context_dict)
+        print('Weasyprint API did not return 200 on print, returning null.', file=stderr)
+        return None
     pdf = BytesIO(response.content)
     return pdf
