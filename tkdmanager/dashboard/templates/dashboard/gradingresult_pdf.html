@@ -4,19 +4,8 @@
     <title>Grading Certificate</title>
     <!-- Add your CSS styles or link to external stylesheets here -->
     <style>
-        @page {
+    @page {
         size: a4 portrait;
-        @frame header_frame {           /* Static Frame */
-            -pdf-frame-content: header_content;
-            left: 50pt; width: 512pt; top: 50pt; height: 150pt;
-        }
-        @frame content_frame {          /* Content Frame */
-            left: 50pt; width: 512pt; top: 200pt; height: 542pt;
-        }
-        @frame footer_frame {           /* Another static Frame */
-            -pdf-frame-content: footer_content;
-            left: 50pt; width: 512pt; top: 742pt; height: 50pt;
-        }
     }
     </style>
     <style>
@@ -40,12 +29,9 @@
 <body>
 
 <div id="header_content">
-    <h1><font size="5">Grading Certificate</font></h1>
-    <h1><font size="7">{{ gradingresult.member.first_name }} {{ gradingresult.member.last_name }} ({{ gradingresult.member.idnumber }})</font></h1>
+    <h1>Grading Certificate</h1>
+    <h1>{{ gradingresult.member.first_name }} {{ gradingresult.member.last_name }} ({{ gradingresult.member.idnumber }})</font></h1>
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
-</div>
-<div id="footer_content" class="centered">
-    <b>Congratulations on your outstanding achievement!</b>
 </div>
 <div>
     <h4>Graded for {{ gradingresult.get_forbelt_display }} in {{ gradingresult.grading.get_grading_type_display }}</h4>
@@ -54,7 +40,7 @@
       <h4>{{ gradingresult.award }}</h4>        
     {% endif %}
 
-    <h5><font size="5">Grading Units</font></h5>
+    <h5>Grading Units</h5>
     {% if gradingresult.assessmentunit_set.all %}
         <ul>
             {% for au in gradingresult.assessmentunit_set.all %}
@@ -68,7 +54,7 @@
         <p>This grading has no units.</p>
     {% endif %}
 
-    <h5><font size="3">Assessors</font></h5>
+    <h5>Assessors</h5>
     {% if gradingresult.assessor.all %}
         <ul>
             {% for as in gradingresult.assessor.all %}
@@ -81,6 +67,8 @@
         <p>This grading had no assessors.</p>
     {% endif %}
 </div>
-
+<div id="footer_content" class="centered">
+    <b>Congratulations on your outstanding achievement!</b>
+</div>
 </body>
 </html>
