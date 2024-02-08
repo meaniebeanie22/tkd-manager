@@ -1,0 +1,59 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - RPayment List</title>
+{{ search_form.media.css }}
+{% endblock %}
+
+{% block content %}
+  <h1>Recurring Payment List</h1>
+  <form method="get" action="{% url 'dash-rpayments' %}">
+    <div class="container-md" style="margin-left: 0;">
+      <div class="row row-cols-8">
+          {% for field in search_form %}
+              <div class="col-md-1 mb-3">
+                  {{ field.errors }}
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+              </div>
+              <div class="col-md-2 mb-3">
+                  {{ field }}
+                  {% if field.help_text %}
+                      <small class="text-muted" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</small>
+                  {% endif %}
+              </div>
+          {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-outline-secondary btn-outline-thicker">Search</button> <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-add-payment' %}">Add</a>
+    </div>
+  </form>
+  {{ search_form.media.js }}
+<br>
+  {% if recurringpayment_list %}
+  <table>
+    <tr>
+        <th>Link</th>
+        <th>Member</th>
+        <th>Type</th>
+        <th>Date Last Paid</th>
+        <th>Date Next Due</th>
+        <th>Amount Due</th>
+        <th>Interval</th>
+        <th>No. Payments</th>
+    </tr>
+    {% for rp in recurringpayment_list %}
+      <tr class="content">
+        <td><a href="{{ rp.get_absolute_url }}">Link</a></td>
+        <td><a href="{{ rp.member.get_absolute_url }}">{{ rp.member }}</a></td>
+        <td>{{ rp.paymenttype }}</td>
+        <td>{{ rp.last_payment_date|date:"d/m/y" }}</td>
+        <td>{{ rp.next_due|date:"d/m/y" }}</td>
+        <td>${{ rp.amount }}</td>
+        <td>{{ rp.interval }}</td>
+        <td>${{ rp.payments.all.count }}</td>
+      </tr>
+    {% endfor %}
+</table>
+  {% else %}
+    <p>There are no recurring payments.</p>
+  {% endif %}
+{% endblock %}

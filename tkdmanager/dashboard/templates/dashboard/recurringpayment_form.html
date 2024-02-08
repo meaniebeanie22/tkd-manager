@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Add/Update RPayment</title>
+{{ form.media.css }}
+{% endblock %}
+
+{% block content %}
+<h4>Add/Update a RPayment</h4>
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit" value="Submit" />
+  <script>
+    $(document).ready(function() {
+        // Function to update gradinginvite options based on the selected member
+        function updatePaymentOptions() {
+            var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
+            var paymentField = $('#id_payment'); 
+            console.log('Tring to fetch member payments');
+            // Make an AJAX request to fetch the filtered grading invites
+            $.ajax({
+                url: '/dashboard/member/' + selectedMember + '/get_payments',  // Replace with the actual URL to your filtering view
+                dataType: 'json',
+                success: function(data) {
+                    // Clear existing options and add new options
+                    paymentField.empty();
+                    $.each(data, function(index, option) {
+                        paymentField.append($('<option>', {
+                            value: option.value,
+                            text: option.label
+                        }));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching grading invites:', error);
+                    // Handle error, e.g., display a message to the user
+                }
+            });
+        }
+ 
+     // Bind the functions to the change event of the member field
+    $('#id_member').on("select2:select", function() {
+         updatePaymentOptions();
+    });
+    });
+    </script>
+</form>
+{{ form.media.js }}
+{% endblock %}
