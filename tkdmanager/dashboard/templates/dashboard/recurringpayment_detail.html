@@ -14,7 +14,7 @@
                 <li class="list-group-item">Member: <a href="{{ recurringpayment.member.get_absolute_url }}">{{ recurringpayment.member }}</a></li>
                 <li class="list-group-item">Type: {{ recurringpayment.paymenttype }}</li>
                 <ul class="list-group">
-                    {% for p in recurringpayment.payments %}
+                    {% for p in recurringpayment.payments.all %}
                         <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>Status: {{ payment.payment_status }}</li>
                     {% endfor %}
                 </ul>
