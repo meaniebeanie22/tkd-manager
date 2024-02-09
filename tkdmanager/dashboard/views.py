@@ -816,3 +816,11 @@ class RecurringPaymentCreateView(LoginRequiredMixin, CreateView):
 class RecurringPaymentUpdateView(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
     form_class = RecurringPaymentUpdateForm
+
+class PaymentTypeCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+    model = PaymentType
+    form_class = PaymentTypeForm
+
+class PaymentTypeUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+    model = PaymentType
+    form_class = PaymentTypeForm

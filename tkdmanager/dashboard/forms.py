@@ -310,3 +310,7 @@ class RecurringPaymentSearchForm(Form):
         'style':'max-width: 175px;'
     }))
         
+class PaymentTypeForm(ModelForm):
+    class Meta:
+        model = PaymentType
+        fields = ['name','standard_amount']

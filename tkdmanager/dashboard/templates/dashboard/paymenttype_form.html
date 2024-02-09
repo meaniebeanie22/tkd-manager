@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Add/Update Payment Type</title>
+{{ form.media.css }}
+{% endblock %}
+
+{% block content %}
+<h4>Add/Update a Class</h4>
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit" value="Submit" />
+</form>
+{{ form.media.js }}
+{% endblock %}
