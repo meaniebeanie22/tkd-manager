@@ -29,7 +29,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Payments</h4>
-                <ul class="list-group">
+                <ul class="list-group list-group-flush">
                     {% if recurringpayment.payments.all %}
                         {% for p in recurringpayment.payments.all %}
                             <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>Status: {{ payment.payment_status }}</li>
