@@ -106,9 +106,13 @@
           </ul>
           <h4 class="card-title">Recurring Payments</h4>
           <ul class="list-group list-group-flush">
-            {% for rp in member.recurringpayment_set.all %}
-              <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
-            {% endfor %}
+            {% if member.recurringpayment_set.all %}
+              {% for rp in member.recurringpayment_set.all %}
+                <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">No recurring payments.</li>
+            {% endif %}
           </ul>
         </div>
       </div>

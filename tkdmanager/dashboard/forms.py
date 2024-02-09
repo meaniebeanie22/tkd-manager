@@ -270,7 +270,7 @@ class GradingForm(ModelForm):
 class RecurringPaymentUpdateForm(ModelForm):
     class Meta:
         model = RecurringPayment
-        fields = ['member','payments','last_payment_date','interval','amount','paymenttype']
+        fields = ['member','payments','interval','amount','paymenttype']
         widgets = {
             'member': MemberWidget,
             'payments': AddAnotherWidgetWrapper(

@@ -255,7 +255,7 @@ class PaymentType(models.Model):
 class RecurringPayment(models.Model):
     member = models.ForeignKey(Member, help_text='Who needs to pay this?', on_delete=models.PROTECT)
     payments = models.ManyToManyField(Payment, help_text='What payments are linked to this', blank=True)
-    last_payment_date = models.DateField(default=timezone.now) # should be the same as the creation date of the most recent payment
+    last_payment_date = models.DateField(null=True) # should be the same as the creation date of the most recent payment
     interval = models.DurationField(default=timedelta(days=30), help_text='DD HH:MM:SS')
     amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     next_due = models.GeneratedField(db_persist=True, output_field=models.DateTimeField(), expression=(F('last_payment_date') + F('interval')))
