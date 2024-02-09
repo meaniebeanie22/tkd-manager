@@ -281,13 +281,9 @@ class RecurringPaymentUpdateForm(ModelForm):
 class RecurringPaymentForm(ModelForm):
     class Meta:
         model = RecurringPayment
-        fields = ['member','last_payment_date','interval','amount','paymenttype']
+        fields = ['member','interval','amount','paymenttype']
         widgets = {
             'member': MemberWidget,
-            'last_payment_date': TextInput(attrs={
-                'placeholder': 'YYYY-mm-dd',
-                'size': 10,
-            }),
         }
 
 class RecurringPaymentSearchForm(Form):
