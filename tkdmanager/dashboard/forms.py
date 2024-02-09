@@ -195,7 +195,7 @@ class PaymentForm(ModelForm):
             'paymenttype': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-paymenttype'),
-                reverse_lazy('dash-update-paymenttype',kwargs={'pk': '__fk__'}),
+                reverse_lazy('dash-update-payment-type',kwargs={'pk': '__fk__'}),
             ),
         }
 
@@ -292,7 +292,7 @@ class RecurringPaymentForm(ModelForm):
             'paymenttype': AddAnotherEditSelectedWidgetWrapper(
                 forms.Select,
                 reverse_lazy('dash-add-paymenttype'),
-                reverse_lazy('dash-update-paymenttype',kwargs={'pk': '__fk__'}),
+                reverse_lazy('dash-update-payment-type',kwargs={'pk': '__fk__'}),
             ),
         }
 
