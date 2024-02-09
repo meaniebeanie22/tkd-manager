@@ -809,10 +809,10 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
         context['search_form'] = RecurringPaymentSearchForm(self.request.GET)
         return context 
 
-class RecurringPaymentCreateView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentCreateView(LoginRequiredMixin, CreateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
 
-class RecurringPaymentUpdateView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentUpdateView(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
