@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
 from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm, RecurringPaymentForm, RecurringPaymentSearchForm
+from .forms import *
 from django.db.models import Q
 from dashboard import renderers
 from django.forms.models import model_to_dict
@@ -815,4 +815,4 @@ class RecurringPaymentCreateView(LoginRequiredMixin, CreateView):
 
 class RecurringPaymentUpdateView(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
-    form_class = RecurringPaymentForm
+    form_class = RecurringPaymentUpdateForm

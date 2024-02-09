@@ -262,7 +262,7 @@ class GradingForm(ModelForm):
             'grading_datetime': DateTimeInput(attrs={'type': 'datetime-local'}), 
         }
 
-class RecurringPaymentForm(ModelForm):
+class RecurringPaymentUpdateForm(ModelForm):
     class Meta:
         model = RecurringPayment
         fields = ['member','payments','last_payment_date','interval','amount','paymenttype']
@@ -272,6 +272,18 @@ class RecurringPaymentForm(ModelForm):
                 forms.SelectMultiple,
                 reverse_lazy('dash-add-payment'),
             ),
+            'last_payment_date': TextInput(attrs={
+                'placeholder': 'YYYY-mm-dd',
+                'size': 10,
+            }),
+        }
+
+class RecurringPaymentForm(ModelForm):
+    class Meta:
+        model = RecurringPayment
+        fields = ['member','last_payment_date','interval','amount','paymenttype']
+        widgets = {
+            'member': MemberWidget,
             'last_payment_date': TextInput(attrs={
                 'placeholder': 'YYYY-mm-dd',
                 'size': 10,
