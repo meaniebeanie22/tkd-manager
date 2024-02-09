@@ -482,11 +482,11 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context['uselist'] = zip(selected, gradinginviteobjectlist)
         return context
 
-class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
+class GradingInviteDelete(LoginRequiredMixin, DeleteView):
     model = GradingInvite
     success_url = reverse_lazy("dash-gradinginvites")
 
-class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -505,7 +505,7 @@ class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
         return i
 
-class GradingInviteUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingInviteUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -529,11 +529,11 @@ class GradingDetailView(LoginRequiredMixin, generic.DetailView):
 class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
 
-class GradingDeleteView(LoginRequiredMixin, DeleteView):
+class GradingDelete(LoginRequiredMixin, DeleteView):
     model = Grading
     success_url = reverse_lazy("dash-gradings")
 
-class GradingCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Grading
     form_class = GradingForm
 
@@ -543,7 +543,7 @@ class GradingCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
         c['popup'] = popup
         return c
 
-class GradingUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Grading
     form_class = GradingForm
 
@@ -809,18 +809,32 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
         context['search_form'] = RecurringPaymentSearchForm(self.request.GET)
         return context 
 
-class RecurringPaymentCreateView(LoginRequiredMixin, CreateView):
+class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
 
-class RecurringPaymentUpdateView(LoginRequiredMixin, UpdateView):
+class RecurringPaymentUpdate(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
     form_class = RecurringPaymentUpdateForm
 
-class PaymentTypeCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class RecurringPaymentDelete(LoginRequiredMixin, DeleteView):
+    model = RecurringPayment
+    success_url = reverse_lazy("dash-rpayments")
+
+class PaymentTypeCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = PaymentType
     form_class = PaymentTypeForm
 
-class PaymentTypeUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class PaymentTypeUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = PaymentType
     form_class = PaymentTypeForm
+
+class PaymentTypeDelete(LoginRequiredMixin, DeleteView):
+    model = PaymentType
+    success_url = reverse_lazy("dash-payment-types")
+
+class PaymentTypeDetailView(LoginRequiredMixin, generic.DetailView):
+    model = PaymentType
+
+class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
+    model = PaymentType
