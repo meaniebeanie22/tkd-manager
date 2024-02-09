@@ -192,6 +192,11 @@ class PaymentForm(ModelForm):
             'date_due': DateInput(attrs={'type': 'date'}),
             'date_paid_in_full': DateInput(attrs={'type':'date'}),
             'member': MemberWidget,
+            'paymenttype': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-paymenttype'),
+                reverse_lazy('dash-update-paymenttype',kwargs={'pk': '__fk__'}),
+            ),
         }
 
 class PaymentSearchForm(Form):
@@ -284,6 +289,11 @@ class RecurringPaymentForm(ModelForm):
         fields = ['member','interval','amount','paymenttype']
         widgets = {
             'member': MemberWidget,
+            'paymenttype': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-paymenttype'),
+                reverse_lazy('dash-update-paymenttype',kwargs={'pk': '__fk__'}),
+            ),
         }
 
 class RecurringPaymentSearchForm(Form):
