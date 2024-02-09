@@ -37,6 +37,7 @@ urlpatterns = [
     path('payment-type/<str:pk>/update', views.PaymentTypeUpdate.as_view(), name='dash-update-payment-type'),
     path('payment-types', views.PaymentTypeListView.as_view(), name='dash-payment-types'),
     path('payment-type/detail/<str:pk>', views.PaymentTypeDetailView.as_view(), name='dash-payment-type-detail'),
+    path('payment-type/<str:pk>/delete', views.PaymentTypeDelete.as_view(), name='dash-delete-payment-type'),
     path('grading-invite/<str:pk>/download', views.gradinginvite_pdf_view, name='dash-grading-invite-download'),
     path('grading-invite/detail/<str:pk>', views.GradingInviteDetailView.as_view(), name='dash-grading-invite-detail'),
     path('grading-invites', views.GradingInviteListView.as_view(), name='dash-gradinginvites'),
