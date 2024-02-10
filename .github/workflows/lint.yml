@@ -22,7 +22,6 @@ jobs:
         pip install bandit
     - name: Run Linters
       run: |
-        cd ..
         echo "\nRunning Pylint against source and test files...\n"
         pylint --rcfile=setup.cfg **/*.py
         echo "\n}Running Flake8 against source and test files...\n"
