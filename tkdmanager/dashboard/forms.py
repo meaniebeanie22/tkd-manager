@@ -122,7 +122,8 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
+    instructor = ModelChoiceField(required=False, 
+        queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
