@@ -22,7 +22,6 @@
   <div class="container-fluid">
     <div class="row">
       {% if not popup %}
-        <div class="col-sm-2">
           <div style="position: sticky; top: 20px;">
             {% block sidebar %}
             <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
@@ -96,7 +95,6 @@
               </div>
           {% endblock %}
         </div>
-      </div>
       {% endif %}
       <div class="col-sm-10 mb-3">
         {% block content %}{% endblock %}
