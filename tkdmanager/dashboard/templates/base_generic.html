@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   {% load static %}
+  {% load dashboard_extras %}
   <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
   <script src="{% static 'admin/js/jquery.init.js' %}"></script>
@@ -34,7 +35,7 @@
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
                       Members & Classes
                     </button>
-                    <div class="collapse" id="home-collapse" style="">
+                    <div class="collapse" id="home-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-members' %}" class="link-dark rounded">All members</a></li>
                         <li><a href="{% url 'dash-add-member' %}" class="link-dark rounded">New member</a></li>
@@ -47,7 +48,7 @@
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
                       Gradings
                     </button>
-                    <div class="collapse" id="dashboard-collapse" style="">
+                    <div class="collapse" id="dashboard-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-gradings' %}" class="link-dark rounded">All gradings</a></li>
                         <li><a href="{% url 'dash-add-grading' %}" class="link-dark rounded">New grading</a></li>
@@ -73,8 +74,23 @@
                       </ul>
                     </div>
                   </li>
+                  {% if user|has_group:"ClubAdmin" %}
+                  <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                      Admin/Customisation
+                    </button>
+                    <div class="collapse" id="home-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="link-dark rounded">Belts</a></li>
+                        <li><a href="#" class="link-dark rounded">Member attributes</a></li>
+                        <li><a href="#" class="link-dark rounded">Styles</a></li>
+                        <li><a href="#" class="link-dark rounded">Class/Grading types</a></li>
+                        <li><a href="#" class="link-dark rounded">Assessment units</a></li>
+                      </ul>
+                    </div>
+                  </li>
                   <li class="border-top my-3"></li>
-                  {% if user.is_authenticated %}
+                  {% endif %}
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                       {{ user }}
