@@ -75,6 +75,7 @@
                     </div>
                   </li>
                   {% if user|has_group:"ClubAdmin" %}
+                  <li class="border-top my-3"></li>
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#admin-collapse" aria-expanded="false">
                       Admin/Customisation
@@ -89,8 +90,8 @@
                       </ul>
                     </div>
                   </li>
-                  <li class="border-top my-3"></li>
                   {% endif %}
+                  <li class="border-top my-3"></li>
                   {% if user.is_authenticated %}
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
