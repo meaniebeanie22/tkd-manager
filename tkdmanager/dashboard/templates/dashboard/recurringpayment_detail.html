@@ -32,7 +32,7 @@
                 <ul class="list-group list-group-flush">
                     {% if recurringpayment.payments.all %}
                         {% for p in recurringpayment.payments.all %}
-                            <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>Status: {{ payment.payment_status }}</li>
+                            <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}><a href="{{ p.get_absolute_url }}">{{ p }}</a></li>
                         {% endfor %}
                     {% else %}
                         <li class="list-group-item">No payments towards this</li>
