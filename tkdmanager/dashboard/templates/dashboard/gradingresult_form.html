@@ -87,13 +87,33 @@
             });
         }
 
+        function alterGradingInvitePopupLink() {
+            var anchor = $('#add_id_gradinginvite'); // get the current a tag
+            var link = anchor.attr("href"); // and its href
+            var selectedMember = $('#id_member').val(); // selected member
+            var selectedGrading = $('#id_grading').val(); // selected grading
+            var selectedBelt = $('#id_forbelt').val(); // selected belt
+            // remove any selected member/grading bit if it exists
+            let i = link.search('&');
+            if (i != -1) {
+                link = link.slice(0, i);
+            }
+            // add new param to the url
+            let params = { member:selectedMember, grading:selectedGrading, forbelt:selectedBelt };
+            var newLink = link.concat('&'.concat(jQuery.param(params)));
+            anchor.attr("href", newLink)
+        }
         // Bind the functions to the change event of the member field
         $('#id_member').on("select2:select", function(e) {
             console.log('id_member changed');
             updateGradingInviteOptions();
+            alterGradingInvitePopupLink();
         });
         $('#id_gradinginvite').on('change', function(e) {
             updateGradingInviteDetails();
+        });
+        $('#id_grading').on("change", function(e) {
+            alterGradingInvitePopupLink();
         });
     });
     </script> 
