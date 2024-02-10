@@ -374,6 +374,14 @@ class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_initial(self):
+        # Autofill the member field based on the 'member_id' parameter in the URL
+        member_id = self.request.GET.get('member_id')
+        i = {}
+        if member_id:
+            i['member'] = member_id
+        return i
 
 class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Payment
