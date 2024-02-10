@@ -37,6 +37,7 @@
                 <li><a href="{% url 'dash-awards' %}">All awards</a></li>
                 <li><a href="{% url 'dash-classes' %}">All classes</a></li>
                 <li><a href="{% url 'dash-payments' %}">All payments</a></li>
+                <li><a href="{% url 'dash-rpayments' %}">All recurring payments</a></li>
               </ul>
               <hr>
               <ul class="sidebar-nav">
@@ -58,6 +59,7 @@
                   <li><a href="{% url 'dash-add-award' %}">New award</a></li>
                   <li><a href="{% url 'dash-add-class' %}">New class</a></li>
                   <li><a href="{% url 'dash-add-payment' %}">New payment</a></li>
+                  <li><a href="{% url 'dash-add-rpayment' %}">New recurring payment</a></li>
                 </ul>
               {% else %}
                 <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>

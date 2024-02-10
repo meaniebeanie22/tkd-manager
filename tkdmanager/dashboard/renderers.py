@@ -20,10 +20,10 @@ def render_to_pdf(template_src, context_dict):
     if not(health):
         print('Weasyprint API did not return HEALTH, Something broken. Returning null', file=stderr)
         return None
-    s.headers['X_API_KEY'] = os.environ.get('WEASYPRINT_API_KEY')
+    s.headers['X-API-KEY'] = os.environ.get('WEASYPRINT_API_KEY')
     response = s.post(os.environ.get('WEASYPRINT_API_DOMAIN') + '/api/v1.0/print', {'html': html})
     if response.status_code != 200:
-        print('Weasyprint API did not return 200 on print, returning null.', file=stderr)
+        print(f'Weasyprint API did not return 200 on print, returning null.\nError Code: {response.status_code}\nReason: {response.reason}', file=stderr)
         return None
     pdf = BytesIO(response.content)
     return pdf
