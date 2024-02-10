@@ -32,10 +32,10 @@
                 </a>
                 <ul class="list-unstyled ps-0">
                   <li class="mb-1">
-                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#member-collapse" aria-expanded="false">
                       Members & Classes
                     </button>
-                    <div class="collapse" id="home-collapse">
+                    <div class="collapse" id="member-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-members' %}" class="link-dark rounded">All members</a></li>
                         <li><a href="{% url 'dash-add-member' %}" class="link-dark rounded">New member</a></li>
@@ -62,10 +62,10 @@
                     </div>
                   </li>
                   <li class="mb-1">
-                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#payments-collapse" aria-expanded="false">
                       Payments
                     </button>
-                    <div class="collapse" id="orders-collapse">
+                    <div class="collapse" id="payments-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-payments' %}" class="link-dark rounded">All payments</a></li>
                         <li><a href="{% url 'dash-add-payment' %}" class="link-dark rounded">New payment</a></li>
@@ -76,10 +76,10 @@
                   </li>
                   {% if user|has_group:"ClubAdmin" %}
                   <li class="mb-1">
-                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#admin-collapse" aria-expanded="false">
                       Admin/Customisation
                     </button>
-                    <div class="collapse" id="home-collapse">
+                    <div class="collapse" id="admin-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="#" class="link-dark rounded">Belts</a></li>
                         <li><a href="#" class="link-dark rounded">Member attributes</a></li>
