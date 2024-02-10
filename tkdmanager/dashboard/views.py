@@ -1,25 +1,32 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type, RecurringPayment
-from django.views import generic, View
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
-from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
-from .forms import *
-from django.db.models import Q
-from dashboard import renderers
-from django.forms.models import model_to_dict
-from rest_framework.authtoken.models import Token
 from io import BytesIO
-from pypdf import PdfWriter, PdfReader
-from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from typing import Any
+
+from dashboard import renderers
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.core import mail
+from django.db.models import Q
+from django.db.models.query import QuerySet
+from django.forms import (BooleanField, Form, ModelChoiceField, ModelForm,
+                          inlineformset_factory, modelformset_factory)
+from django.forms.models import model_to_dict
+from django.http import (HttpResponse, HttpResponseRedirect, JsonResponse,
+                         QueryDict)
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse, reverse_lazy
+from django.views import View, generic
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from pypdf import PdfReader, PdfWriter
+from rest_framework.authtoken.models import Token
+
+from .forms import *
+from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
+                     Grading, GradingInvite, GradingResult, Member, Payment,
+                     PaymentType, RecurringPayment, determine_belt_type)
+
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta

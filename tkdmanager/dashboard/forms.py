@@ -1,11 +1,21 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField, MultipleChoiceField
-from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select, CheckboxSelectMultiple
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS, RecurringPayment
-from django.utils import timezone
-from django import forms 
+from django import forms
+from django.forms import (BooleanField, ChoiceField, DateField, DateTimeField,
+                          Form, HiddenInput, IntegerField, ModelChoiceField,
+                          ModelForm, ModelMultipleChoiceField,
+                          MultipleChoiceField, TextInput)
+from django.forms.widgets import (CheckboxSelectMultiple, DateInput,
+                                  DateTimeInput, Select, TimeInput)
 from django.urls import reverse_lazy
+from django.utils import timezone
+from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
+                                       AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
-from django_addanother.widgets import AddAnotherWidgetWrapper, AddAnotherEditSelectedWidgetWrapper
+
+from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
+                     AssessmentUnit, Award, Class, Grading, GradingInvite,
+                     GradingResult, Member, Payment, PaymentType,
+                     RecurringPayment)
+
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
