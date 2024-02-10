@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
-from django.urls import reverse # Used to generate URLs by reversing the URL patterns
+from django.urls import \
+    reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
-from datetime import datetime, timedelta
-from django.contrib.auth.models import User
 
 # Create your models here.
 
