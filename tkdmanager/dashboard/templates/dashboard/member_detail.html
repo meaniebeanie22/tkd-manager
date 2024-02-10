@@ -98,7 +98,7 @@
           <ul class="list-group list-group-flush">
             {% if relevant_payments %}
               {% for payment in relevant_payments %}
-                <li class="list-group-item"><a href="{{ payment.get_absolute_url }}"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ payment }}</a></li>
+                <li class="list-group-item"><a href="{{ payment.get_absolute_url }}"{% if payment.payment_status == 'Overdue' %} style="color:red;"{% elif payment.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif payment.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ payment }}</a></li>
               {% endfor %}
             {% else %}
               <li class="list-group-item">No overdue or upcoming payments.</li>
@@ -106,9 +106,13 @@
           </ul>
           <h4 class="card-title">Recurring Payments</h4>
           <ul class="list-group list-group-flush">
-            {% for rp in member.relevantpayment_set.all %}
-              <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
-            {% endfor %}
+            {% if member.recurringpayment_set.all %}
+              {% for rp in member.recurringpayment_set.all %}
+                <li class="list-group-item"><a href="{{ rp.get_absolute_url }}">{{ rp }}</a></li>
+              {% endfor %}
+            {% else %}
+              <li class="list-group-item">No recurring payments.</li>
+            {% endif %}
           </ul>
         </div>
       </div>

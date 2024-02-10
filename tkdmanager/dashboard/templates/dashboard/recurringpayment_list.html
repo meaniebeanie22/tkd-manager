@@ -49,7 +49,7 @@
         <td>{{ rp.next_due|date:"d/m/y" }}</td>
         <td>${{ rp.amount }}</td>
         <td>{{ rp.interval }}</td>
-        <td>${{ rp.payments.all.count }}</td>
+        <td>{{ rp.payments.all.count }}</td>
       </tr>
     {% endfor %}
 </table>

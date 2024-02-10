@@ -5,27 +5,40 @@
 {% endblock %}
 
 {% block content %}
-{% now "Y-m-d H:i:s" as today %}
-<h1>Payment Details</h1>
-<div class="col-md-4">
-    <div class="card">
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Member: <a href="{{ recurringpayment.member.get_absolute_url }}">{{ recurringpayment.member }}</a></li>
-                <li class="list-group-item">Type: {{ recurringpayment.paymenttype }}</li>
-                <ul class="list-group">
-                    {% for p in recurringpayment.payments %}
-                        <li class="list-group-item"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>Status: {{ payment.payment_status }}</li>
-                    {% endfor %}
+<h1>Recurring Payment Details</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Details</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Member: <a href="{{ recurringpayment.member.get_absolute_url }}">{{ recurringpayment.member }}</a></li>
+                    <li class="list-group-item">Type: {{ recurringpayment.paymenttype }}</li>
+                    <li class="list-group-item">Last Payment Date: {{ recurringpayment.last_payment_date|date:"d/m/y" }}</li>
+                    <li class="list-group-item">Next Due: {{ recurringpayment.next_due|date:"d/m/y" }}</li>
+                    <li class="list-group-item">Amount Due: ${{ recurringpayment.amount }}</li>
+                    <li class="list-group-item">Interval: {{ recurringpayment.interval }}</li>
                 </ul>
-                <li class="list-group-item">Last Payment Date: {{ recurringpayment.last_payment_date|date:"d/m/y" }}</li>
-                <li class="list-group-item">Next Due: {{ recurringpayment.next_due|date:"d/m/y" }}</li>
-                <li class="list-group-item">Amount Due: ${{ recurringpayment.amount }}</li>
-                <li class="list-group-item">Interval: ${{ recurringpayment.interval }}</li>
-            </ul>
-            <br>
-            <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-recurringpayment' recurringpayment.pk %}">Edit</a>
-            <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-recurringpayment' recurringpayment.pk %}">Delete</a>
+                <br>
+                <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-rpayment' recurringpayment.pk %}">Edit</a>
+                <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-rpayment' recurringpayment.pk %}">Delete</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Payments</h4>
+                <ul class="list-group list-group-flush">
+                    {% if recurringpayment.payments.all %}
+                        {% for p in recurringpayment.payments.all %}
+                            <li class="list-group-item"><a href="{{ p.get_absolute_url }}"{% if p.payment_status == 'Overdue' %} style="color:red;"{% elif p.payment_status == 'Paid Late' %} style="color:#d0d000;"{% elif p.payment_status == 'Paid On Time' %} style="color: lime;"{% endif %}>{{ p }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">No payments towards this</li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </div>
 </div>

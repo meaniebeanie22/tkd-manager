@@ -63,10 +63,28 @@
         });
     }
 
+    function setNewPaymentParams() {
+        var anchor = $('#add_id_payment'); // get the current a tag
+        var link = anchor.attr("href"); // and its href
+        var selectedMember = $('#id_member').val(); // selected member
+        // remove any selected member bit if it exists
+        let i = link.search('&');
+        if (i != -1) {
+            link = link.slice(0, i);
+        }
+        // add new param to the url
+        let params = { member:selectedMember };
+        var newLink = link.concat('&'.concat(jQuery.param(params)));
+        anchor.attr("href", newLink)
+
+    }
+
+    setNewPaymentParams();
     // Bind the functions to the change event of the member field
     $('#id_member').on("select2:select", function() {
         updatePaymentOptions();
         setForbeltValue();
+        setNewPaymentParams();
     });
    });
    </script>

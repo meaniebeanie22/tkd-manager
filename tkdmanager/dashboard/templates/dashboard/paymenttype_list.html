@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Payment Type List</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Payment Type List</h1>
+  <p><a href="{% url 'dash-add-payment-type' %}">Add</a></p>
+  {% if paymenttype_list %}
+  <ul>
+    {% for pt in paymenttype_list %}
+      <li>
+        <a href="{{ pt.get_absolute_url }}">{{ pt }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no payment types.</p>
+  {% endif %}
+{% endblock %}

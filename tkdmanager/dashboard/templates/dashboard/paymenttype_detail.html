@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>TKD Manager - Payment Type Details</title>
+{% endblock %}
+
+{% block content %}
+<h1>Payment Type Details</h1>
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Name: {{ paymenttype.name }}</li>
+                <li class="list-group-item">Standard Amount: {% verbatim %}${% endverbatim %}{{ paymenttype.standard_amount }}</li>
+            </ul>
+            <br>
+            <a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-payment-type' paymenttype.pk %}">Edit</a>
+            <a class="btn btn-outline-danger btn-outline-thicker" href="{% url 'dash-delete-payment-type' paymenttype.pk %}">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

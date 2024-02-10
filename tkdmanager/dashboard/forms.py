@@ -1,11 +1,21 @@
-from django.forms import ModelForm, ChoiceField, DateField, ModelChoiceField, ModelMultipleChoiceField, TextInput, Form, DateTimeField, IntegerField, HiddenInput, BooleanField, MultipleChoiceField
-from django.forms.widgets import DateInput, DateTimeInput, TimeInput, DateTimeInput, Select, CheckboxSelectMultiple
-from .models import GradingResult, Class, Member, Award, Payment, AssessmentUnit, GradingInvite, Grading, PaymentType, BELT_CHOICES, GRADINGS, LETTER_GRADES, ASSESSMENT_UNITS, RecurringPayment
-from django.utils import timezone
-from django import forms 
+from django import forms
+from django.forms import (BooleanField, ChoiceField, DateField, DateTimeField,
+                          Form, HiddenInput, IntegerField, ModelChoiceField,
+                          ModelForm, ModelMultipleChoiceField,
+                          MultipleChoiceField, TextInput)
+from django.forms.widgets import (CheckboxSelectMultiple, DateInput,
+                                  DateTimeInput, Select, TimeInput)
 from django.urls import reverse_lazy
+from django.utils import timezone
+from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
+                                       AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
-from django_addanother.widgets import AddAnotherWidgetWrapper, AddAnotherEditSelectedWidgetWrapper
+
+from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
+                     AssessmentUnit, Award, Class, Grading, GradingInvite,
+                     GradingResult, Member, Payment, PaymentType,
+                     RecurringPayment)
+
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
@@ -112,7 +122,8 @@ class ClassSearchForm(Form):
         'placeholder': 'YYYY-mm-dd',
         'size': 10
     }))
-    instructor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
+    instructor = ModelChoiceField(required=False, 
+        queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
             search_fields = [
@@ -192,6 +203,11 @@ class PaymentForm(ModelForm):
             'date_due': DateInput(attrs={'type': 'date'}),
             'date_paid_in_full': DateInput(attrs={'type':'date'}),
             'member': MemberWidget,
+            'paymenttype': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-payment-type'),
+                reverse_lazy('dash-update-payment-type',kwargs={'pk': '__fk__'}),
+            ),
         }
 
 class PaymentSearchForm(Form):
@@ -262,10 +278,10 @@ class GradingForm(ModelForm):
             'grading_datetime': DateTimeInput(attrs={'type': 'datetime-local'}), 
         }
 
-class RecurringPaymentForm(ModelForm):
+class RecurringPaymentUpdateForm(ModelForm):
     class Meta:
         model = RecurringPayment
-        fields = ['member','payments','last_payment_date','interval','amount','paymenttype']
+        fields = ['member','payments','interval','amount','paymenttype']
         widgets = {
             'member': MemberWidget,
             'payments': AddAnotherWidgetWrapper(
@@ -276,6 +292,19 @@ class RecurringPaymentForm(ModelForm):
                 'placeholder': 'YYYY-mm-dd',
                 'size': 10,
             }),
+        }
+
+class RecurringPaymentForm(ModelForm):
+    class Meta:
+        model = RecurringPayment
+        fields = ['member','interval','amount','paymenttype']
+        widgets = {
+            'member': MemberWidget,
+            'paymenttype': AddAnotherEditSelectedWidgetWrapper(
+                forms.Select,
+                reverse_lazy('dash-add-payment-type'),
+                reverse_lazy('dash-update-payment-type',kwargs={'pk': '__fk__'}),
+            ),
         }
 
 class RecurringPaymentSearchForm(Form):
@@ -292,3 +321,7 @@ class RecurringPaymentSearchForm(Form):
         'style':'max-width: 175px;'
     }))
         
+class PaymentTypeForm(ModelForm):
+    class Meta:
+        model = PaymentType
+        fields = ['name','standard_amount']

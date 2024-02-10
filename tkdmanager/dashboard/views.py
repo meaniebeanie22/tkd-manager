@@ -1,25 +1,32 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.shortcuts import render, get_object_or_404
-from .models import Member, Award, AssessmentUnit, GradingResult, Class, Payment, PaymentType, GradingInvite, Grading, GRADINGS, LETTER_GRADES, determine_belt_type, RecurringPayment
-from django.views import generic, View
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
 from datetime import date, datetime, timedelta
-from django.forms import inlineformset_factory, modelformset_factory, Form, ModelChoiceField, ModelForm, BooleanField
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
-from .forms import GradingResultCreateForm, GradingResultUpdateForm, ClassForm, GradingResultSearchForm, MemberForm, PaymentForm, AssessmentUnitLetterForm, GradingInviteForm, GradingForm, GradingInviteSearchForm, ClassSearchForm, PaymentSearchForm, RecurringPaymentForm, RecurringPaymentSearchForm
-from django.db.models import Q
-from dashboard import renderers
-from django.forms.models import model_to_dict
-from rest_framework.authtoken.models import Token
 from io import BytesIO
-from pypdf import PdfWriter, PdfReader
-from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from typing import Any
+
+from dashboard import renderers
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.core import mail
+from django.db.models import Q
+from django.db.models.query import QuerySet
+from django.forms import (BooleanField, Form, ModelChoiceField, ModelForm,
+                          inlineformset_factory, modelformset_factory)
+from django.forms.models import model_to_dict
+from django.http import (HttpResponse, HttpResponseRedirect, JsonResponse,
+                         QueryDict)
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse, reverse_lazy
+from django.views import View, generic
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from pypdf import PdfReader, PdfWriter
+from rest_framework.authtoken.models import Token
+
+from .forms import *
+from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
+                     Grading, GradingInvite, GradingResult, Member, Payment,
+                     PaymentType, RecurringPayment, determine_belt_type)
+
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -314,11 +321,11 @@ class ClassDetailView(LoginRequiredMixin, generic.DetailView):
         # Call the base implementation first to get the context
         context = super(ClassDetailView, self).get_context_data(**kwargs)
         cl = self.get_object()
-        url = reverse('dash-batch-create-grading-invite')+'?'
+        url = reverse('dash-batch-add-grading-invite')+'?'
         for student in cl.students.all():
             url += (f'selected_items={student.pk}&')
         url = url.strip('&')
-        context['batch_create_grading_invites_url'] = url
+        context['batch_add_grading_invites_url'] = url
         return context
 
 class ClassCreate(LoginRequiredMixin, CreateView):
@@ -374,6 +381,14 @@ class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_initial(self):
+        # Autofill the member field based on the 'member' parameter in the URL
+        member_id = self.request.GET.get('member')
+        i = {}
+        if member_id:
+            i['member'] = member_id
+        return i
 
 class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Payment
@@ -482,11 +497,11 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         context['uselist'] = zip(selected, gradinginviteobjectlist)
         return context
 
-class GradingInviteDeleteView(LoginRequiredMixin, DeleteView):
+class GradingInviteDelete(LoginRequiredMixin, DeleteView):
     model = GradingInvite
     success_url = reverse_lazy("dash-gradinginvites")
 
-class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -498,14 +513,25 @@ class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
-        member_id = self.request.GET.get('member_id')
+        member_id = self.request.GET.get('member')
+        grading = self.request.GET.get('grading')
+        forbelt = self.request.GET.get('forbelt')
+
         i = {}
         if member_id:
             i['member'] = member_id
+
+        if forbelt:
+            i['forbelt'] = forbelt
+        elif member_id:
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+
+        if grading:
+            i['grading'] = grading
+            
         return i
 
-class GradingInviteUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingInviteUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -529,11 +555,11 @@ class GradingDetailView(LoginRequiredMixin, generic.DetailView):
 class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
 
-class GradingDeleteView(LoginRequiredMixin, DeleteView):
+class GradingDelete(LoginRequiredMixin, DeleteView):
     model = Grading
     success_url = reverse_lazy("dash-gradings")
 
-class GradingCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Grading
     form_class = GradingForm
 
@@ -543,7 +569,7 @@ class GradingCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
         c['popup'] = popup
         return c
 
-class GradingUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Grading
     form_class = GradingForm
 
@@ -809,10 +835,32 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
         context['search_form'] = RecurringPaymentSearchForm(self.request.GET)
         return context 
 
-class RecurringPaymentCreateView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
 
-class RecurringPaymentUpdateView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentUpdate(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
-    form_class = RecurringPaymentForm
+    form_class = RecurringPaymentUpdateForm
+
+class RecurringPaymentDelete(LoginRequiredMixin, DeleteView):
+    model = RecurringPayment
+    success_url = reverse_lazy("dash-rpayments")
+
+class PaymentTypeCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+    model = PaymentType
+    form_class = PaymentTypeForm
+
+class PaymentTypeUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+    model = PaymentType
+    form_class = PaymentTypeForm
+
+class PaymentTypeDelete(LoginRequiredMixin, DeleteView):
+    model = PaymentType
+    success_url = reverse_lazy("dash-payment-types")
+
+class PaymentTypeDetailView(LoginRequiredMixin, generic.DetailView):
+    model = PaymentType
+
+class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
+    model = PaymentType

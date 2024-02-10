@@ -1,9 +1,16 @@
+from dashboard.models import (AssessmentUnit, Award, Class, Grading,
+                              GradingInvite, GradingResult, Member, Payment,
+                              PaymentType)
 from django.contrib.auth.models import User
-from dashboard.models import GradingResult, AssessmentUnit, Grading, GradingInvite, Payment, PaymentType, Member, Award, Class
 from rest_framework import viewsets
-from rest_framework import permissions
-from .serializers import UserSerializer, GradingResultSerializer, AssessmentUnitSerializer, PaymentTypeSerialzer, PaymentSerializer, GradingInviteSerializer, GradingSerializer, MemberSerializer, AwardSerializer, ClassSerializer
+
 from .permissions import APIAllowed
+from .serializers import (AssessmentUnitSerializer, AwardSerializer,
+                          ClassSerializer, GradingInviteSerializer,
+                          GradingResultSerializer, GradingSerializer,
+                          MemberSerializer, PaymentSerializer,
+                          PaymentTypeSerialzer, UserSerializer)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """

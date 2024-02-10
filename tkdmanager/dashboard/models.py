@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
-from django.urls import reverse # Used to generate URLs by reversing the URL patterns
+from django.urls import \
+    reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
-from datetime import datetime, timedelta
-from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -255,11 +257,11 @@ class PaymentType(models.Model):
 class RecurringPayment(models.Model):
     member = models.ForeignKey(Member, help_text='Who needs to pay this?', on_delete=models.PROTECT)
     payments = models.ManyToManyField(Payment, help_text='What payments are linked to this', blank=True)
-    last_payment_date = models.DateField(default=timezone.now) # should be the same as the creation date of the most recent payment
-    interval = models.DurationField(default=timedelta(days=30))
+    last_payment_date = models.DateField(null=True) # should be the same as the creation date of the most recent payment
+    interval = models.DurationField(default=timedelta(days=30), help_text='DD HH:MM:SS')
     amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     next_due = models.GeneratedField(db_persist=True, output_field=models.DateTimeField(), expression=(F('last_payment_date') + F('interval')))
-    paymenttype = models.ForeignKey(PaymentType, help_text='Payment Type', on_delete=models.PROTECT)
+    paymenttype = models.ForeignKey(PaymentType, verbose_name='Payment Type', on_delete=models.PROTECT)
 
     def __str__(self):
         return f'Recurring Payment for {self.member}, ${self.amount} per {self.interval}'
