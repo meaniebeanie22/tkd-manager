@@ -506,11 +506,22 @@ class GradingInviteCreateView(CreatePopupMixin, LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         # Autofill the member field based on the 'member_id' parameter in the URL
-        member_id = self.request.GET.get('member_id')
+        member_id = self.request.GET.get('member')
+        grading = self.request.GET.get('grading')
+        forbelt = self.request.GET.get('forbelt')
+
         i = {}
         if member_id:
             i['member'] = member_id
+
+        if forbelt:
+            i['forbelt'] = forbelt
+        elif member_id:
             i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+
+        if grading:
+            i['grading'] = grading
+            
         return i
 
 class GradingInviteUpdateView(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
