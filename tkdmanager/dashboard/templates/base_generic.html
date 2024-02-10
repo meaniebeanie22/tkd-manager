@@ -50,7 +50,7 @@
                     <div class="collapse" id="dashboard-collapse" style="">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-gradings' %}" class="link-dark rounded">All gradings</a></li>
-                        <li><a href="{% url 'dash-add-grading' %}">New grading</a></li>
+                        <li><a href="{% url 'dash-add-grading' %}" class="link-dark rounded">New grading</a></li>
                         <li><a href="{% url 'dash-gradingresults' %}" class="link-dark rounded">All grading results</a></li>
                         <li><a href="{% url 'dash-add-grading-result' %}" class="link-dark rounded">New grading result</a></li>
                         <li><a href="{% url 'dash-gradinginvites' %}" class="link-dark rounded">All grading invites</a></li>
@@ -85,7 +85,7 @@
                         <li>
                           <form action="{% url 'logout' %}" method="post">
                               {% csrf_token %}
-                              <button type="submit" class="link-dark rounded">Sign out</button>
+                              <button type="submit" class="btn btn-link link-dark rounded">Sign out</button>
                           </form>
                         </li>
                       </ul>
