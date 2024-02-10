@@ -23,7 +23,7 @@ jobs:
     - name: Run Linters
       run: |
         echo "\nRunning Pylint against source and test files...\n"
-        pylint --rcfile=setup.cfg **/*.py --ignore=[manage.py, migrations,]
+        pylint --rcfile=setup.cfg **/*.py --ignore=manage.py,migrations
         echo "\n}Running Flake8 against source and test files...\n"
         flake8
         echo "\nRunning Bandit against source files...\n"
