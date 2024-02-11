@@ -740,7 +740,7 @@ def manageBelts(request, **kwargs):
     BeltFormSet = modelformset_factory(Belt, form=BeltForm, formset=ConvenientBaseModelFormSet, can_delete=True, can_order=True)
 
     if request.method == "POST":
-        formset = BeltFormSet(request.POST, prefix='belt-formset')
+        formset = BeltFormSet(request.POST, request.FILES, prefix='belt-formset')
         if formset.is_valid():
             print('Valid')
             for form in formset:
@@ -749,10 +749,12 @@ def manageBelts(request, **kwargs):
                 belt.degree = form.ORDER
                 belt.save()
                 print(f'Belt Saved: {belt}')
-        instances = formset.save(commit=False)
-        for obj in formset.deleted_objects:
-            print(f'Deleting obj: {obj}')
-            obj.delete()
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                print(f'Deleting obj: {obj}')
+                obj.delete()
+        else:
+
     else:
         formset = BeltFormSet(prefix='belt-formset')
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
