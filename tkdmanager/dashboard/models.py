@@ -70,7 +70,7 @@ def time_in_a_month():
 
 class Belt(models.Model):
     # style
-    degree = models.PositiveSmallIntegerField(unique=True)
+    degree = models.IntegerField(unique=True)
     name = models.CharField(max_length=50)
 
     class Meta:
