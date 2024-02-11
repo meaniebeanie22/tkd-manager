@@ -43,7 +43,7 @@
     <div id="belt-forms-container">
         {% for belt_form in formset.forms %}
         <div class="row belt-form">
-            <div class="col">
+            <div class="col" style="max-width: 350px;">
                 {{ belt_form.name }}
             </div>
             <div class="col">
@@ -53,17 +53,22 @@
                 {% endif %}
                 {% if formset.can_order %}
                     {{ belt_form.ORDER }}
-                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
-                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
+                    <button type="button" class="btn btn-secondary" value="Move up">
+                        <i class="bi bi-caret-up-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" value="Move down">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
-    <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
+    <hr>
+    <div><input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
     <template id="empty-form-template">
         <div class="row belt-form">
-            <div class="col">
+            <div class="col" style="max-width: 350px;">
                 {{ formset.empty_form.name }}
             </div>
             <div class="col">
@@ -72,15 +77,18 @@
                 {% endif %}
                 {% if formset.can_order %}
                     {{ formset.empty_form.ORDER }}
-                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
-                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
+                    <button type="button" class="btn btn-secondary" value="Move up">
+                        <i class="bi bi-caret-up-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" value="Move down">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
                 {% endif %}
             </div>
         </div>
     </template>
     {{ formset.management_form }}
     </div>
-    <input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/>
 </form>
 
 {% endblock %}
