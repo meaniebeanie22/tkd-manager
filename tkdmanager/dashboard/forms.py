@@ -43,7 +43,7 @@ class MemberPropertiesWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
         'name__icontains'
     ]
-    queryset = MemberProperty.objects.filter(propertytype_searchable__exact=True).all()
+    queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all()
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -108,7 +108,7 @@ class MemberForm(ModelForm):
 
 class MemberSearchForm(Form):
     member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
-    properties = MultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype_searchable__exact=True).all(), widget=MemberPropertiesWidget)
+    properties = MultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
 
 class ClassForm(ModelForm):
     class Meta:
