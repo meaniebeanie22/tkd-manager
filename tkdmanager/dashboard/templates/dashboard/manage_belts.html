@@ -46,33 +46,33 @@
             {{ belt_form.name }}
             {% if formset.can_delete %}
                 {{ belt_form.DELETE }}
-                <input type="button" class="delete-form-button" value="Delete">
+                <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
             {% endif %}
             {% if formset.can_order %}
                 {{ belt_form.ORDER }}
-                <input type="button" class="move-form-up-button" value="Move up">
-                <input type="button" class="move-form-down-button" value="Move down">
+                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
+                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
             {% endif %}
         </div>
         {% endfor %}
     </div>
-    <div><input type="button" id="add-form-button" value="Add another"></div>
+    <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
     <template id="empty-form-template">
         <div class="belt-form">
             {{ formset.empty_form.name }}
             {% if formset.can_delete %}
-                <input type="button" class="delete-form-button" value="Delete">
+                <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
             {% endif %}
             {% if formset.can_order %}
                 {{ formset.empty_form.ORDER }}
-                <input type="button" class="move-form-up-button" value="Move up">
-                <input type="button" class="move-form-down-button" value="Move down">
+                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
+                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
             {% endif %}
         </div>
     </template>
     {{ formset.management_form }}
     </div>
-    <input type="submit" value="Submit"/>
+    <input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/>
 </form>
 
 {% endblock %}
