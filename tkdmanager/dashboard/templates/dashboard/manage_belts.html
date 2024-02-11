@@ -35,7 +35,7 @@
 
 {% block content %}
 <h4>Manage Belts</h4>
-<form action="" method="post">
+
 <!-- Render formset using the following basic structure -->
 <div id="belt-formset">
   <div id="belt-forms-container">
@@ -57,7 +57,7 @@
   <div><input type="button" id="add-form-button" value="Add another"></div>
   <template id="empty-form-template">
       <div class="belt-form">
-          {{ formset.empty_form.email }}
+          {{ formset.empty_form.name }}
           {% if formset.can_delete %}
               <input type="button" class="delete-form-button" value="Delete">
           {% endif %}
@@ -70,7 +70,6 @@
   </template>
   {{ formset.management_form }}
 </div>
-<input type="submit" value="Done">
-</form>
+
 {% endblock %}
 
