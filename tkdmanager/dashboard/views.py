@@ -754,7 +754,7 @@ def manageBelts(request, **kwargs):
                 print(f'Deleting obj: {obj}')
                 obj.delete()
         else:
-            pass
+            print(f'Errors: {formset.errors}')
     else:
         formset = BeltFormSet(prefix='belt-formset')
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
