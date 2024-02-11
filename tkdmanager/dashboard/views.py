@@ -70,11 +70,26 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
     ordering = ['-belt','last_name']
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        if query:
-            return Member.objects.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(idnumber__icontains=query) | Q(email__icontains=query) | Q(phone__iexact=query))
-        else:
-            return Member.objects.all()
+        queryset = Member.objects.all()
+
+        # Process form data to filter queryset
+        form = MemberSearchForm(self.request.GET)
+        if form.is_valid():
+            filters = {}
+
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if value:
+                    filters[field_name] = value
+            
+            # Apply all filters to the queryset in a single call
+            queryset = queryset.filter(**filters)
+
+        return queryset
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = MemberSearchForm(self.request.GET)
+        return context
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member

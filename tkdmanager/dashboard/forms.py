@@ -14,7 +14,7 @@ from django_select2 import forms as s2forms
 from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
-                     RecurringPayment)
+                     RecurringPayment, MemberProperty)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -38,6 +38,12 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
         'idnumber__istartswith'
     ]
     queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
+
+class MemberPropertiesWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        'name__icontains'
+    ]
+    queryset = MemberProperty.objects.filter(propertytype_searchable__exact=True).all()
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -99,6 +105,10 @@ class MemberForm(ModelForm):
             'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
         }
+
+class MemberSearchForm(Form):
+    member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
+    properties = MultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype_searchable__exact=True).all(), widget=MemberPropertiesWidget)
 
 class ClassForm(ModelForm):
     class Meta:
