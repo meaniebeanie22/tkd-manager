@@ -6,5 +6,12 @@
 
 {% block content %}
   <h1>Token</h1>
-  <p>{{ token }}</p>
+  <p>Protect this token with your life - <b>it can do anything you can do</b></p>
+  <div id="spoiler" style="display:none">
+    {{ token }}
+  </div>
+  <button type="button" class="btn btn-outline-danger btn-outline-thicker" onclick="if(document.getElementById('spoiler') .style.display=='none') {document.getElementById('spoiler') .style.display=''}else{document.getElementById('spoiler') .style.display='none'}">Reveal</button>
+  <form>
+    <a href="{% url 'dash-delete-token' %}" class="btn btn-outline-success btn-outline-thicker">Refresh token</a>
+  </form>
 {% endblock %}

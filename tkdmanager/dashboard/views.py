@@ -66,6 +66,12 @@ def token_display(request):
 
     return render(request, 'token.html', context=context)
 
+@permission_required('authtoken.delete_token')
+def token_delete(request, **kwargs):
+    token = get_object_or_404(Token, pk=kwargs.get('pk'))
+    token.delete()
+    return HttpResponseRedirect(reverse_lazy('dash-get-token'))
+
 def health(request):
     return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': datetime.now()})
 
