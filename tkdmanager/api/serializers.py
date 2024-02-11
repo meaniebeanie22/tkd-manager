@@ -1,9 +1,29 @@
 from dashboard.models import (AssessmentUnit, Award, Class, Grading,
                               GradingInvite, GradingResult, Member, Payment,
-                              PaymentType)
+                              PaymentType, MemberProperty, MemberPropertyType,
+                              RecurringPayment, Belt)
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+class MemberPropertySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MemberProperty
+        fields = ['propertytype', 'member', 'name']
+
+class MemberPropertyTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MemberPropertyType
+        fields = ['name', 'searchable']
+
+class BeltSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Belt
+        fields = ['degree', 'name']
+
+class RecurringPaymentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = RecurringPayment
+        fields = ['member', 'payments', 'last_payment_date', 'interval', 'amount', 'paymenttype']
 
 class ClassSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -23,7 +43,7 @@ class AssessmentUnitSerializer(serializers.HyperlinkedModelSerializer):
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member 
-        fields = ['url', 'first_name', 'last_name', 'idnumber', 'address_line_1', 'address_line_2', 'address_line_3', 'date_of_birth', 'belt', 'email', 'phone', 'team_leader_instructor', 'active']
+        fields = ['url', 'first_name', 'last_name', 'idnumber', 'address_line_1', 'address_line_2', 'address_line_3', 'date_of_birth', 'belt', 'email', 'phone', 'team_leader_instructor', 'active', 'properties']
 
 class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
     assessmentunits = AssessmentUnitSerializer(many=True, read_only=True)

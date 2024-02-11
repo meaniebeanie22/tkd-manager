@@ -25,7 +25,8 @@ from rest_framework.authtoken.models import Token
 from .forms import *
 from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
                      Grading, GradingInvite, GradingResult, Member, Payment,
-                     PaymentType, RecurringPayment, determine_belt_type)
+                     PaymentType, RecurringPayment, determine_belt_type,
+                     Belt)
 
 
 def time_difference_in_seconds(time1, time2):
@@ -724,6 +725,29 @@ def gradinginvite_batch_create(request, **kwargs):
         formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
+
+class BeltForm(ModelForm):
+    class Meta:
+        model = Belt
+        fields = ['name']
+
+@permission_required("dashboard.add_belt")
+def manageBelts(request, **kwargs):
+    BeltFormSet = modelformset_factory(Belt, form=BeltForm, can_delete=True, can_order=True)
+
+    if request.method == "POST":
+        formset = BeltFormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                belt = form.save(commit=False)
+                belt.degree = form.ORDER
+                belt.save()
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+    else:
+        formset = BeltFormSet()
+    return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 @login_required
 def batch_gradinginvite_revise(request, **kwargs):

@@ -1,15 +1,12 @@
 from dashboard.models import (AssessmentUnit, Award, Class, Grading,
                               GradingInvite, GradingResult, Member, Payment,
-                              PaymentType)
+                              PaymentType, MemberProperty, MemberPropertyType,
+                              RecurringPayment, Belt)
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 
 from .permissions import APIAllowed
-from .serializers import (AssessmentUnitSerializer, AwardSerializer,
-                          ClassSerializer, GradingInviteSerializer,
-                          GradingResultSerializer, GradingSerializer,
-                          MemberSerializer, PaymentSerializer,
-                          PaymentTypeSerialzer, UserSerializer)
+from .serializers import *
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -90,4 +87,36 @@ class ClassViewSet(viewsets.ModelViewSet):
     """
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
+    permission_classes = [APIAllowed]
+
+class BeltViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for belts
+    """
+    queryset = Belt.objects.all()
+    serializer_class = BeltSerializer
+    permission_classes = [APIAllowed]
+
+class MemberPropertyViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for member properties
+    """
+    queryset = MemberProperty.objects.all()
+    serializer_class = MemberPropertySerializer
+    permission_classes = [APIAllowed]
+
+class MemberPropertyTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for member property types
+    """
+    queryset = MemberPropertyType.objects.all()
+    serializer_class = MemberPropertyTypeSerializer
+    permission_classes = [APIAllowed]
+
+class RecurringPaymentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for recurring payments
+    """
+    queryset = RecurringPayment.objects.all()
+    serializer_class = RecurringPaymentSerializer
     permission_classes = [APIAllowed]

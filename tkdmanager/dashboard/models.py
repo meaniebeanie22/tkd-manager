@@ -291,3 +291,8 @@ class MemberPropertyType(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+    
+class Belt(models.Model):
+    # style
+    degree = models.PositiveSmallIntegerField(unique=True)
+    name = models.CharField(max_length=50)
