@@ -108,7 +108,7 @@ class MemberForm(ModelForm):
 
 class MemberSearchForm(Form):
     member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
-    properties = MultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
+    properties = ModelMultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
 
 class ClassForm(ModelForm):
     class Meta:
