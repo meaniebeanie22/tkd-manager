@@ -205,6 +205,7 @@ class Class(models.Model):
 
     class Meta:
         ordering = ['-date', '-start']
+        verbose_name_plural = 'classes'
 
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
@@ -270,12 +271,22 @@ class RecurringPayment(models.Model):
         return reverse('dash-rpayment-detail', args=[str(self.id)])
 
 class MemberProperty(models.Model):
+    class Meta:
+        verbose_name_plural = 'memberproperties'
+
     # Team leader L3, or First Aid
     propertytype = models.ForeignKey('MemberPropertyType', on_delete=models.CASCADE, verbose_name='Property Type')
-    member = models.ManyToManyField(Member, related_name='properties')
+    member = models.ManyToManyField(Member, related_name='properties', blank=True)
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.propertytype} - {self.name}'
+
 
 class MemberPropertyType(models.Model):
     # Instructor level, or qualifications
     name = models.CharField(max_length=200)
     searchable = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.name}'
