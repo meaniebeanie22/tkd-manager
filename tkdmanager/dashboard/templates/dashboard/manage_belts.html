@@ -8,7 +8,21 @@
 <h4>Manage Belts</h4>
 <form method="POST">
   {% csrf_token %}
-  {{ formset }}
+  {{ formset.management_form }}
+  {% for form in formset %}
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+    {# Include the visible fields #}
+    <div>
+      {% for field in form.visible_fields %}
+        <span class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+        </span>
+      {% endfor %}
+    </div>
+  {% endfor %}
   <input type="submit" value="Done">
 </form>
 {% endblock %}
