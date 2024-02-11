@@ -30,6 +30,12 @@
             <li class="list-group-item">{% if member.address_line_1 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'dash-update-member' member.pk %}">Fix</a>{% endif %}</li>
             <li class="list-group-item"><a class="btn btn-outline-primary btn-outline-thicker" href="{% url 'dash-update-member' member.pk %}">Edit</a></li>
           </ul>
+          <h4 class="card-title">Properties</h4>
+          <ul class="list-group list-group-flush">
+            {% for p in member.properties.all %}
+              <li class="list-group-item">{{ p }}</li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
