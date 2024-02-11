@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'api.apps.ApiConfig',
     'django_select2',
+    'convenient_formsets',
 ]
 
 MIDDLEWARE = [

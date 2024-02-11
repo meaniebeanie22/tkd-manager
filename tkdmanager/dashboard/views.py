@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from typing import Any
+from convenient_formsets import ConvenientBaseModelFormSet
 
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
@@ -730,10 +731,10 @@ class BeltForm(ModelForm):
 
 @permission_required("dashboard.add_belt")
 def manageBelts(request, **kwargs):
-    BeltFormSet = modelformset_factory(Belt, form=BeltForm, can_delete=True, can_order=True)
+    BeltFormSet = modelformset_factory(Belt, form=BeltForm, formset=ConvenientBaseModelFormSet, can_delete=True, can_order=True)
 
     if request.method == "POST":
-        formset = BeltFormSet(request.POST)
+        formset = BeltFormSet(request.POST, prefix='belt-formset')
         if formset.is_valid():
             for form in formset:
                 belt = form.save(commit=False)
@@ -743,7 +744,7 @@ def manageBelts(request, **kwargs):
         for obj in formset.deleted_objects:
             obj.delete()
     else:
-        formset = BeltFormSet()
+        formset = BeltFormSet(prefix='belt-formset')
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 @login_required

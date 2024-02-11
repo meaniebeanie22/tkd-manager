@@ -4,26 +4,68 @@
 <title>TKD Manager - Manage Belts</title>
 {% endblock %}
 
+{% block extrahead %}
+<!-- Include the formset's media -->
+{{ email_formset.media }}
+
+<!-- Initialize a ConvenientFormset -->
+<script>
+    window.addEventListener('load', function(event) {
+        new ConvenientFormset({
+            'formsetPrefix': '{{ formset.prefix }}',
+            'formsContainerSelector': '#belt-formset #belt-forms-container',
+            'formSelector': '.belt-form',
+
+            'canAddForms': true,
+            'addFormButtonSelector': '#belt-formset #add-form-button',
+            'emptyFormTemplateSelector': '#belt-formset #empty-form-template',
+
+            'canDeleteForms': true,
+            'deleteFormButtonSelector': '.delete-form-button',
+
+            'canOrderForms': true,
+            'moveFormDownButtonSelector': '.move-form-down-button',
+            'moveFormUpButtonSelector': '.move-form-up-button',
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <h4>Manage Belts</h4>
-<form method="POST">
-  {% csrf_token %}
-  {{ formset.management_form }}
-  {% for form in formset %}
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
-    {# Include the visible fields #}
-    <div>
-      {% for field in form.visible_fields %}
-        <span class="fieldWrapper">
-            {{ field.errors }}
-            {{ field.label_tag }} {{ field }}
-        </span>
+<!-- Render formset using the following basic structure -->
+<div id="belt-formset">
+  <div id="belt-forms-container">
+      {% for belt_form in formset.forms %}
+      <div class="belt-form">
+          {{ belt_form.name }}
+          {% if formset.can_delete %}
+              {{ belt_form.DELETE }}
+              <input type="button" class="delete-form-button" value="Delete">
+          {% endif %}
+          {% if formset.can_order %}
+              {{ belt_form.ORDER }}
+              <input type="button" class="move-form-up-button" value="Move up">
+              <input type="button" class="move-form-down-button" value="Move down">
+          {% endif %}
+      </div>
       {% endfor %}
-    </div>
-  {% endfor %}
-  <input type="submit" value="Done">
-</form>
+  </div>
+  <div><input type="button" id="add-form-button" value="Add another"></div>
+  <template id="empty-form-template">
+      <div class="email-form">
+          {{ formset.empty_form.email }}
+          {% if formset.can_delete %}
+              <input type="button" class="delete-form-button" value="Delete">
+          {% endif %}
+          {% if formset.can_order %}
+              {{ belt_form.ORDER }}
+              <input type="button" class="move-form-up-button" value="Move up">
+              <input type="button" class="move-form-down-button" value="Move down">
+          {% endif %}
+      </div>
+  </template>
+  {{ formset.management_form }}
+</div>
 {% endblock %}
 
