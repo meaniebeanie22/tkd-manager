@@ -67,8 +67,8 @@ def token_display(request):
     return render(request, 'token.html', context=context)
 
 @permission_required('authtoken.delete_token')
-def token_delete(request, **kwargs):
-    token = get_object_or_404(Token, pk=kwargs.get('pk'))
+def token_delete(request):
+    token = get_object_or_404(Token, user=request.user)
     token.delete()
     return HttpResponseRedirect(reverse_lazy('dash-get-token'))
 
