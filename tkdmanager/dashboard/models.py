@@ -272,7 +272,7 @@ class RecurringPayment(models.Model):
 
 class MemberProperty(models.Model):
     class Meta:
-        verbose_name_plural = 'memberproperties'
+        verbose_name_plural = 'member properties'
 
     # Team leader L3, or First Aid
     propertytype = models.ForeignKey('MemberPropertyType', on_delete=models.CASCADE, verbose_name='Property Type')
