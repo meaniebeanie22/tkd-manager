@@ -105,6 +105,7 @@ class MemberForm(ModelForm):
         widgets = {
             'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+            'properties': MemberPropertiesWidget,
         }
 
 class MemberSearchForm(Form):
