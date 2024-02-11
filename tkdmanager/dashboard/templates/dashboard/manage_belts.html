@@ -33,6 +33,7 @@
 
 {% block content %}
 <h4>Manage Belts</h4>
+<form action="" method="post">
 <!-- Render formset using the following basic structure -->
 <div id="belt-formset">
   <div id="belt-forms-container">
@@ -67,5 +68,7 @@
   </template>
   {{ formset.management_form }}
 </div>
+<input type="submit" value="Done">
+</form>
 {% endblock %}
 
