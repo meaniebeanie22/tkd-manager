@@ -37,6 +37,7 @@
       <th>ID Number</th>
       <th>DOB</th>
       <th>TL/Inst</th>
+      <th>Properties</th>
     </tr>
     {% for member in member_list %}
       <tr class="content">
@@ -45,6 +46,13 @@
         <td>{{ member.idnumber }}</td>
         <td>{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
         <td>{% if member.team_leader_instructor %}{{ member.get_team_leader_instructor_display }}{% else %}---{% endif %}</td>
+        <td>
+          <ul>
+            {% for p in member.properties.all %}
+              <li>{{ p }}</li>
+            {% endfor %}
+          </ul>
+        </td>
       </tr>
     {% endfor %}
   </table>
