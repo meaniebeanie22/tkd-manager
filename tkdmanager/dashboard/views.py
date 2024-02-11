@@ -53,7 +53,7 @@ def index(request):
 
     return render(request, 'home.html', context=context)
 
-@login_required
+@permission_required('authtoken.add_token')
 def token_display(request):
     token = Token.objects.get_or_create(user=request.user)
     context = {
