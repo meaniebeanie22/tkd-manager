@@ -38,6 +38,7 @@
 
 <!-- Render formset using the following basic structure -->
 <form action="" method="post">
+    {% csrf_token %}
     <div id="belt-formset">
     <div id="belt-forms-container">
         {% for belt_form in formset.forms %}
