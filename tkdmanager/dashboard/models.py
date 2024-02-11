@@ -268,3 +268,14 @@ class RecurringPayment(models.Model):
     
     def get_absolute_url(self):
         return reverse('dash-rpayment-detail', args=[str(self.id)])
+
+class MemberProperty(models.Model):
+    # Team leader L3, or First Aid
+    propertytype = models.ForeignKey('MemberPropertyType', on_delete=models.CASCADE, verbose_name='Property Type')
+    member = models.ManyToManyField(Member, related_name='properties')
+    name = models.CharField(max_length=200)
+
+class MemberPropertyType(models.Model):
+    # Instructor level, or qualifications
+    name = models.CharField(max_length=200)
+    searchable = models.BooleanField(default=False)
