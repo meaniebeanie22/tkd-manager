@@ -79,10 +79,13 @@ class Belt(models.Model):
     @classmethod
     def get_default_pk(cls):
         belt, created = cls.objects.get_or_create(
-            degree=1,
+            degree=2,
             name='No Belt'
         )
         return belt.pk
+    
+    def __str__(self):
+        return self.name
     
 class Award(models.Model):
     """Model representing a type of award."""
