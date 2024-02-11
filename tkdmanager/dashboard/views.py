@@ -741,7 +741,6 @@ def manageBelts(request, **kwargs):
 
     if request.method == "POST":
         formset = BeltFormSet(request.POST, prefix='belt-formset')
-        print(f'Formset: {formset.cleaned_data}')
         if formset.is_valid():
             print('Valid')
             for form in formset:
