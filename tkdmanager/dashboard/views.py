@@ -743,10 +743,11 @@ def manageBelts(request, **kwargs):
         formset = BeltFormSet(request.POST, request.FILES, prefix='belt-formset')
         if formset.is_valid():
             print('Valid')
-            for form in formset:
+            no_forms = len(formset)
+            for i, form in enumerate(formset.ordered_forms):
                 print(f'Form: {form.cleaned_data}')
                 belt = form.save(commit=False)
-                belt.degree = form.ORDER
+                belt.degree = no_forms - i
                 belt.save()
                 print(f'Belt Saved: {belt}')
             instances = formset.save(commit=False)
