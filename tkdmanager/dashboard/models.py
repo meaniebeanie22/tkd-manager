@@ -181,7 +181,7 @@ class GradingResult(models.Model):
 
     def __str__(self):
         if self.grading:
-            return f'GR: {self.grading.get_grading_type_display()} - {self.grading.grading_datetime.strftime("%d/%m/%Y")}, by {self.member}'
+            return f'GR: {self.grading.get_grading_type_display()} - {self.grading.grading_datetime.strftime("%d/%m/%Y")}, for {self.forbelt.name} by {self.member}'
         else:
             return f'GRADINGRESULT_NULL_GRADING by {self.member}'
     
