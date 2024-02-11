@@ -98,7 +98,7 @@
         <td>{{ gr.grading.get_grading_type_display }}</td>
         <td>{{ gr.grading.grading_datetime|date:"d/m/y" }}</td>
         <td><a href="{{ gr.member.get_absolute_url }}">{{ gr.member }}</a></td>
-        <td>{{ gr.get_forbelt_display }}</td>
+        <td>{{ gr.forbelt.name }}</td>
         <td>
           <dl>
           {% for a in gr.assessor.all %}

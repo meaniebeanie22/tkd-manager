@@ -42,7 +42,7 @@
     {% for member in member_list %}
       <tr class="content">
         <td><a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }}</a></td>
-        <td>{% if member.belt %}{{ member.get_belt_display }}{% else %}No Belt{% endif %}</td>
+        <td>{% if member.belt %}{{ member.belt.name }}{% else %}No Belt{% endif %}</td>
         <td>{{ member.idnumber }}</td>
         <td>{% if member.date_of_birth %}{{ member.date_of_birth|date:"d/m/y" }}{% endif %}</td>
         <td>{% if member.team_leader_instructor %}{{ member.get_team_leader_instructor_display }}{% else %}---{% endif %}</td>

@@ -60,7 +60,7 @@
         <div class="invitation-details">
             <p><span class="details-label">Member:</span> {{ gradinginvite.member.first_name }} {{ gradinginvite.member.last_name }}</p>
             <p><span class="details-label">ID No.:</span> {{ gradinginvite.member.idnumber }}</p>
-            <p><span class="details-label">Belt:</span> {{ gradinginvite.get_forbelt_display }}</p>
+            <p><span class="details-label">Belt:</span> {{ gradinginvite.forbelt.name }}</p>
             <p><span class="details-label">Type of Grading:</span> {{ gradinginvite.grading.get_grading_type_display }}</p>
             <p><span class="details-label">Date and Time:</span> {{ gradinginvite.grading.grading_datetime }}</p>
             <p><span class="details-label">Cost:</span> ${{ gradinginvite.payment.amount_due }}</p>

@@ -25,8 +25,7 @@ from rest_framework.authtoken.models import Token
 from .forms import *
 from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
                      Grading, GradingInvite, GradingResult, Member, Payment,
-                     PaymentType, RecurringPayment, determine_belt_type,
-                     Belt)
+                     PaymentType, RecurringPayment, Belt)
 
 
 def time_difference_in_seconds(time1, time2):
@@ -44,12 +43,15 @@ def index(request):
     # Number of members
     num_members = Member.objects.count()
     num_active_members = Member.objects.filter(active__exact=True).count()
+    belts = Belt.objects.all()
+    labels = [belt.name for belt in belts]
+    counts = [belt.member_set.count() for belt in belts]
 
     context = {
         'num_members': num_members,
         'num_active_members': num_active_members,
-        'belt_labels': ["None","White","Orange","Yellow","Blue","Red","CDB","Black"],
-        'belt_count': [Member.objects.filter(belt__exact=None).count(),Member.objects.filter(belt__in=tuple(range(8))).count(),Member.objects.filter(belt__in=tuple(range(8,16))).count(),Member.objects.filter(belt__in=tuple(range(16,24))).count(),Member.objects.filter(belt__in=tuple(range(24,32))).count(),Member.objects.filter(belt__in=tuple(range(32,39))).count(),Member.objects.filter(belt__in=tuple(range(39,47))).count(),Member.objects.filter(belt__in=tuple(range(47,56))).count()]
+        'belt_labels': labels,
+        'belt_count': counts,
     }
 
     return render(request, 'home.html', context=context)
@@ -212,7 +214,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         i = {}
         if member_id:
             i['member'] = member_id
-            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+            i['forbelt'] = get_object_or_404(Belt, pk=(Member.objects.get(id=member_id).belt.pk + 1))
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
@@ -540,7 +542,7 @@ class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         if forbelt:
             i['forbelt'] = forbelt
         elif member_id:
-            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+            i['forbelt'] = get_object_or_404(Belt, pk=(int(Member.objects.get(id=member_id).belt.pk) + 1))
 
         if grading:
             i['grading'] = grading
@@ -701,12 +703,7 @@ def gradinginvite_batch_create(request, **kwargs):
                 if form.cleaned_data['select']:
                     gi = form.save(commit=False)
                     gi.issued_by = request.user
-                    belt = determine_belt_type(gi.forbelt)
-                    # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
-                    if belt == 'Black':
-                        pt=13
-                    else:
-                        pt=12
+                    pt=12
                     p = Payment(member=form.cleaned_data['member'], paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
                     p.save()
                     gi.payment = p
@@ -722,7 +719,7 @@ def gradinginvite_batch_create(request, **kwargs):
         # GET request
         pks = request.GET.getlist('selected_items')
         GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=len(pks))
-        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
+        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':get_object_or_404(Belt, pk=(get_object_or_404(Member, pk=pk).belt.pk + 1))} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
 

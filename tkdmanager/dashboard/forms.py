@@ -14,7 +14,7 @@ from django_select2 import forms as s2forms
 from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
-                     RecurringPayment, MemberProperty)
+                     RecurringPayment, MemberProperty, Belt)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -113,7 +113,7 @@ class MemberSearchForm(Form):
 
     member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
     properties = ModelMultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
-    belt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='Belt')
+    belt = ModelChoiceField(queryset=Belt.objects.all(), required=False)
 
 class ClassForm(ModelForm):
     class Meta:
@@ -172,7 +172,7 @@ class GradingResultSearchForm(Form):
             ]
         )
     )
-    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
+    forbelt = ModelChoiceField(queryset=Belt.objects.all(), required=False, label='For Belt')
     assesor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
@@ -202,7 +202,7 @@ class GradingInviteSearchForm(Form):
             ],
         )
     )
-    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
+    forbelt = ModelChoiceField(queryset=Belt.objects.all(), required=False, label='For Belt')
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd'

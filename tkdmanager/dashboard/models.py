@@ -65,15 +65,25 @@ TL_INST_RANKS = [
 #FDCC+BB+AA+
 LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
 
-def determine_belt_type(id):
-    if id > 39: # is x id a blackbelt or not (for gradings)
-        return 'Black'
-    else:
-        return 'Color'
-
 def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 
+class Belt(models.Model):
+    # style
+    degree = models.PositiveSmallIntegerField(unique=True)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['-degree']
+
+    @classmethod
+    def get_default_pk(cls):
+        belt, created = cls.objects.get_or_create(
+            degree=1,
+            name='No Belt'
+        )
+        return belt.pk
+    
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
@@ -93,7 +103,7 @@ class Member(models.Model):
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
-    belt = models.IntegerField(choices=BELT_CHOICES, null=True)
+    belt = models.ForeignKey(Belt, default=Belt.get_default_pk, on_delete=models.PROTECT)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
@@ -156,7 +166,7 @@ class Grading(models.Model):
 class GradingResult(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='member2gradings')
     assessor = models.ManyToManyField(Member, help_text='Who assessed this particular grading?', related_name='assessor2gradings')
-    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.ForeignKey(Belt, on_delete=models.PROTECT, default=Belt.get_default_pk, verbose_name="For Belt")
     comments = models.CharField(max_length=300, blank=True)
     award = models.ForeignKey(Award, on_delete=models.RESTRICT, verbose_name='Award', null=True, blank=True)
     is_letter = models.BooleanField(default=False)
@@ -178,7 +188,7 @@ class GradingResult(models.Model):
     
 class GradingInvite(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE,)
-    forbelt = models.IntegerField(choices=BELT_CHOICES, verbose_name="For Belt")
+    forbelt = models.ForeignKey('Belt', on_delete=models.PROTECT, default=Belt.get_default_pk, verbose_name="For Belt")
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
@@ -188,9 +198,9 @@ class GradingInvite(models.Model):
 
     def __str__(self):
         if self.grading:
-            return f'GI: {self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%d/%m/%Y")} for {self.get_forbelt_display()}, by {self.member}'
+            return f'GI: {self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%d/%m/%Y")} for {self.belt.name}, by {self.member}'
         else:
-            return f'GRADINGINVITE_NULL_GRADING for {self.get_forbelt_display()}, by {self.member}'
+            return f'GRADINGINVITE_NULL_GRADING for {self.belt.name}, by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
@@ -291,8 +301,3 @@ class MemberPropertyType(models.Model):
 
     def __str__(self):
         return f'{self.name}'
-    
-class Belt(models.Model):
-    # style
-    degree = models.PositiveSmallIntegerField(unique=True)
-    name = models.CharField(max_length=50)

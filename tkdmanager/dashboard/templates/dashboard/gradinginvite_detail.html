@@ -11,7 +11,7 @@
       <div class="card-body">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><a href="{{ gradinginvite.member.get_absolute_url }}">Member: {{ gradinginvite.member }}</a></li>
-          <li class="list-group-item">For: {{ gradinginvite.get_forbelt_display }}</li>
+          <li class="list-group-item">For: {{ gradinginvite.forbelt.name }}</li>
           <li class="list-group-item">Type: {{ gradinginvite.grading.get_grading_type_display }} </li>
           <li class="list-group-item">Grading Date & Time: {{ gradinginvite.grading.grading_datetime }}</li>
           <li class="list-group-item">Issued by: {{ gradinginvite.issued_by }}</li>

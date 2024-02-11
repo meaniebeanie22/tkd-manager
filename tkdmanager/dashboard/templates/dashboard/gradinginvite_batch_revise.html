@@ -20,7 +20,7 @@
     {% for gi in gradinginvites %}
     <tr>
         <td><a href="{{ gi.member.get_absolute_url }}">{{ gi.member }}</a></td>
-        <td>{{ gi.get_forbelt_display }}</td>
+        <td>{{ gi.forbelt.name }}</td>
         <td><a href="{{ gi.grading.get_absolute_url }}">{{ gi.grading }}</a></td>
         <td><a href="{% url 'dash-update-grading-invite' gi.pk %}" class="btn btn-outline-secondary">Edit</a></td>
         <td>{{ gi.payment.paymenttype }}</td>

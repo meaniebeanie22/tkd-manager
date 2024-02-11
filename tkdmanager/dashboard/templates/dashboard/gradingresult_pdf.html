@@ -34,7 +34,7 @@
     <p>Grading Date: {{ gradingresult.grading.grading_datetime|date:"d/m/y" }}</p>
 </div>
 <div>
-    <h4>Graded for {{ gradingresult.get_forbelt_display }} in {{ gradingresult.grading.get_grading_type_display }}</h4>
+    <h4>Graded for {{ gradingresult.forbelt.name }} in {{ gradingresult.grading.get_grading_type_display }}</h4>
 
     {% if gradingresult.award %}
       <h4>{{ gradingresult.award }}</h4>        
@@ -59,7 +59,7 @@
         <ul>
             {% for as in gradingresult.assessor.all %}
                 <li>
-                    {{ as }} - <b>{{ as.get_belt_display }}</b>
+                    {{ as }} - <b>{{ as.belt.name }}</b>
                 </li>
             {% endfor %}
         </ul>
