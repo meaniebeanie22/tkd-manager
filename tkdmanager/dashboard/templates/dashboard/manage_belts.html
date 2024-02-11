@@ -42,32 +42,40 @@
     <div id="belt-formset">
     <div id="belt-forms-container">
         {% for belt_form in formset.forms %}
-        <div class="belt-form">
-            {{ belt_form.name }}
-            {% if formset.can_delete %}
-                {{ belt_form.DELETE }}
-                <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
-            {% endif %}
-            {% if formset.can_order %}
-                {{ belt_form.ORDER }}
-                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
-                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
-            {% endif %}
+        <div class="row belt-form">
+            <div class="col">
+                {{ belt_form.name }}
+            </div>
+            <div class="col">
+                {% if formset.can_delete %}
+                    {{ belt_form.DELETE }}
+                    <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
+                {% endif %}
+                {% if formset.can_order %}
+                    {{ belt_form.ORDER }}
+                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
+                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
+                {% endif %}
+            </div>
         </div>
         {% endfor %}
     </div>
     <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
     <template id="empty-form-template">
-        <div class="belt-form">
-            {{ formset.empty_form.name }}
-            {% if formset.can_delete %}
-                <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
-            {% endif %}
-            {% if formset.can_order %}
-                {{ formset.empty_form.ORDER }}
-                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
-                <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
-            {% endif %}
+        <div class="row belt-form">
+            <div class="col">
+                {{ formset.empty_form.name }}
+            </div>
+            <div class="col">
+                {% if formset.can_delete %}
+                    <input type="button" class="btn btn-outline-danger btn-outline-thicker" value="Delete">
+                {% endif %}
+                {% if formset.can_order %}
+                    {{ formset.empty_form.ORDER }}
+                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move up">
+                    <input type="button" class="btn btn-outline-secondary btn-outline-thicker" value="Move down">
+                {% endif %}
+            </div>
         </div>
     </template>
     {{ formset.management_form }}
