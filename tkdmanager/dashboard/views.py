@@ -741,11 +741,11 @@ def manageBelts(request, **kwargs):
 
     if request.method == "POST":
         formset = BeltFormSet(request.POST, prefix='belt-formset')
-        print(f'Formset: {formset}')
+        print(f'Formset: {formset.cleaned_data}')
         if formset.is_valid():
             print('Valid')
             for form in formset:
-                print(f'Form: {form}')
+                print(f'Form: {form.cleaned_data}')
                 belt = form.save(commit=False)
                 belt.degree = form.ORDER
                 belt.save()
