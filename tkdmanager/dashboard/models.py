@@ -98,6 +98,7 @@ class Member(models.Model):
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
     active = models.BooleanField(default=True)
+    properties = models.ManyToManyField('MemberProperty', related_name='properties', blank=True)
 
     class Meta:
         ordering = ['-belt','last_name']
@@ -276,7 +277,7 @@ class MemberProperty(models.Model):
 
     # Team leader L3, or First Aid
     propertytype = models.ForeignKey('MemberPropertyType', on_delete=models.CASCADE, verbose_name='Property Type')
-    member = models.ManyToManyField(Member, related_name='properties', blank=True)
+    member = models.ManyToManyField(Member, through=Member.properties.through, related_name='members', blank=True)
     name = models.CharField(max_length=200)
 
     def __str__(self):
