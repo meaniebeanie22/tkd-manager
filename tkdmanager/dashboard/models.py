@@ -114,7 +114,7 @@ class Member(models.Model):
     properties = models.ManyToManyField('MemberProperty', related_name='properties', blank=True)
 
     class Meta:
-        ordering = ['-belt','last_name']
+        ordering = ['-belt__degree','last_name']
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.idnumber})'
@@ -201,9 +201,9 @@ class GradingInvite(models.Model):
 
     def __str__(self):
         if self.grading:
-            return f'GI: {self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%d/%m/%Y")} for {self.belt.name}, by {self.member}'
+            return f'GI: {self.grading.get_grading_type_display()} on {self.grading.grading_datetime.strftime("%d/%m/%Y")} for {self.forbelt.name}, by {self.member}'
         else:
-            return f'GRADINGINVITE_NULL_GRADING for {self.belt.name}, by {self.member}'
+            return f'GRADINGINVITE_NULL_GRADING for {self.forbelt.name}, by {self.member}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
