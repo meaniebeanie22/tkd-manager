@@ -107,8 +107,11 @@ class MemberForm(ModelForm):
         }
 
 class MemberSearchForm(Form):
+    BLANK_CHOICE = [('', '---------')]
+
     member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
     properties = ModelMultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
+    belt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
 
 class ClassForm(ModelForm):
     class Meta:
