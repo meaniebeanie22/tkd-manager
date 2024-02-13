@@ -20,7 +20,7 @@ ASSESSMENT_UNITS = [
 def make_placeholder_unittypes(apps, schema_editor):
     AssessmentUnitType = apps.get_model('dashboard', 'AssessmentUnitType')
     for dbname, vname in ASSESSMENT_UNITS:
-        AssessmentUnitType.create(name=dbname)
+        AssessmentUnitType.objects.create(name=dbname)
 
 def copy_across_unitOLD(apps, schema_editor):
     AssessmentUnitType = apps.get_model('dashboard', 'AssessmentUnitType')
