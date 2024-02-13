@@ -138,13 +138,14 @@ class Member(models.Model):
     
 class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""
-    unit = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
+    unit = models.ForeignKey('AssessmentUnitType', on_delete=models.SET_NULL, null=True)
+    unitOLD = models.CharField(max_length=200, choices=ASSESSMENT_UNITS)
     achieved_pts = models.SmallIntegerField()
     max_pts = models.SmallIntegerField() # if letter rep then should be set to 7
     grading_result = models.ForeignKey('GradingResult', on_delete=models.CASCADE, verbose_name="Associated Grading Result")
 
     class Meta:
-        ordering = ['unit']
+        ordering = ['unitOLD']
     
     def __str__(self):
         return f'{self.unit} - {self.grading_result}'
