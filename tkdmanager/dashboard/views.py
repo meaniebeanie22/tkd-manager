@@ -439,7 +439,7 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         gradinginvite = get_object_or_404(GradingInvite, pk=pk)
         response = {
-            'forbelt': gradinginvite.forbelt.degree,
+            'forbelt': gradinginvite.forbelt.pk,
             'gradingpk': gradinginvite.grading.pk,
         }
         return JsonResponse(response)
@@ -478,7 +478,8 @@ class MemberGetDetails(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
         data = model_to_dict(selected_member)
-        data['belt'] = data['belt'].degree
+        data['next_belt'] = get_object_or_404(Belt, degree=(data.get('belt').degree + 1)).pk
+        data['belt'] = data['belt'].pk
         return JsonResponse(data, safe=False)
 
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
