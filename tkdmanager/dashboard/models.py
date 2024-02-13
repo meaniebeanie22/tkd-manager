@@ -296,7 +296,6 @@ class MemberProperty(models.Model):
     def __str__(self):
         return f'{self.propertytype} - {self.name}'
 
-
 class MemberPropertyType(models.Model):
     # Instructor level, or qualifications
     name = models.CharField(max_length=200)
@@ -304,3 +303,20 @@ class MemberPropertyType(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+class AssessmentUnitType(models.Model):
+    """
+    ASSESSMENT_UNITS = [
+        ('SD','Self Defense'),
+        ('SE','Self Develop'),
+        ('PA1','1st Pattern'),
+        ('PA2','2nd Pattern'),
+        ('PA3','3rd Pattern'),
+        ('BA', 'Basics - Hands and Feet'),
+        ('BW', 'Bag Work'),
+        ('SP', 'Sparring'),
+        ('BB', 'Board Breaking'),
+        ('BF', 'Back and Fighting Stances'),
+    ]
+    """
+    name = models.CharField(max_length=200, unique=True)

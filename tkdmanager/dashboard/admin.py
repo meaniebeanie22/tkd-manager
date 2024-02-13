@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import (AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
                      RecurringPayment, MemberProperty, MemberPropertyType,
-                     Belt)
+                     Belt, AssessmentUnitType)
 
 admin.site.register(Award)
 admin.site.register(Member)
@@ -19,3 +19,4 @@ admin.site.register(RecurringPayment)
 admin.site.register(MemberPropertyType)
 admin.site.register(MemberProperty)
 admin.site.register(Belt)
+admin.site.register(AssessmentUnitType)
