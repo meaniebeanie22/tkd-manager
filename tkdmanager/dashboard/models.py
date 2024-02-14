@@ -8,31 +8,6 @@ from django.urls import \
 from django.utils import timezone
 
 # Create your models here.
-
-BELT_CHOICES = [
-    (None, 'No Belt'), 
-    ("White",      ((0, 'White Belt'), (1, 'White ½'), (2, 'White 1'), (3, 'White 1 ½'), (4, 'White 2'), (5, 'White 2 ½'), (6, 'White 3'), (7, 'White-Orange'))),
-    ("Orange",     ((8, 'Orange Belt'), (9, 'Orange ½'), (10, 'Orange 1'), (11, 'Orange 1 ½'), (12, 'Orange 2'), (13, 'Orange 2 ½'), (14, 'Orange 3'), (15, 'White-Yellow'))),
-    ("Yellow",     ((16, 'Yellow Belt'), (17, 'Yellow ½'), (18, 'Yellow 1'), (19, 'Yellow 1 ½'), (20, 'Yellow 2'), (21, 'Yellow 2 ½'), (22, 'Yellow 3'), (23, 'White-Blue'))),
-    ("Blue",       ((24, 'Blue Belt'), (25, 'Blue ½'), (26, 'Blue 1'), (27, 'Blue 1 ½'), (28, 'Blue 2'), (29, 'Blue 2 ½'), (30, 'Blue 3'), (31, 'White-Red'))),
-    ("Red",        ((32, 'Red Belt'), (33, 'Red ½'), (34, 'Red 1'), (35, 'Red 1 ½'), (36, 'Red 2'), (37, 'Red 2 ½'), (38, 'Red 3'))),
-    ("Cho-Dan Bo", ((39, 'Cho-Dan Bo 1'), (40, 'Cho-Dan Bo 2'), (41, 'Cho-Dan Bo 3'), (42, 'Cho-Dan Bo 4'), (43, 'Cho-Dan Bo 5'), (44, 'Cho-Dan Bo 6'), (45, 'Advanced Cho-Dan Bo'), (46, 'Probationary Black Belt'))),
-    ("Black Belt", ((47, '1st Dan'), (48, '2nd Dan'), (49, '3rd Dan'), (50, '4th Dan'), (51, '5th Dan'), (52, '6th Dan'), (53, '7th Dan'), (54, '8th Dan'), (55, '9th Dan'))),
-]
-
-ASSESSMENT_UNITS = [
-    ('SD','Self Defense'),
-    ('SE','Self Develop'),
-    ('PA1','1st Pattern'),
-    ('PA2','2nd Pattern'),
-    ('PA3','3rd Pattern'),
-    ('BA', 'Basics - Hands and Feet'),
-    ('BW', 'Bag Work'),
-    ('SP', 'Sparring'),
-    ('BB', 'Board Breaking'),
-    ('BF', 'Back and Fighting Stances'),
-]
-
 GRADINGS = [
     ('MS','Musketeers'),
     ('JR','Juniors'),
@@ -69,7 +44,7 @@ def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 
 class Belt(models.Model):
-    # style
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
     degree = models.IntegerField(unique=True)
     name = models.CharField(max_length=50)
 
@@ -90,6 +65,7 @@ class Belt(models.Model):
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
 
     def __str__(self):
         """string for representing the award"""
@@ -155,6 +131,7 @@ class AssessmentUnit(models.Model):
 class Grading(models.Model):
     grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
 
     class Meta:
         ordering = ['-grading_datetime', 'grading_type']
@@ -175,6 +152,7 @@ class GradingResult(models.Model):
     is_letter = models.BooleanField(default=False)
     gradinginvite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Grading Invite')
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
     
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -195,6 +173,7 @@ class GradingInvite(models.Model):
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
 
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -214,6 +193,7 @@ class Class(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     type = models.CharField(max_length=2, choices=GRADINGS)
+    classtype = models.ForeignKey('ClassType', on_delete=models.PROTECT)
     instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes', blank=True)
     students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes', blank=True)
 
@@ -263,6 +243,7 @@ class Payment(models.Model):
             return "Awaiting Payment"
         
 class PaymentType(models.Model):
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
     name = models.CharField(max_length=200)
     standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)
 
@@ -277,6 +258,9 @@ class RecurringPayment(models.Model):
     amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Amount to be paid, in $', default=0)
     next_due = models.GeneratedField(db_persist=True, output_field=models.DateTimeField(), expression=(F('last_payment_date') + F('interval')))
     paymenttype = models.ForeignKey(PaymentType, verbose_name='Payment Type', on_delete=models.PROTECT)
+    
+    class Meta:
+            ordering = ['-next_due', 'paymenttype']
 
     def __str__(self):
         return f'Recurring Payment for {self.member}, ${self.amount} per {self.interval}'
@@ -287,6 +271,7 @@ class RecurringPayment(models.Model):
 class MemberProperty(models.Model):
     class Meta:
         verbose_name_plural = 'member properties'
+        ordering = ['name']
 
     # Team leader L3, or First Aid
     propertytype = models.ForeignKey('MemberPropertyType', on_delete=models.CASCADE, verbose_name='Property Type')
@@ -301,25 +286,48 @@ class MemberPropertyType(models.Model):
     name = models.CharField(max_length=200)
     searchable = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return f'{self.name}'
 
 class AssessmentUnitType(models.Model):
-    """
-    ASSESSMENT_UNITS = [
-        ('SD','Self Defense'),
-        ('SE','Self Develop'),
-        ('PA1','1st Pattern'),
-        ('PA2','2nd Pattern'),
-        ('PA3','3rd Pattern'),
-        ('BA', 'Basics - Hands and Feet'),
-        ('BW', 'Bag Work'),
-        ('SP', 'Sparring'),
-        ('BB', 'Board Breaking'),
-        ('BF', 'Back and Fighting Stances'),
-    ]
-    """
     name = models.CharField(max_length=200, unique=True)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return f'AssessmentUnitType: {self.name}'
+    
+class ClassType(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'ClassType: {self.name}'
+    
+class GradingType(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'GradingType: {self.name}'
+    
+class Style(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
+

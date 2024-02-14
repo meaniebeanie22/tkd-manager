@@ -45,7 +45,7 @@
         <ul>
             {% for au in gradingresult.assessmentunit_set.all %}
                 <li>
-                    <b>{{ au.get_unit_display }}</b> - {% if gradingresult.is_letter %}{{ au.get_letter_rep }}{% else %}{{ au.achieved_pts }} / {{ au.max_pts }}{% endif %}
+                    <b>{{ au.assessmentunittype.name }}</b> - {% if gradingresult.is_letter %}{{ au.get_letter_rep }}{% else %}{{ au.achieved_pts }} / {{ au.max_pts }}{% endif %}
                 </li>
             {% endfor %}
         </ul>

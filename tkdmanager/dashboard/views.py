@@ -26,7 +26,7 @@ from rest_framework.authtoken.models import Token
 from .forms import *
 from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
                      Grading, GradingInvite, GradingResult, Member, Payment,
-                     PaymentType, RecurringPayment, Belt)
+                     PaymentType, RecurringPayment, Belt, AssessmentUnitType)
 
 
 def time_difference_in_seconds(time1, time2):
@@ -157,7 +157,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
-        queryset = GradingResult.objects.all()
+        queryset = GradingResult.objects.filter(style__pk=self.request.session['pk']).all()
 
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET)
@@ -250,6 +250,10 @@ class GradingResultDelete(LoginRequiredMixin, DeleteView):
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
+    def get_queryset(self):
+        queryset = Award.objects.filter(style__pk=self.request.session['pk']).all()
+        return queryset
+
 class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Award
     fields = ['name']
@@ -277,10 +281,19 @@ class AwardDelete(LoginRequiredMixin, DeleteView):
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
 
+class AssessmentUnitGradingResultForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session['pk'])
+        super(AssessmentUnitGradingResultForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['unit', 'achieved_pts', 'max_pts']
+        
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
-    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, fields=['unit','achieved_pts','max_pts'], extra=10-gradingresult.assessmentunit_set.all().count())
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitGradingResultForm(request=request), extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
         formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
@@ -295,7 +308,7 @@ def manageGradingResult(request, **kwargs):
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResultLetter(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
-    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm(request=request), extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
         formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
@@ -317,7 +330,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
 
     def get_queryset(self):
-        queryset = Class.objects.all()
+        queryset = Class.objects.filter(classtype__style__pk=self.request.session['pk']).all()
 
         # Process form data to filter queryset
         form = ClassSearchForm(self.request.GET)
@@ -489,7 +502,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
-        queryset = GradingInvite.objects.all()
+        queryset = GradingInvite.objects.filter(style__pk=self.request.session['pk']).all()
 
         # Process form data to filter queryset
         form = GradingInviteSearchForm(self.request.GET)
@@ -581,6 +594,10 @@ class GradingDetailView(LoginRequiredMixin, generic.DetailView):
 
 class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
+
+    def get_queryset(self):
+        queryset = Grading.objects.filter(style__pk=self.request.session['pk']).all()
+        return queryset
 
 class GradingDelete(LoginRequiredMixin, DeleteView):
     model = Grading
@@ -919,3 +936,7 @@ class PaymentTypeDetailView(LoginRequiredMixin, generic.DetailView):
 
 class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
     model = PaymentType
+
+def selectStyle(request, pk):
+    request.session['style'] = pk
+    return HttpResponse()

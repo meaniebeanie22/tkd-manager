@@ -260,9 +260,14 @@ class PaymentSearchForm(Form):
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session['pk'])
+        super(AssessmentUnitLetterForm, self).__init__(*args, **kwargs)
+
     achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
     max_pts = IntegerField(initial=7, widget=HiddenInput())
-    unit = ModelChoiceField(queryset=AssessmentUnitType.objects.all(), required=False)
+    unit = ModelChoiceField(required=False)
     class Meta:
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']

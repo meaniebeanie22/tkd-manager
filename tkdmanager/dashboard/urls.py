@@ -68,4 +68,5 @@ urlpatterns = [
     path('recurringpayment/<str:pk>/update', views.RecurringPaymentUpdate.as_view(), name='dash-update-rpayment'),
     path('recurringpayment/<str:pk>/delete', views.RecurringPaymentDelete.as_view(), name='dash-delete-rpayment'),
     path('belts', views.manageBelts, name='dash-belts'),
+    path('style/<str:pk>', views.selectStyle, name='dash-select-style'),
 ]
