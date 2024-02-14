@@ -145,12 +145,15 @@ class AssessmentUnit(models.Model):
         return LETTER_GRADES[self.achieved_pts]          
 
 class Grading(models.Model):
-    grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
     style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
+    grading_type = models.ForeignKey('GradingType', on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ['-grading_datetime', 'grading_type']
+
+    def get_grading_type_display(self):
+        return self.grading_type.name
 
     def __str__(self):
         return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%d/%m/%Y")}'
@@ -208,14 +211,16 @@ class Class(models.Model):
     date = models.DateField()
     start = models.TimeField()
     end = models.TimeField()
-    type = models.CharField(max_length=2, choices=GRADINGS)
-    classtype = models.ForeignKey('ClassType', on_delete=models.PROTECT, null=True)
+    type = models.ForeignKey('ClassType', on_delete=models.PROTECT, null=True)
     instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes', blank=True)
     students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes', blank=True)
 
     class Meta:
         ordering = ['-date', '-start']
         verbose_name_plural = 'classes'
+
+    def get_type_display(self):
+        return self.type.name
 
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
