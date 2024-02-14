@@ -91,7 +91,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
             for field_name, value in form.cleaned_data.items():
                 print(f'Field, Value: {field_name} || {value}')
                 if field_name == 'member':
-                    queryset = QuerySet(value)
+                    queryset = Member.objects.filter(pk=value.pk).all()
                     print(f'Queryset: {queryset}')
                     return queryset
                 if value:
