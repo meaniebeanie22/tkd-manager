@@ -89,7 +89,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
 
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
-                if field_name == 'member':
+                if field_name == 'member' and value:
                     queryset = Member.objects.filter(pk=value.pk).all()
                     return queryset
                 if value:
