@@ -209,7 +209,7 @@ class Class(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     type = models.CharField(max_length=2, choices=GRADINGS)
-    classtype = models.ForeignKey('ClassType', on_delete=models.PROTECT)
+    classtype = models.ForeignKey('ClassType', on_delete=models.PROTECT, null=True)
     instructors = models.ManyToManyField(Member, help_text='Who taught this class?', related_name='instructors2classes', blank=True)
     students = models.ManyToManyField(Member, help_text='Who attended this class?', related_name='students2classes', blank=True)
 
