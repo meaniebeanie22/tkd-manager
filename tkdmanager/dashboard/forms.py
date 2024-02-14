@@ -267,7 +267,7 @@ class AssessmentUnitLetterForm(ModelForm):
 
     achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
     max_pts = IntegerField(initial=7, widget=HiddenInput())
-    unit = ModelChoiceField(required=False)
+    unit = ModelChoiceField(queryset=AssessmentUnitType.objects.all(), required=False)
     class Meta:
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']

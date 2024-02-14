@@ -43,8 +43,24 @@ LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
 def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 
+class Style(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
+    
+    @classmethod
+    def get_default_pk(cls):
+        style, created = cls.objects.get_or_create(
+            name='TKD'
+        )
+        return style.pk
+
 class Belt(models.Model):
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
     degree = models.IntegerField(unique=True)
     name = models.CharField(max_length=50)
 
@@ -65,7 +81,7 @@ class Belt(models.Model):
 class Award(models.Model):
     """Model representing a type of award."""
     name = models.CharField(max_length=200)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     def __str__(self):
         """string for representing the award"""
@@ -131,7 +147,7 @@ class AssessmentUnit(models.Model):
 class Grading(models.Model):
     grading_type = models.CharField(max_length=2, choices=GRADINGS)
     grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['-grading_datetime', 'grading_type']
@@ -152,7 +168,7 @@ class GradingResult(models.Model):
     is_letter = models.BooleanField(default=False)
     gradinginvite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Grading Invite')
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
     
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -173,7 +189,7 @@ class GradingInvite(models.Model):
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -243,7 +259,7 @@ class Payment(models.Model):
             return "Awaiting Payment"
         
 class PaymentType(models.Model):
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
     name = models.CharField(max_length=200)
     standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)
 
@@ -294,7 +310,7 @@ class MemberPropertyType(models.Model):
 
 class AssessmentUnitType(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['name']
@@ -304,7 +320,7 @@ class AssessmentUnitType(models.Model):
     
 class ClassType(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['name']
@@ -314,7 +330,7 @@ class ClassType(models.Model):
     
 class GradingType(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    style = models.ForeignKey('Style', on_delete=models.PROTECT)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['name']
@@ -322,12 +338,5 @@ class GradingType(models.Model):
     def __str__(self):
         return f'GradingType: {self.name}'
     
-class Style(models.Model):
-    name = models.CharField(max_length=200, unique=True)
 
-    class Meta:
-        ordering = ['name']
-
-    def __str__(self):
-        return f'{self.name}'
 
