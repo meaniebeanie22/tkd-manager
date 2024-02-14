@@ -11,10 +11,10 @@ from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
                                        AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
 
-from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
+from .models import (GRADINGS, LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
-                     RecurringPayment, MemberProperty, Belt)
+                     RecurringPayment, MemberProperty, Belt, AssessmentUnitType)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -262,7 +262,7 @@ class AssessmentUnitLetterForm(ModelForm):
 
     achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
     max_pts = IntegerField(initial=7, widget=HiddenInput())
-    unit = ChoiceField(choices= BLANK_CHOICE + ASSESSMENT_UNITS, required=False)
+    unit = ModelChoiceField(queryset=AssessmentUnitType.objects.all(), required=False)
     class Meta:
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']
