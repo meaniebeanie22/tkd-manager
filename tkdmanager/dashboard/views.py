@@ -89,10 +89,8 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
 
             # Iterate over form fields and add filters dynamically
             for field_name, value in form.cleaned_data.items():
-                print(f'Field, Value: {field_name} || {value}')
                 if field_name == 'member':
                     queryset = Member.objects.filter(pk=value.pk).all()
-                    print(f'Queryset: {queryset}')
                     return queryset
                 if value:
                     filters[field_name] = value
@@ -567,7 +565,7 @@ class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
             i['member'] = member_id
 
         if forbelt:
-            i['forbelt'] = forbelt
+            i['forbelt'] = get_object_or_404(Belt, pk=forbelt)
         elif member_id:
             i['forbelt'] = get_object_or_404(Belt, pk=(int(Member.objects.get(id=member_id).belt.pk) + 1))
 
