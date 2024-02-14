@@ -272,6 +272,15 @@ class AssessmentUnitLetterForm(ModelForm):
         model = AssessmentUnit
         fields = ['unit', 'achieved_pts', 'max_pts']
 
+class AssessmentUnitGradingResultForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(AssessmentUnitGradingResultForm, self).__init__(*args, **kwargs)
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
+
+    class Meta:
+        fields = ['unit', 'achieved_pts', 'max_pts']
+
 class GradingInviteForm(ModelForm):   
     class Meta:
         model = GradingInvite
@@ -345,3 +354,32 @@ class PaymentTypeForm(ModelForm):
     class Meta:
         model = PaymentType
         fields = ['name','standard_amount']
+
+class GradingSelectForm(Form):
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
+
+class GradingInviteBulkForm(ModelForm):
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
+    class Meta:
+        model = GradingInvite
+        fields = ['member', 'forbelt', 'grading']
+    
+    select = BooleanField(required=False, initial=True)
+
+    def has_changed(self):
+        """
+        Permit saving initial data
+        """
+        changed_data = super(ModelForm, self).has_changed()
+        return bool(self.initial or changed_data)
+
+class BeltForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+            
+    class Meta:
+        model = Belt
+        fields = ['name']

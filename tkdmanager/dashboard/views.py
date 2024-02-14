@@ -283,15 +283,6 @@ class AwardDelete(LoginRequiredMixin, DeleteView):
 
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
-
-class AssessmentUnitGradingResultForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
-        super(AssessmentUnitGradingResultForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        fields = ['unit', 'achieved_pts', 'max_pts']
         
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
@@ -700,24 +691,6 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
     else:
         return HttpResponse(status=204)
 
-class GradingSelectForm(Form):
-    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
-
-class GradingInviteBulkForm(ModelForm):
-    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
-    class Meta:
-        model = GradingInvite
-        fields = ['member', 'forbelt', 'grading']
-    
-    select = BooleanField(required=False, initial=True)
-
-    def has_changed(self):
-        """
-        Permit saving initial data
-        """
-        changed_data = super(ModelForm, self).has_changed()
-        return bool(self.initial or changed_data)
-
 @permission_required("dashboard.add_gradingresult")
 def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=0)
@@ -751,17 +724,6 @@ def gradinginvite_batch_create(request, **kwargs):
         formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':get_object_or_404(Belt, pk=(get_object_or_404(Member, pk=pk).belt.pk + 1))} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
-
-class BeltForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-            visible.field.widget.attrs['placeholder'] = visible.field.label
-            
-    class Meta:
-        model = Belt
-        fields = ['name']
 
 @permission_required("dashboard.add_belt")
 def manageBelts(request, **kwargs):
