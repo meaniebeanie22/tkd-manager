@@ -287,25 +287,25 @@ class AwardDetailView(LoginRequiredMixin, generic.DetailView):
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
-    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitGradingResultForm(request=request), extra=10-gradingresult.assessmentunit_set.all().count())
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitGradingResultForm, extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
-        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult, form_kwargs={'request': request})
         if formset.is_valid():
             formset.save()
             # Do something. Should generally end with a redirect. For example:
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
-        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult, form_kwargs={'request': request})
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResultLetter(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
-    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm(request=request), extra=10-gradingresult.assessmentunit_set.all().count())
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
-        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult, form_kwargs={'request': request})
         if formset.is_valid():
             for form in formset:
                 unit = form.cleaned_data.get('unit')
@@ -317,7 +317,7 @@ def manageGradingResultLetter(request, **kwargs):
             # Do something. Should generally end with a redirect. For example:
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
-        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult, form_kwargs={'request', request})
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})    
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
