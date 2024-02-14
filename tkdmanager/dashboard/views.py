@@ -160,7 +160,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
-        queryset = GradingResult.objects.filter(style__pk=self.request.session['pk']).all()
+        queryset = GradingResult.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET)
@@ -254,7 +254,7 @@ class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
     def get_queryset(self):
-        queryset = Award.objects.filter(style__pk=self.request.session['pk']).all()
+        queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
         return queryset
 
 class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
@@ -287,7 +287,7 @@ class AwardDetailView(LoginRequiredMixin, generic.DetailView):
 class AssessmentUnitGradingResultForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session['pk'])
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
         super(AssessmentUnitGradingResultForm, self).__init__(*args, **kwargs)
 
     class Meta:
@@ -333,7 +333,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
 
     def get_queryset(self):
-        queryset = Class.objects.filter(classtype__style__pk=self.request.session['pk']).all()
+        queryset = Class.objects.filter(classtype__style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = ClassSearchForm(self.request.GET)
@@ -505,7 +505,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
-        queryset = GradingInvite.objects.filter(style__pk=self.request.session['pk']).all()
+        queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = GradingInviteSearchForm(self.request.GET)
@@ -599,7 +599,7 @@ class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
 
     def get_queryset(self):
-        queryset = Grading.objects.filter(style__pk=self.request.session['pk']).all()
+        queryset = Grading.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
         return queryset
 
 class GradingDelete(LoginRequiredMixin, DeleteView):

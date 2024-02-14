@@ -262,7 +262,7 @@ class AssessmentUnitLetterForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session['pk'])
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
         super(AssessmentUnitLetterForm, self).__init__(*args, **kwargs)
 
     achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
