@@ -2,9 +2,7 @@ import os
 
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "railway_django_stack.settings")
-
-app = Celery("railway_django_stack")
+app = Celery("tkdmanager")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
