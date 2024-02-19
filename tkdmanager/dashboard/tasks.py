@@ -1,9 +1,9 @@
 from .models import RecurringPayment
 from django.db.models import Q
-from tkdmanager.celery import app
+from celery import shared_task
 import datetime
 
-@app.task
+@shared_task
 def recurpayments():
     print("Beginning to recur payments.")
     affected = 0
