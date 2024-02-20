@@ -31,7 +31,7 @@ from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
-    delta = datetime.combine(datetime.today(), time2) - datetime.combine(datetime.today(), time1)
+    delta = datetime.combine(timezone.now().date(), time2) - datetime.combine(timezone.now().date(), time1)
     # Calculate the time difference in seconds
     difference_seconds = delta.total_seconds()
     return difference_seconds
@@ -73,7 +73,7 @@ def token_delete(request):
     return HttpResponseRedirect(reverse_lazy('dash-get-token'))
 
 def health(request):
-    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': datetime.now()})
+    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': timezone.now()})
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
@@ -123,7 +123,7 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         context['hours_taught'] = hours
 
         # Find overdue payments + those for the next 6 months
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_later = today + timedelta(days=6 * 30)
         six_months_before = today - timedelta(days=6 * 30)
         recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=six_months_before) & Q(date_due__date__lte=six_months_later)).all()
@@ -455,7 +455,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
         grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).all()
@@ -473,7 +473,7 @@ class MemberGetPayments(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
         payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all().order_by("-date_created")
@@ -581,7 +581,7 @@ def gradinginvite_pdf_view(request, pk, **kwargs):
     data = {
         'gradinginvite': gi
     }
-    return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+    return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
 
 class GradingDetailView(LoginRequiredMixin, generic.DetailView):
     model = Grading
@@ -636,7 +636,7 @@ def gradingresult_pdf_view(request, pk, **kwargs):
             data['total_max_pts'] = maxpts
             data['total_achieved_pts'] = apts
             data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
-    return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+    return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
 
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
@@ -666,7 +666,7 @@ def gradingresult_batch_pdf_view(request, **kwargs):
         merger.close()
 
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="GradingResults_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="GradingResults_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response
     else:
         return HttpResponse(status=204)   
@@ -686,7 +686,7 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         merger.close()
 
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="GradingInvites_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="GradingInvites_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response  
     else:
         return HttpResponse(status=204)
@@ -795,7 +795,7 @@ def gradingresult_batch_email_view(request, **kwargs):
                 'Please see attached your Grading Certificate.\n - TKD Manager.',
                 'beaniemcc1@gmail.com',
                 (f'{gr.member.email}',),
-                attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
+                attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
             messages.append(message)
@@ -826,13 +826,13 @@ def gradinginvite_batch_email_view(request, **kwargs):
             data = {
                 'gradinginvite': gi
             }
-            # renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+            # renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
             message = mail.EmailMessage(
                 f'Grading Invite for {gi.member}',
                 'Please see attached your Grading Invite.\n - TKD Manager.',
                 'beaniemcc1@gmail.com',
                 (f'{gi.member.email}',),
-                attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
+                attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
             messages.append(message)

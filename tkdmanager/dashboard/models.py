@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
@@ -116,13 +115,13 @@ class Member(models.Model):
         return reverse('dash-member-detail', args=[str(self.id)])
 
     def get_class_types_pretty(self):
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_ago = today - timedelta(days=6 * 30)
         class_types = set(obj.get_type_display() for obj in self.students2classes.filter(date__gte=six_months_ago))
         return class_types
     
     def get_class_types(self):
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_ago = today - timedelta(days=6 * 30)
         classes_queryset = self.students2classes.filter(date__gte=six_months_ago)
         class_types = classes_queryset.values_list('type', flat=True).distinct()
