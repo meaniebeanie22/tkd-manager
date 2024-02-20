@@ -17,6 +17,10 @@ router.register(r'belt', views.BeltViewSet)
 router.register(r'recurringpayment', views.RecurringPaymentViewSet)
 router.register(r'memberproperty', views.MemberPropertyViewSet)
 router.register(r'memberpropertytype', views.MemberPropertyTypeViewSet)
+router.register(r'assessmentunittype', views.AssessmentUnitTypeViewSet)
+router.register(r'classtype', views.ClassTypeViewSet)
+router.register(r'gradingtype', views.GradingTypeViewSet)
+router.register(r'style', views.StyleViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

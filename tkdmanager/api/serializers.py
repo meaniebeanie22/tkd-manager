@@ -1,29 +1,30 @@
 from dashboard.models import (AssessmentUnit, Award, Class, Grading,
                               GradingInvite, GradingResult, Member, Payment,
                               PaymentType, MemberProperty, MemberPropertyType,
-                              RecurringPayment, Belt)
+                              RecurringPayment, Belt, ClassType, GradingType,
+                              AssessmentUnitType, Style)
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 class MemberPropertySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MemberProperty
-        fields = ['propertytype', 'member', 'name']
+        fields = ['url', 'propertytype', 'member', 'name']
 
 class MemberPropertyTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MemberPropertyType
-        fields = ['name', 'searchable']
+        fields = ['url', 'name', 'searchable']
 
 class BeltSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Belt
-        fields = ['degree', 'name']
+        fields = ['url', 'style', 'degree', 'name']
 
 class RecurringPaymentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RecurringPayment
-        fields = ['member', 'payments', 'last_payment_date', 'interval', 'amount', 'paymenttype']
+        fields = ['url', 'member', 'payments', 'last_payment_date', 'interval', 'amount', 'next_due', 'paymenttype']
 
 class ClassSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -49,12 +50,12 @@ class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
     assessmentunits = AssessmentUnitSerializer(many=True, read_only=True)
     class Meta:
         model = GradingResult
-        fields = ['url', 'member', 'grading', 'forbelt', 'assessor', 'comments', 'award', 'assessmentunits', 'is_letter', 'gradinginvite']
+        fields = ['url', 'member', 'grading', 'forbelt', 'assessor', 'comments', 'award', 'assessmentunits', 'is_letter', 'gradinginvite', 'style']
 
 class GradingInviteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GradingInvite
-        fields = ['url', 'member', 'forbelt', 'issued_by', 'payment', 'grading']
+        fields = ['url', 'member', 'forbelt', 'issued_by', 'payment', 'grading', 'style']
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -64,7 +65,7 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
 class GradingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Grading
-        fields = ['url', 'grading_type', 'grading_datetime']
+        fields = ['url', 'grading_type', 'grading_datetime', 'style']
 
 class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -74,5 +75,24 @@ class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
 class AwardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Award
+        fields = ['url', 'name', 'style']
+
+class ClassTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ClassType
+        fields = ['url', 'name', 'style'] 
+
+class AssessmentUnitTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AssessmentUnitType
+        fields = ['url', 'name', 'style'] 
+
+class GradingTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GradingType
+        fields = ['url', 'name', 'style']
+
+class StyleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Style
         fields = ['url', 'name']
-    

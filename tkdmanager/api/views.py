@@ -120,3 +120,35 @@ class RecurringPaymentViewSet(viewsets.ModelViewSet):
     queryset = RecurringPayment.objects.all()
     serializer_class = RecurringPaymentSerializer
     permission_classes = [APIAllowed]
+
+class GradingTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for grading types
+    """
+    queryset = GradingType.objects.all()
+    serializer_class = GradingTypeSerializer
+    permission_classes = [APIAllowed]
+
+class ClassTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for class types
+    """
+    queryset = ClassType.objects.all()
+    serializer_class = ClassTypeSerializer
+    permission_classes = [APIAllowed]
+
+class AssessmentUnitTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for assessmentunittypes
+    """
+    queryset = AssessmentUnitType.objects.all()
+    serializer_class = AssessmentUnitTypeSerializer
+    permission_classes = [APIAllowed]
+
+class StyleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for styles
+    """
+    queryset = Style.objects.all()
+    serializer_class = StyleSerializer
+    permission_classes = [APIAllowed]
