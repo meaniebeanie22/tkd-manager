@@ -49,6 +49,14 @@ class MemberPropertiesWidget(s2forms.ModelSelect2MultipleWidget):
     queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all()
 
 class GradingResultUpdateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingResultSearchForm, self).__init__(*args, **kwargs)
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["award"].queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["gradinginvite"].queryset = GradingInvite.objects.filter(grading__grading_type__style__pk=self.request.session.get('pk', 1))
+        self.fields['grading'].queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1))
+
     is_letter = BooleanField(disabled=True, required=False)
 
     class Meta:
@@ -110,6 +118,11 @@ class GradingResultCreateForm(ModelForm):
         }
 
 class MemberForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(MemberForm, self).__init__(*args, **kwargs)
+        self.fields["belt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+
     class Meta:
         model = Member
         fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active', 'properties']
@@ -120,7 +133,10 @@ class MemberForm(ModelForm):
         }
 
 class MemberSearchForm(Form):
-    BLANK_CHOICE = [('', '---------')]
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(MemberSearchForm, self).__init__(*args, **kwargs)
+        self.fields["belt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
 
     member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
     properties = ModelMultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
@@ -139,9 +155,12 @@ class ClassForm(ModelForm):
         }
 
 class ClassSearchForm(Form):
-    BLANK_CHOICE = [('', '---------')]
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(ClassSearchForm, self).__init__(*args, **kwargs)
+        self.fields["type"].queryset = ClassType.objects.filter(style__pk=self.request.session.get('pk', 1))
 
-    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False, widget=Select(attrs={
+    type = ModelChoiceField(queryset=ClassType.objects.all(), required=False, widget=Select(attrs={
         'style':'max-width: 175px;'
     }))
     date = DateField(required=False, widget=TextInput(attrs={

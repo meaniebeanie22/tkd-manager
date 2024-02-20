@@ -590,7 +590,7 @@ class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
 
     def get_queryset(self):
-        queryset = Grading.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1)).all()
         return queryset
 
 class GradingDelete(LoginRequiredMixin, DeleteView):
