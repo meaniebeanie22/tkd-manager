@@ -145,7 +145,6 @@ class AssessmentUnit(models.Model):
 
 class Grading(models.Model):
     grading_datetime = models.DateTimeField(verbose_name="Grading Date & Time")
-    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
     grading_type = models.ForeignKey('GradingType', on_delete=models.PROTECT, null=True)
 
     class Meta:
@@ -170,7 +169,6 @@ class GradingResult(models.Model):
     is_letter = models.BooleanField(default=False)
     gradinginvite = models.OneToOneField('GradingInvite', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Grading Invite')
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
-    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
     
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -191,7 +189,6 @@ class GradingInvite(models.Model):
     issued_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.OneToOneField('Payment', on_delete=models.SET_NULL, null=True, blank=True)
     grading = models.ForeignKey(Grading, on_delete=models.SET_NULL, null=True)
-    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
 
     class Meta:
         ordering = ['-grading__grading_datetime', '-forbelt', 'grading__grading_type', 'member__idnumber']
@@ -263,7 +260,7 @@ class Payment(models.Model):
             return "Awaiting Payment"
         
 class PaymentType(models.Model):
-    style = models.ForeignKey(Style, on_delete=models.PROTECT, default=Style.get_default_pk)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, blank=True, null=True)
     name = models.CharField(max_length=200)
     standard_amount = models.DecimalField(max_digits=7, decimal_places=2, help_text='Standard amount to be paid, in $', default=0)
 

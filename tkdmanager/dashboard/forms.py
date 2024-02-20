@@ -7,6 +7,7 @@ from django.forms.widgets import (CheckboxSelectMultiple, DateInput,
                                   DateTimeInput, Select, TimeInput)
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.db.models import Q
 from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
                                        AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
@@ -14,7 +15,8 @@ from django_select2 import forms as s2forms
 from .models import (GRADINGS, LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
-                     RecurringPayment, MemberProperty, Belt, AssessmentUnitType)
+                     RecurringPayment, MemberProperty, Belt, AssessmentUnitType,
+                     GradingType, ClassType)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -73,6 +75,15 @@ class GradingResultUpdateForm(ModelForm):
         }
 
 class GradingResultCreateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingResultSearchForm, self).__init__(*args, **kwargs)
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["award"].queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["gradinginvite"].queryset = GradingInvite.objects.filter(grading__grading_type__style__pk=self.request.session.get('pk', 1))
+        self.fields['grading'].queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1))
+        
+
     is_letter = BooleanField(required=False)
 
     class Meta:
@@ -160,7 +171,12 @@ class ClassSearchForm(Form):
     )
 
 class GradingResultSearchForm(Form):
-    BLANK_CHOICE = [('', '---------')]
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingResultSearchForm, self).__init__(*args, **kwargs)
+        self.fields["type"].queryset = GradingType.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["award"].queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1))
 
     member = ModelChoiceField(required=False, queryset=Member.objects.all(),
         widget=s2forms.ModelSelect2Widget(
@@ -184,13 +200,17 @@ class GradingResultSearchForm(Form):
         )
     )
     award = ModelChoiceField(queryset=Award.objects.all(), required=False)
-    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
+    type = ModelChoiceField(queryset=GradingType.objects.all(), required=False)
     date = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd'
     }))
 
 class GradingInviteSearchForm(Form):
-    BLANK_CHOICE = [('', '---------')]
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingInviteSearchForm, self).__init__(*args, **kwargs)
+        self.fields["type"].queryset = GradingType.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
 
     member = ModelChoiceField(required=False, queryset=Member.objects.all(),
         widget=s2forms.ModelSelect2Widget(
@@ -203,12 +223,17 @@ class GradingInviteSearchForm(Form):
         )
     )
     forbelt = ModelChoiceField(queryset=Belt.objects.all(), required=False, label='For Belt')
-    type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
+    type = ModelChoiceField(queryset=GradingType.objects.all(), required=False)
     date = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd'
     }))
 
 class PaymentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(RecurringPaymentUpdateForm, self).__init__(*args, **kwargs)
+        self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
+
     date_created = DateTimeField(disabled=True, initial=timezone.now())
 
     class Meta:
@@ -226,6 +251,11 @@ class PaymentForm(ModelForm):
         }
 
 class PaymentSearchForm(Form):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(PaymentSearchForm, self).__init__(*args, **kwargs)
+        self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
+
     member = ModelChoiceField(required=False, queryset=Member.objects.all(),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
@@ -281,7 +311,13 @@ class AssessmentUnitGradingResultForm(ModelForm):
     class Meta:
         fields = ['unit', 'achieved_pts', 'max_pts']
 
-class GradingInviteForm(ModelForm):   
+class GradingInviteForm(ModelForm):  
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingInviteForm, self).__init__(*args, **kwargs)
+        self.fields["grading"].queryset = Grading.objects.filter(style__pk=self.request.session.get('pk', 1))
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+
     class Meta:
         model = GradingInvite
         fields = ['member', 'forbelt', 'grading', 'issued_by', 'payment']
@@ -300,6 +336,11 @@ class GradingInviteForm(ModelForm):
         }
         
 class GradingForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingForm, self).__init__(*args, **kwargs)
+        self.fields["grading_type"].queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1))
+
     class Meta:
         model = Grading
         fields = ['grading_datetime', 'grading_type']
@@ -308,6 +349,11 @@ class GradingForm(ModelForm):
         }
 
 class RecurringPaymentUpdateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(RecurringPaymentUpdateForm, self).__init__(*args, **kwargs)
+        self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
+
     class Meta:
         model = RecurringPayment
         fields = ['member','payments','interval','amount','paymenttype']
@@ -324,6 +370,11 @@ class RecurringPaymentUpdateForm(ModelForm):
         }
 
 class RecurringPaymentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(RecurringPaymentForm, self).__init__(*args, **kwargs)
+        self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
+
     class Meta:
         model = RecurringPayment
         fields = ['member','interval','amount','paymenttype']
@@ -337,6 +388,11 @@ class RecurringPaymentForm(ModelForm):
         }
 
 class RecurringPaymentSearchForm(Form):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(RecurringPaymentSearchForm, self).__init__(*args, **kwargs)
+        self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
+
     member = ModelMultipleChoiceField(queryset=Member.objects.all(), required=False, widget=MemberWidget)
     last_payment_date = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd',
@@ -353,12 +409,23 @@ class RecurringPaymentSearchForm(Form):
 class PaymentTypeForm(ModelForm):
     class Meta:
         model = PaymentType
-        fields = ['name','standard_amount']
+        fields = ['name', 'standard_amount', 'style']
 
 class GradingSelectForm(Form):
-    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingSelectForm, self).__init__(*args, **kwargs)
+        self.fields["grading"].queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1))
+
+    grading = ModelChoiceField(queryset = Grading.objects.all(), required=False)
 
 class GradingInviteBulkForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(GradingInviteBulkForm, self).__init__(*args, **kwargs)
+        self.fields["grading"].queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1))
+        self.fields["forbelt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
+
     grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
     class Meta:
         model = GradingInvite

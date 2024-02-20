@@ -65,7 +65,7 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
 class GradingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Grading
-        fields = ['url', 'grading_type', 'grading_datetime', 'style']
+        fields = ['url', 'grading_type', 'grading_datetime']
 
 class PaymentTypeSerialzer(serializers.HyperlinkedModelSerializer):
     class Meta:

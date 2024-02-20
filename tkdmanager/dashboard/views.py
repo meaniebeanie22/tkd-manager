@@ -172,7 +172,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
                 if field_name == 'date' and value:
                     filters['grading__grading_datetime__date'] = value
                 elif field_name == 'type' and value:
-                    filters['grading__grading_type__exact'] = value
+                    filters['grading__grading_type'] = value
                 else:
                     if value:
                         filters[field_name] = value
@@ -465,7 +465,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
 
 class GetGradingsJSON(LoginRequiredMixin, View):
     def get(self, request):
-        gradings = Grading.objects.all()
+        gradings = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1)).all()
         data = [{'value': grading.id, 'label': str(grading)} for grading in gradings]
         return JsonResponse(data, safe=False)
 
@@ -508,7 +508,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
                 if field_name == 'date' and value:
                     filters['grading__grading_datetime__date'] = value
                 elif field_name == 'type' and value:
-                    filters['grading__grading_type__exact'] = value
+                    filters['grading__grading_type'] = value
                 else:
                     if value:
                         filters[field_name] = value
