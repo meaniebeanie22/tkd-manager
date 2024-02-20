@@ -55,6 +55,7 @@ urlpatterns = [
     path('grading/create', views.GradingCreate.as_view(), name='dash-add-grading'),
     path('gradingresult/<str:pk>/download', views.gradingresult_pdf_view, name='dash-grading-result-download'),
     path('token', views.token_display, name='dash-get-token'),
+    path('token/delete', views.token_delete, name='dash-delete-token'),
     path('gradinginvite/batchdownload', views.gradinginvite_batch_pdf_view, name='dash-batch-generate-gi-pdf'),
     path('gradingresult/batchdownload', views.gradingresult_batch_pdf_view, name='dash-batch-generate-gr-pdf'),
     path('gradinginvite/batch_create', views.gradinginvite_batch_create, name='dash-batch-add-grading-invite'),
@@ -66,4 +67,6 @@ urlpatterns = [
     path('recurringpayment/create', views.RecurringPaymentCreate.as_view(), name='dash-add-rpayment'),
     path('recurringpayment/<str:pk>/update', views.RecurringPaymentUpdate.as_view(), name='dash-update-rpayment'),
     path('recurringpayment/<str:pk>/delete', views.RecurringPaymentDelete.as_view(), name='dash-delete-rpayment'),
+    path('belts', views.manageBelts, name='dash-belts'),
+    path('style/<str:pk>', views.selectStyle, name='dash-select-style'),
 ]

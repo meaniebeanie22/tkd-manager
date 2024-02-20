@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -24,6 +26,7 @@ urlpatterns = [
     path('', RedirectView.as_view(url='dashboard/', permanent=True)),
     path('accounts/', include('django.contrib.auth.urls')),
     path("select2/", include("django_select2.urls")),
+    path('celery/test', views.test_task)
 ]
 
 from django.conf import settings

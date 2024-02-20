@@ -103,9 +103,30 @@
             var newLink = link.concat('&'.concat(jQuery.param(params)));
             anchor.attr("href", newLink)
         }
+
+        function setForbeltValue() {
+            var selectedMember = $('#id_member').val();  // Assuming 'id_member' is the ID of the member field
+            var forbeltField = $('#id_forbelt');  // Assuming 'id_forbelt' is the ID of the forbelt field
+            console.log(selectedMember)
+            console.log('Tring to fetch member details');
+            // Make an AJAX request to fetch the selected member's details
+            $.ajax({
+                url: '/dashboard/member/' + selectedMember + '/get-details',  // Replace with the actual URL to your member details view
+                dataType: 'json',
+                success: function(data) {
+                    // Set the forbelt field value to member's next belt
+                    forbeltField.val(data.next_belt);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching member details:', error);
+                    // Handle error, e.g., display a message to the user
+                }
+            });
+        }
         // Bind the functions to the change event of the member field
         $('#id_member').on("select2:select", function(e) {
             console.log('id_member changed');
+            setForbeltValue();
             updateGradingInviteOptions();
             alterGradingInvitePopupLink();
         });

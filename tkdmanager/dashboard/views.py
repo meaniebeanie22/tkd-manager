@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from typing import Any
+from convenient_formsets import ConvenientBaseModelFormSet
 
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
@@ -25,12 +26,12 @@ from rest_framework.authtoken.models import Token
 from .forms import *
 from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
                      Grading, GradingInvite, GradingResult, Member, Payment,
-                     PaymentType, RecurringPayment, determine_belt_type)
+                     PaymentType, RecurringPayment, Belt, AssessmentUnitType)
 
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
-    delta = datetime.combine(datetime.today(), time2) - datetime.combine(datetime.today(), time1)
+    delta = datetime.combine(timezone.now().date(), time2) - datetime.combine(timezone.now().date(), time1)
     # Calculate the time difference in seconds
     difference_seconds = delta.total_seconds()
     return difference_seconds
@@ -43,38 +44,65 @@ def index(request):
     # Number of members
     num_members = Member.objects.count()
     num_active_members = Member.objects.filter(active__exact=True).count()
+    belts = Belt.objects.all()
+    labels = [belt.name for belt in belts]
+    counts = [belt.member_set.count() for belt in belts]
 
     context = {
         'num_members': num_members,
         'num_active_members': num_active_members,
-        'belt_labels': ["None","White","Orange","Yellow","Blue","Red","CDB","Black"],
-        'belt_count': [Member.objects.filter(belt__exact=None).count(),Member.objects.filter(belt__in=tuple(range(8))).count(),Member.objects.filter(belt__in=tuple(range(8,16))).count(),Member.objects.filter(belt__in=tuple(range(16,24))).count(),Member.objects.filter(belt__in=tuple(range(24,32))).count(),Member.objects.filter(belt__in=tuple(range(32,39))).count(),Member.objects.filter(belt__in=tuple(range(39,47))).count(),Member.objects.filter(belt__in=tuple(range(47,56))).count()]
+        'belt_labels': labels,
+        'belt_count': counts,
     }
 
     return render(request, 'home.html', context=context)
 
-@login_required
+@permission_required('authtoken.add_token')
 def token_display(request):
-    token = Token.objects.get_or_create(user=request.user)
+    token, created = Token.objects.get_or_create(user=request.user)
     context = {
-        'token': token
+        'token': token.key
     }
 
     return render(request, 'token.html', context=context)
 
+@permission_required('authtoken.delete_token')
+def token_delete(request):
+    token = get_object_or_404(Token, user=request.user)
+    token.delete()
+    return HttpResponseRedirect(reverse_lazy('dash-get-token'))
+
 def health(request):
-    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': datetime.now()})
+    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': timezone.now()})
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ['-belt','last_name']
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        if query:
-            return Member.objects.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(idnumber__icontains=query) | Q(email__icontains=query) | Q(phone__iexact=query))
-        else:
-            return Member.objects.all()
+        queryset = Member.objects.all()
+
+        # Process form data to filter queryset
+        form = MemberSearchForm(self.request.GET)
+        if form.is_valid():
+            filters = {}
+
+            # Iterate over form fields and add filters dynamically
+            for field_name, value in form.cleaned_data.items():
+                if field_name == 'member' and value:
+                    queryset = Member.objects.filter(pk=value.pk).all()
+                    return queryset
+                if value:
+                    filters[field_name] = value
+            
+            # Apply all filters to the queryset in a single call
+            queryset = queryset.filter(**filters)
+
+        return queryset
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = MemberSearchForm(self.request.GET)
+        return context
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
@@ -95,7 +123,7 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
         context['hours_taught'] = hours
 
         # Find overdue payments + those for the next 6 months
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_later = today + timedelta(days=6 * 30)
         six_months_before = today - timedelta(days=6 * 30)
         recent_payments = self.get_object().payment_set.filter(Q(date_due__date__gte=six_months_before) & Q(date_due__date__lte=six_months_later)).all()
@@ -132,7 +160,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
-        queryset = GradingResult.objects.all()
+        queryset = GradingResult.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET)
@@ -196,7 +224,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         i = {}
         if member_id:
             i['member'] = member_id
-            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+            i['forbelt'] = get_object_or_404(Belt, pk=(Member.objects.get(id=member_id).belt.pk + 1))
         return i
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
@@ -225,6 +253,10 @@ class GradingResultDelete(LoginRequiredMixin, DeleteView):
 class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
+    def get_queryset(self):
+        queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        return queryset
+
 class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = Award
     fields = ['name']
@@ -251,20 +283,20 @@ class AwardDelete(LoginRequiredMixin, DeleteView):
 
 class AwardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Award
-
+        
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs['pk'])
-    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, fields=['unit','achieved_pts','max_pts'], extra=10-gradingresult.assessmentunit_set.all().count())
+    AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitGradingResultForm, extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
-        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult, form_kwargs={'request': request})
         if formset.is_valid():
             formset.save()
             # Do something. Should generally end with a redirect. For example:
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
-        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult, form_kwargs={'request': request})
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})
 
 @permission_required("dashboard.change_gradingresult")
@@ -273,7 +305,7 @@ def manageGradingResultLetter(request, **kwargs):
     AssessmentUnitInlineFormSet = inlineformset_factory(GradingResult, AssessmentUnit, form=AssessmentUnitLetterForm, extra=10-gradingresult.assessmentunit_set.all().count())
     
     if request.method == "POST":
-        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(request.POST, request.FILES, instance=gradingresult, form_kwargs={'request': request})
         if formset.is_valid():
             for form in formset:
                 unit = form.cleaned_data.get('unit')
@@ -285,14 +317,14 @@ def manageGradingResultLetter(request, **kwargs):
             # Do something. Should generally end with a redirect. For example:
             return HttpResponseRedirect(gradingresult.get_absolute_url())
     else:
-        formset = AssessmentUnitInlineFormSet(instance=gradingresult)
+        formset = AssessmentUnitInlineFormSet(instance=gradingresult, form_kwargs={'request', request})
     return render(request, 'dashboard/gradingresult_form2.html', {'formset': formset})    
 
 class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
 
     def get_queryset(self):
-        queryset = Class.objects.all()
+        queryset = Class.objects.filter(classtype__style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = ClassSearchForm(self.request.GET)
@@ -414,7 +446,7 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         gradinginvite = get_object_or_404(GradingInvite, pk=pk)
         response = {
-            'forbelt': gradinginvite.forbelt,
+            'forbelt': gradinginvite.forbelt.pk,
             'gradingpk': gradinginvite.grading.pk,
         }
         return JsonResponse(response)
@@ -423,7 +455,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
         grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).all()
@@ -441,7 +473,7 @@ class MemberGetPayments(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
-        today = datetime.now().date()
+        today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
         payments = selected_member.payment_set.filter(date_created__gte=six_months_before).all().order_by("-date_created")
@@ -453,6 +485,8 @@ class MemberGetDetails(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
         data = model_to_dict(selected_member)
+        data['next_belt'] = get_object_or_404(Belt, degree=(data.get('belt').degree + 1)).pk
+        data['belt'] = data['belt'].pk
         return JsonResponse(data, safe=False)
 
 class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
@@ -462,7 +496,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
-        queryset = GradingInvite.objects.all()
+        queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
         form = GradingInviteSearchForm(self.request.GET)
@@ -522,9 +556,9 @@ class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
             i['member'] = member_id
 
         if forbelt:
-            i['forbelt'] = forbelt
+            i['forbelt'] = get_object_or_404(Belt, pk=forbelt)
         elif member_id:
-            i['forbelt'] = int(Member.objects.get(id=member_id).belt) + 1
+            i['forbelt'] = get_object_or_404(Belt, pk=(int(Member.objects.get(id=member_id).belt.pk) + 1))
 
         if grading:
             i['grading'] = grading
@@ -547,13 +581,17 @@ def gradinginvite_pdf_view(request, pk, **kwargs):
     data = {
         'gradinginvite': gi
     }
-    return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+    return renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
 
 class GradingDetailView(LoginRequiredMixin, generic.DetailView):
     model = Grading
 
 class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
+
+    def get_queryset(self):
+        queryset = Grading.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        return queryset
 
 class GradingDelete(LoginRequiredMixin, DeleteView):
     model = Grading
@@ -598,7 +636,7 @@ def gradingresult_pdf_view(request, pk, **kwargs):
             data['total_max_pts'] = maxpts
             data['total_achieved_pts'] = apts
             data['total_percent'] = round((data['total_achieved_pts']/data['total_max_pts'])*100)
-    return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+    return renderers.PDFResponse('dashboard/gradingresult_pdf.html', f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
 
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist('selected_items')
@@ -628,7 +666,7 @@ def gradingresult_batch_pdf_view(request, **kwargs):
         merger.close()
 
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="GradingResults_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="GradingResults_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response
     else:
         return HttpResponse(status=204)   
@@ -648,28 +686,10 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         merger.close()
 
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="GradingInvites_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="GradingInvites_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf"'
         return response  
     else:
         return HttpResponse(status=204)
-
-class GradingSelectForm(Form):
-    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
-
-class GradingInviteBulkForm(ModelForm):
-    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
-    class Meta:
-        model = GradingInvite
-        fields = ['member', 'forbelt', 'grading']
-    
-    select = BooleanField(required=False, initial=True)
-
-    def has_changed(self):
-        """
-        Permit saving initial data
-        """
-        changed_data = super(ModelForm, self).has_changed()
-        return bool(self.initial or changed_data)
 
 @permission_required("dashboard.add_gradingresult")
 def gradinginvite_batch_create(request, **kwargs):
@@ -685,12 +705,7 @@ def gradinginvite_batch_create(request, **kwargs):
                 if form.cleaned_data['select']:
                     gi = form.save(commit=False)
                     gi.issued_by = request.user
-                    belt = determine_belt_type(gi.forbelt)
-                    # hardcoded values for blackbelt and coloured belt payment type pks bleuhh
-                    if belt == 'Black':
-                        pt=13
-                    else:
-                        pt=12
+                    pt=12
                     p = Payment(member=form.cleaned_data['member'], paymenttype=get_object_or_404(PaymentType, pk=pt), amount_due=get_object_or_404(PaymentType, pk=pt).standard_amount)
                     p.save()
                     gi.payment = p
@@ -706,9 +721,31 @@ def gradinginvite_batch_create(request, **kwargs):
         # GET request
         pks = request.GET.getlist('selected_items')
         GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=len(pks))
-        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':(get_object_or_404(Member, pk=pk).belt + 1)} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
+        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':get_object_or_404(Belt, pk=(get_object_or_404(Member, pk=pk).belt.pk + 1))} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
         gradingselectform = GradingSelectForm(prefix="miscselect")
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
+
+@permission_required("dashboard.add_belt")
+def manageBelts(request, **kwargs):
+    BeltFormSet = modelformset_factory(Belt, form=BeltForm, formset=ConvenientBaseModelFormSet, can_delete=True, can_order=True)
+
+    if request.method == "POST":
+        formset = BeltFormSet(request.POST, request.FILES, prefix='belt-formset')
+        if formset.is_valid():
+            no_forms = len(formset)
+            for i, form in enumerate(formset.ordered_forms):
+                belt = form.save(commit=False)
+                belt.degree = no_forms - i
+                belt.save()
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                print(f'Deleting obj: {obj}')
+                obj.delete()
+        else:
+            pass
+    else:
+        formset = BeltFormSet(prefix='belt-formset')
+    return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 @login_required
 def batch_gradinginvite_revise(request, **kwargs):
@@ -758,7 +795,7 @@ def gradingresult_batch_email_view(request, **kwargs):
                 'Please see attached your Grading Certificate.\n - TKD Manager.',
                 'beaniemcc1@gmail.com',
                 (f'{gr.member.email}',),
-                attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
+                attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
             messages.append(message)
@@ -789,13 +826,13 @@ def gradinginvite_batch_email_view(request, **kwargs):
             data = {
                 'gradinginvite': gi
             }
-            # renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', data)
+            # renderers.PDFResponse('dashboard/gradinginvite_pdf.html', f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', data)
             message = mail.EmailMessage(
                 f'Grading Invite for {gi.member}',
                 'Please see attached your Grading Invite.\n - TKD Manager.',
                 'beaniemcc1@gmail.com',
                 (f'{gi.member.email}',),
-                attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{datetime.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
+                attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
             )
             print(f'EmailMessage: {message}')
             messages.append(message)
@@ -864,3 +901,7 @@ class PaymentTypeDetailView(LoginRequiredMixin, generic.DetailView):
 
 class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
     model = PaymentType
+
+def selectStyle(request, pk):
+    request.session['style'] = pk
+    return HttpResponse()

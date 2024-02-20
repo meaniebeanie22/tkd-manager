@@ -13,6 +13,10 @@ router.register(r'payment', views.PaymentViewSet)
 router.register(r'paymenttype', views.PaymentTypeViewSet)
 router.register(r'award', views.AwardViewSet)
 router.register(r'class', views.ClassViewSet)
+router.register(r'belt', views.BeltViewSet)
+router.register(r'recurringpayment', views.RecurringPaymentViewSet)
+router.register(r'memberproperty', views.MemberPropertyViewSet)
+router.register(r'memberpropertytype', views.MemberPropertyTypeViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

@@ -7,7 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     pkg-config \
     libcairo2-dev \
-    python3-dev
+    python3-dev 
+
+RUN apt-get install --assume-yes git
 
 WORKDIR /app
 

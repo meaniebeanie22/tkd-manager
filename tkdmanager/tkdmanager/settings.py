@@ -49,10 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_addanother',
     'dashboard.apps.DashboardConfig',
+    "django_celery_beat",
+    "django_celery_results",
     'rest_framework',
     'rest_framework.authtoken',
     'api.apps.ApiConfig',
     'django_select2',
+    'convenient_formsets',
 ]
 
 MIDDLEWARE = [
@@ -92,6 +95,23 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("GOOGLE_EMAIL_ADDRESS")
 EMAIL_HOST_PASSWORD = os.environ.get("GOOGLE_APP_PASSWORD")
+
+REDIS_URL = f"redis://{os.environ.get('REDISUSER', default='default')}:{os.environ.get('REDISPASSWORD', default='')}@{os.environ.get('REDISHOST', default='redis')}:{os.environ.get('REDISPORT', default=6379)}"
+
+# CELERY CONFIG
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", default="django-db")
+CELERY_BEAT_SCHEDULER = os.environ.get(
+    "CELERY_BEAT_SCHEDULER", default="django_celery_beat.schedulers.DatabaseScheduler"
+)
+
+# REDIS CACHE CONFIG
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -134,7 +154,7 @@ TIME_ZONE = 'Australia/Melbourne'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -160,7 +180,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-STATIC_ROOT= os.path.join(BASE_DIR,'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 

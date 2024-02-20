@@ -11,10 +11,10 @@ from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
                                        AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
 
-from .models import (ASSESSMENT_UNITS, BELT_CHOICES, GRADINGS, LETTER_GRADES,
+from .models import (GRADINGS, LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
-                     RecurringPayment)
+                     RecurringPayment, MemberProperty, Belt, AssessmentUnitType)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -38,6 +38,13 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
         'idnumber__istartswith'
     ]
     queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
+
+class MemberPropertiesWidget(s2forms.ModelSelect2MultipleWidget):
+    model = MemberProperty
+    search_fields = [
+        'name__icontains'
+    ]
+    queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all()
 
 class GradingResultUpdateForm(ModelForm):
     is_letter = BooleanField(disabled=True, required=False)
@@ -94,11 +101,19 @@ class GradingResultCreateForm(ModelForm):
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active']
+        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active', 'properties']
         widgets = {
             'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+            'properties': MemberPropertiesWidget,
         }
+
+class MemberSearchForm(Form):
+    BLANK_CHOICE = [('', '---------')]
+
+    member = ModelChoiceField(required=False, queryset=Member.objects.all(), widget=MemberWidget)
+    properties = ModelMultipleChoiceField(required=False, queryset = MemberProperty.objects.filter(propertytype__searchable__exact=True).all(), widget=MemberPropertiesWidget)
+    belt = ModelChoiceField(queryset=Belt.objects.all(), required=False)
 
 class ClassForm(ModelForm):
     class Meta:
@@ -157,7 +172,7 @@ class GradingResultSearchForm(Form):
             ]
         )
     )
-    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
+    forbelt = ModelChoiceField(queryset=Belt.objects.all(), required=False, label='For Belt')
     assesor = ModelChoiceField(required=False, queryset=Member.objects.all().exclude(team_leader_instructor__exact=''),
         widget=s2forms.ModelSelect2Widget(
             model=Member, 
@@ -187,7 +202,7 @@ class GradingInviteSearchForm(Form):
             ],
         )
     )
-    forbelt = ChoiceField(choices=BLANK_CHOICE + BELT_CHOICES, required=False, label='For Belt')
+    forbelt = ModelChoiceField(queryset=Belt.objects.all(), required=False, label='For Belt')
     type = ChoiceField(choices=BLANK_CHOICE + GRADINGS, required=False)
     date = DateField(required=False, widget=TextInput(attrs={
         'placeholder': 'YYYY-mm-dd'
@@ -245,11 +260,25 @@ class PaymentSearchForm(Form):
 class AssessmentUnitLetterForm(ModelForm):
     BLANK_CHOICE = [(None, '---------')]
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(AssessmentUnitLetterForm, self).__init__(*args, **kwargs)
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
+
     achieved_pts = ChoiceField(choices=enumerate(LETTER_GRADES), initial=4, required=False)
     max_pts = IntegerField(initial=7, widget=HiddenInput())
-    unit = ChoiceField(choices= BLANK_CHOICE + ASSESSMENT_UNITS, required=False)
+    unit = ModelChoiceField(queryset=AssessmentUnitType.objects.all(), required=False)
     class Meta:
         model = AssessmentUnit
+        fields = ['unit', 'achieved_pts', 'max_pts']
+
+class AssessmentUnitGradingResultForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(AssessmentUnitGradingResultForm, self).__init__(*args, **kwargs)
+        self.fields["unit"].queryset = AssessmentUnitType.objects.filter(style__pk=self.request.session.get('pk', 1))
+
+    class Meta:
         fields = ['unit', 'achieved_pts', 'max_pts']
 
 class GradingInviteForm(ModelForm):   
@@ -325,3 +354,32 @@ class PaymentTypeForm(ModelForm):
     class Meta:
         model = PaymentType
         fields = ['name','standard_amount']
+
+class GradingSelectForm(Form):
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
+
+class GradingInviteBulkForm(ModelForm):
+    grading = ModelChoiceField(queryset=Grading.objects.all(), required=False)
+    class Meta:
+        model = GradingInvite
+        fields = ['member', 'forbelt', 'grading']
+    
+    select = BooleanField(required=False, initial=True)
+
+    def has_changed(self):
+        """
+        Permit saving initial data
+        """
+        changed_data = super(ModelForm, self).has_changed()
+        return bool(self.initial or changed_data)
+
+class BeltForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+            
+    class Meta:
+        model = Belt
+        fields = ['name']
