@@ -476,3 +476,8 @@ class StyleForm(ModelForm):
     class Meta:
         model = Style
         fields = ['name']
+
+class AssessmentUnitTypeForm(ModelForm):
+    class Meta:
+        model = AssessmentUnitType
+        fields = ['name', 'style']

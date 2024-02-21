@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>TKD Manager - Manage Styles</title>
+<title>TKD Manager - Manage Assessable Units</title>
 {% endblock %}
 
 {% block extrahead %}
@@ -15,12 +15,12 @@
     window.addEventListener('load', function(event) {
         new ConvenientFormset({
             'formsetPrefix': '{{ formset.prefix }}',
-            'formsContainerSelector': '#style-formset #style-forms-container',
-            'formSelector': '.style-form',
+            'formsContainerSelector': '#assessmentunittype-formset #assessmentunittype-forms-container',
+            'formSelector': '.assessmentunittype-form',
 
             'canAddForms': true,
-            'addFormButtonSelector': '#style-formset #add-form-button',
-            'emptyFormTemplateSelector': '#style-formset #empty-form-template',
+            'addFormButtonSelector': '#assessmentunittype-formset #add-form-button',
+            'emptyFormTemplateSelector': '#assessmentunittype-formset #empty-form-template',
 
             'canDeleteForms': true,
             'deleteFormButtonSelector': '.delete-form-button',
@@ -30,22 +30,22 @@
 {% endblock %}
 
 {% block content %}
-<h4>Manage Styles</h4>
+<h4>Manage Assessable Units</h4>
 
 <!-- Render formset using the following basic structure -->
 <form method="post">
     {% csrf_token %}
-    <div id="style-formset">
-    <div id="style-forms-container">
-        {% for style_form in formset.forms %}
-        <div class="row style-form">
-            <div class="col" style="max-width: 350px;">
-                {{ style_form.id }} <!-- hidden field needed for modelformset -->
-                {{ style_form.name }}
+    <div id="assessmentunittype-formset">
+    <div id="assessmentunittype-forms-container">
+        {% for assessmentunittype_form in formset.forms %}
+        <div class="row assessmentunittype-form">
+            <div class="col" assessmentunittype="max-width: 350px;">
+                {{ assessmentunittype_form.id }} <!-- hidden field needed for modelformset -->
+                {{ assessmentunittype_form.name }}
             </div>
             <div class="col">
                 {% if formset.can_delete %}
-                    {{ style_form.DELETE }}
+                    {{ assessmentunittype_form.DELETE }}
                     <input type="button" class="btn btn-outline-danger btn-outline-thicker delete-form-button" value="Delete">
                 {% endif %}
             </div>
@@ -57,8 +57,8 @@
     <div>
     </div>
     <template id="empty-form-template">
-        <div class="row style-form">
-            <div class="col" style="max-width: 350px;">
+        <div class="row assessmentunittype-form">
+            <div class="col" assessmentunittype="max-width: 350px;">
                 {{ formset.empty_form.name }}
             </div>
             <div class="col">

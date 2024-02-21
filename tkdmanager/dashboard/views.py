@@ -1002,3 +1002,22 @@ def manageStyles(request, **kwargs):
     else:
         formset = StyleFormSet(prefix='style-formset', queryset=Style.objects.all())
     return render(request, "dashboard/manage_styles.html", {"formset": formset})
+
+@permission_required("dashboard.add_assessmentunittype")
+def manageAssessmentUnitTypes(request, **kwargs):
+    AssessmentUnitTypeFormSet = modelformset_factory(AssessmentUnitType, form=AssessmentUnitTypeForm, formset=ConvenientBaseModelFormSet, can_delete=True)
+
+    if request.method == "POST":
+        formset = AssessmentUnitTypeFormSet(request.POST, request.FILES, prefix='belt-formset')
+        if formset.is_valid():
+            for form in formset.forms:
+                aut = form.save(commit=False)
+                aut.style = request.session.get('style', 1)
+                aut.save()
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                print(f'Deleting obj: {obj}')
+                obj.delete()
+    else:
+        formset = AssessmentUnitTypeFormSet(prefix='assessmentunittype-formset', queryset=AssessmentUnitType.objects.all())
+    return render(request, "dashboard/manage_assessmentunittypes.html", {"formset": formset})

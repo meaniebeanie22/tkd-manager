@@ -70,4 +70,5 @@ urlpatterns = [
     path('belts', views.manageBelts, name='dash-belts'),
     path('style/<str:pk>', views.selectStyle, name='dash-select-style'),
     path('styles', views.manageStyles, name='dash-styles'),
+    path('assessableunits', views.manageAssessmentUnitTypes, name='dash-assessableunits'),
 ]
