@@ -5,6 +5,7 @@ from django.db.models import F
 from django.urls import \
     reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 TL_INST_RANKS = [
     ('T1','Team Leader Level 1'),
@@ -285,6 +286,23 @@ class MemberPropertyType(models.Model):
     # Instructor level, or qualifications
     name = models.CharField(max_length=200)
     searchable = models.BooleanField(default=False)
+    style = models.ForeignKey(Style, on_delete=models.PROTECT, blank=True, null=True)
+    teacher_property = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        """
+        There can only be one type with the teacher_property attr set to true
+        """
+        # get all memberpropertytypes
+        mpts = MemberPropertyType.objects.all()
+        mpts = mpts.filter(style__pk=self.style.pk) # filter them to find ones with the same style
+        teacherpropertyexists = mpts.filter(teacher_property__exact=True).exists() # see if there is a teacher propertytype in the style's memberpropertytypes
+        if teacherpropertyexists:
+            # This below line will render error by breaking page, you will see
+            raise ValidationError(
+                "There must only be one teacher propertytype for each style!"
+            )
+        return super(MemberPropertyType, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['name']

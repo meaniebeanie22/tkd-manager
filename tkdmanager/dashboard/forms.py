@@ -39,7 +39,8 @@ class InstructorsWidget(s2forms.ModelSelect2MultipleWidget):
         'last_name__icontains',
         'idnumber__istartswith'
     ]
-    queryset = Member.objects.all().exclude(team_leader_instructor__exact='')
+    # members who have a property who's propertytype has teacher_property set to true - will need to be filtered to a specific style
+    queryset = Member.objects.filter(properties__propertytype__teacher_property__exact=True).all()
 
 class MemberPropertiesWidget(s2forms.ModelSelect2MultipleWidget):
     model = MemberProperty
