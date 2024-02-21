@@ -1,11 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-  <title>TKD Manager - Dashboard</title>
+  <title>{{ style }} Manager - Dashboard</title>
 {% endblock %}
 
 {% block content %}
-  <h1>TKD Manager Dashboard</h1>
+  <h1>{{ style }} Manager Dashboard</h1>
   <ul>
     <li><strong>Total Members:</strong> {{ num_members }}</li>
     <li><strong>Active Members:</strong> {{ num_active_members }}</li>
