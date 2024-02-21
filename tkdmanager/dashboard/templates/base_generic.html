@@ -37,8 +37,23 @@
                   </button>
                   <ul class="dropdown-menu">
                     {% for s in styles %}
-                      <li><button class="btn btn-link dropdown-item" onclick="{% url 'dash-select-style' s.pk %}; window.location.reload();">{{ s }}</button></li>
+                      <li><button class="btn btn-link dropdown-item" onclick="changeStyle();">{{ s }}</button></li>
                     {% endfor %}
+                    <script>
+                      function changeStyle() {
+                        const link = {% url 'dash-select-style' s.pk %};
+                        $.ajax({
+                          url: link,
+                          success: function() {
+                              console.log('Style changed');
+                          },
+                          error: function() {
+                              console.error('Style didnt change');
+                          }
+                        });
+                        location.reload();
+                      }
+                    </script>
                   </ul>
                 </div>
                 <ul class="list-unstyled ps-0">
