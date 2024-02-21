@@ -792,16 +792,21 @@ def manageBelts(request, **kwargs):
 
     if request.method == "POST":
         formset = BeltFormSet(request.POST, request.FILES, prefix='belt-formset')
+        print(f'Belt Formset Data: {formset.data}')
         if formset.is_valid():
+            print('Belt Formset Valid')
             no_forms = len(formset)
             for i, form in enumerate(formset.ordered_forms):
                 belt = form.save(commit=False)
                 belt.degree = no_forms - i
                 belt.style = request.session.get('style', 1)
                 belt.save()
+                print(f'Saved belt: {belt}')
+                print(f'Saved belt pk: {belt.pk}')
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
                 obj.delete()
+            print('Belt Formset: Done')
         else:
             pass
     else:
