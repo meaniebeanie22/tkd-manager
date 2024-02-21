@@ -2,6 +2,7 @@
  * Convenient Formsets 2.0 (https://github.com/tiesjan/django-convenient-formsets/)
  * Copyright 2021-present Ties Jan Hefting
  * Licensed under BSD 3-Clause License
+ * CHANGED 2102
  */
 'use strict';
 
