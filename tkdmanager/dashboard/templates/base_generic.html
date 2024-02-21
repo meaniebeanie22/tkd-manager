@@ -51,7 +51,9 @@
                               console.error('Style didnt change');
                           }
                         });
-                        location.reload();
+                        setTimeout(function() {
+                          location.reload();
+                        }, 100);
                       }
                     </script>
                   </ul>
