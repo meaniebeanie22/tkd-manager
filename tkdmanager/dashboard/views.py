@@ -959,9 +959,21 @@ class PaymentTypeCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
     model = PaymentType
     form_class = PaymentTypeForm
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
+
 class PaymentTypeUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = PaymentType
     form_class = PaymentTypeForm
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        c = super().get_context_data(**kwargs)
+        popup = self.request.GET.get('_popup', False)
+        c['popup'] = popup
+        return c
 
 class PaymentTypeDelete(LoginRequiredMixin, DeleteView):
     model = PaymentType

@@ -50,12 +50,12 @@ class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
     assessmentunits = AssessmentUnitSerializer(many=True, read_only=True)
     class Meta:
         model = GradingResult
-        fields = ['url', 'member', 'grading', 'forbelt', 'assessor', 'comments', 'award', 'assessmentunits', 'is_letter', 'gradinginvite', 'style']
+        fields = ['url', 'member', 'grading', 'forbelt', 'assessor', 'comments', 'award', 'assessmentunits', 'is_letter', 'gradinginvite']
 
 class GradingInviteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GradingInvite
-        fields = ['url', 'member', 'forbelt', 'issued_by', 'payment', 'grading', 'style']
+        fields = ['url', 'member', 'forbelt', 'issued_by', 'payment', 'grading']
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -28,9 +28,19 @@
           <div style="position: sticky; top: 0px;">
             {% block sidebar %}
             <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
-                <a href="{% url 'dash-index' %}" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-                  <span class="fs-5 fw-semibold">TKD Manager</span>
-                </a>
+                <div class="btn-group">
+                  <form action="{% url 'dash-index' %}">
+                    <button type="submit" class="btn btn-light"><span class="fs-5 fw-semibold">{{ style }} Manager</span></button>
+                  </form>
+                  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    {% for s in styles %}
+                      <li><a class="dropdown-item" href="{% url 'dash-select-style' s.pk %}">{{ s }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
                 <ul class="list-unstyled ps-0">
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#member-collapse" aria-expanded="false">
