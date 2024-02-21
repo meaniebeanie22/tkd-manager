@@ -37,13 +37,13 @@
                   </button>
                   <ul class="dropdown-menu">
                     {% for s in styles %}
-                      <li><button class="btn btn-link dropdown-item" onclick="changeStyle();">{{ s }}</button></li>
+                      <li><button class="btn btn-link dropdown-item" onclick="changeStyle({{ s.pk }});">{{ s }}</button></li>
                     {% endfor %}
                     <script>
-                      function changeStyle() {
-                        const link = {% url 'dash-select-style' s.pk %};
+                      function changeStyle(pk) {
+                        const link = 'dashboard/style/';
                         $.ajax({
-                          url: link,
+                          url: link + pk,
                           success: function() {
                               console.log('Style changed');
                           },
