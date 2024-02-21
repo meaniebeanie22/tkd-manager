@@ -37,7 +37,7 @@
                   </button>
                   <ul class="dropdown-menu">
                     {% for s in styles %}
-                      <li><a class="dropdown-item" href="{% url 'dash-select-style' s.pk %}">{{ s }}</a></li>
+                      <li><button class="btn btn-link dropdown-item" onclick="{% url 'dash-select-style' s.pk %}; window.location.reload();">{{ s }}</button></li>
                     {% endfor %}
                   </ul>
                 </div>

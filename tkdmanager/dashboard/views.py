@@ -988,7 +988,6 @@ class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
 
 def selectStyle(request, pk):
     request.session['style'] = pk
-    return HttpResponse()
 
 @permission_required("dashboard.add_style")
 def manageStyles(request, **kwargs):
