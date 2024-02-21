@@ -245,7 +245,7 @@ class GradingInviteSearchForm(Form):
 class PaymentForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(RecurringPaymentUpdateForm, self).__init__(*args, **kwargs)
+        super(PaymentForm, self).__init__(*args, **kwargs)
         self.fields["paymenttype"].queryset = PaymentType.objects.filter(Q(style__pk=self.request.session.get('pk', 1)) | Q(style__pk__isnull=True))
 
     date_created = DateTimeField(disabled=True, initial=timezone.now())
