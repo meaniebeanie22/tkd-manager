@@ -801,7 +801,6 @@ def manageBelts(request, **kwargs):
                 belt.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
-                print(f'Deleting obj: {obj}')
                 obj.delete()
         else:
             pass
@@ -859,7 +858,6 @@ def gradingresult_batch_email_view(request, **kwargs):
                 (f'{gr.member.email}',),
                 attachments=[(f'GradingResult_{gr.member.first_name}{gr.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradingresult_pdf.html', data).getvalue(), 'application/pdf')]
             )
-            print(f'EmailMessage: {message}')
             messages.append(message)
         connection = mail.get_connection()  # Use default email connection
         connection.send_messages(messages)
@@ -896,7 +894,6 @@ def gradinginvite_batch_email_view(request, **kwargs):
                 (f'{gi.member.email}',),
                 attachments=[(f'GradingInvitation_{gi.member.first_name}{gi.member.last_name}_{timezone.now().strftime("%d%m%y%H%M%S")}.pdf', renderers.render_to_pdf('dashboard/gradinginvite_pdf.html', data).getvalue(), 'application/pdf')]
             )
-            print(f'EmailMessage: {message}')
             messages.append(message)
         connection = mail.get_connection()  # Use default email connection
         connection.send_messages(messages)
@@ -988,7 +985,6 @@ class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
 
 def selectStyle(request, pk):
     request.session['style'] = pk
-    print(f'Request Session Data: {request.session.items()}')
     return HttpResponse()
 
 @permission_required("dashboard.add_style")
@@ -1009,7 +1005,6 @@ def manageAssessmentUnitTypes(request, **kwargs):
 
     if request.method == "POST":
         formset = AssessmentUnitTypeFormSet(request.POST, request.FILES, prefix='assessmentunittype-formset')
-        print(f'Formset data: {formset.data}')
         if formset.is_valid():
             for form in formset.forms:
                 aut = form.save(commit=False)
@@ -1017,7 +1012,6 @@ def manageAssessmentUnitTypes(request, **kwargs):
                 aut.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
-                print(f'Deleting obj: {obj}')
                 obj.delete()
     else:
         formset = AssessmentUnitTypeFormSet(prefix='assessmentunittype-formset', queryset=AssessmentUnitType.objects.filter(style__pk=request.session.get('style', 1)))
