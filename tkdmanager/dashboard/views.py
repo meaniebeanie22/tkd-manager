@@ -788,7 +788,7 @@ def gradinginvite_batch_create(request, **kwargs):
 
 @permission_required("dashboard.add_belt")
 def manageBelts(request, **kwargs):
-    BeltFormSet = modelformset_factory(Belt, form=BeltForm, formset=ConvenientBaseModelFormSet, can_delete=True, can_order=True)
+    BeltFormSet = modelformset_factory(Belt, form=BeltForm, formset=ConvenientBaseModelFormSet, extra=1, can_delete=True, can_order=True)
 
     if request.method == "POST":
         formset = BeltFormSet(request.POST, request.FILES, prefix='belt-formset')
