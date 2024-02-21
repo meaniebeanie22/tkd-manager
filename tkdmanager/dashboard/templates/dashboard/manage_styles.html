@@ -7,7 +7,7 @@
 {% block extrahead %}
 {% load static %}
 <!-- Include the formset's media -->
-{{ formset.media }}
+<script src="{% static 'convenient_formsets/convenient_formsets.js' %}"></script>
 
 <!-- Initialize a ConvenientFormset -->
 <script>
