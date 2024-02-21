@@ -1019,5 +1019,5 @@ def manageAssessmentUnitTypes(request, **kwargs):
                 print(f'Deleting obj: {obj}')
                 obj.delete()
     else:
-        formset = AssessmentUnitTypeFormSet(prefix='assessmentunittype-formset', queryset=AssessmentUnitType.objects.all())
+        formset = AssessmentUnitTypeFormSet(prefix='assessmentunittype-formset', queryset=AssessmentUnitType.filter(style__pk=request.session.get('style', 1)))
     return render(request, "dashboard/manage_assessmentunittypes.html", {"formset": formset})
