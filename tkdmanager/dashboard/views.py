@@ -83,7 +83,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
         queryset = Member.objects.all()
 
         # Process form data to filter queryset
-        form = MemberSearchForm(self.request.GET)
+        form = MemberSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
@@ -163,7 +163,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
         queryset = GradingResult.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
-        form = GradingResultSearchForm(self.request.GET)
+        form = GradingResultSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
@@ -327,7 +327,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
         queryset = Class.objects.filter(classtype__style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
-        form = ClassSearchForm(self.request.GET)
+        form = ClassSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
@@ -379,7 +379,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
         manager = Payment.objects
 
         # Process form data to filter queryset
-        form = PaymentSearchForm(self.request.GET)
+        form = PaymentSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
@@ -458,7 +458,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
-        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).all()
+        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).filter(grading__grading_type__style=request.session.get('pk', 1)).all()
 
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
@@ -499,7 +499,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
 
         # Process form data to filter queryset
-        form = GradingInviteSearchForm(self.request.GET)
+        form = GradingInviteSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
@@ -854,7 +854,7 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
         manager = RecurringPayment.objects
 
         # Process form data to filter queryset
-        form = RecurringPaymentSearchForm(self.request.GET)
+        form = RecurringPaymentSearchForm(self.request.GET, request=self.request)
         if form.is_valid():
             filters = {}
 
