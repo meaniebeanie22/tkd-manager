@@ -161,7 +161,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
-        queryset = GradingResult.objects.filter(style__pk=self.request.session.get('style', 1)).all()
+        queryset = GradingResult.objects.filter(grading__grading_type__style__pk=self.request.session.get('style', 1)).all()
 
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET, request=self.request)
@@ -537,7 +537,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
-        queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('style', 1)).all()
+        queryset = GradingInvite.objects.filter(grading__grading_type__style__pk=self.request.session.get('style', 1)).all()
 
         # Process form data to filter queryset
         form = GradingInviteSearchForm(self.request.GET, request=self.request)
