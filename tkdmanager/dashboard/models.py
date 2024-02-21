@@ -48,7 +48,7 @@ class Belt(models.Model):
     name = models.CharField(max_length=50)
 
     class Meta:
-        ordering = ['-degree']
+        ordering = ['-style', '-degree']
 
     @classmethod
     def get_default_pk(cls):
@@ -74,7 +74,7 @@ class Belt(models.Model):
         return super(Belt, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f'{self.style}: {self.name}'
     
 class Award(models.Model):
     """Model representing a type of award."""
@@ -83,7 +83,7 @@ class Award(models.Model):
 
     def __str__(self):
         """string for representing the award"""
-        return self.name 
+        return f'{self.style}: {self.name}' 
     
     def get_absolute_url(self):
         return reverse('dash-award-detail', args=[str(self.id)])
@@ -153,7 +153,7 @@ class Grading(models.Model):
         return self.grading_type.name
 
     def __str__(self):
-        return f'Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%d/%m/%Y")}'
+        return f'{self.grading_type.style} Grading: {self.get_grading_type_display()} on {self.grading_datetime.strftime("%d/%m/%Y")}'
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this member's grading results."""
