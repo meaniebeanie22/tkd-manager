@@ -21,6 +21,9 @@
   {% block extrahead %}{% endblock %}
 </head>
 <body>
+  {% for k,v in request.session %}
+    {{ k }}, {{ v }}
+  {% endfor %}
   {{ request.session }}
   <div class="container-fluid">
     <div class="row">
