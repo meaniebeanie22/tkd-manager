@@ -101,7 +101,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
         return queryset
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = MemberSearchForm(self.request.GET)
+        context['search_form'] = MemberSearchForm(self.request.GET, request=self.request)
         return context
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
@@ -184,7 +184,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = GradingResultSearchForm(self.request.GET)
+        context['search_form'] = GradingResultSearchForm(self.request.GET, request=self.request)
         return context
     
 class MemberCreate(LoginRequiredMixin, CreateView):
@@ -343,7 +343,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = ClassSearchForm(self.request.GET)
+        context['search_form'] = ClassSearchForm(self.request.GET, request=self.request)
         return context         
         
 class ClassDetailView(LoginRequiredMixin, generic.DetailView):
@@ -398,7 +398,7 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
             
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = PaymentSearchForm(self.request.GET)
+        context['search_form'] = PaymentSearchForm(self.request.GET, request=self.request)
         return context  
 
 class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
@@ -520,7 +520,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = GradingInviteSearchForm(self.request.GET)
+        context['search_form'] = GradingInviteSearchForm(self.request.GET, request=self.request)
         # get initial values for the checkboxes
         selected_pks = self.request.GET.getlist('selected_items')
         pks = [int(pk) for pk in selected_pks]
@@ -721,8 +721,8 @@ def gradinginvite_batch_create(request, **kwargs):
         # GET request
         pks = request.GET.getlist('selected_items')
         GradingInviteFormSet = modelformset_factory(GradingInvite, form=GradingInviteBulkForm, extra=len(pks))
-        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':get_object_or_404(Belt, pk=(get_object_or_404(Member, pk=pk).belt.pk + 1))} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites")
-        gradingselectform = GradingSelectForm(prefix="miscselect")
+        formset = GradingInviteFormSet(initial=[{'member':pk, 'forbelt':get_object_or_404(Belt, pk=(get_object_or_404(Member, pk=pk).belt.pk + 1))} for pk in pks], queryset=GradingInvite.objects.none(), prefix="gradinginvites", form_kwargs={'request', request})
+        gradingselectform = GradingSelectForm(prefix="miscselect", request=request)
     return render(request, "dashboard/gradinginvite_batch_create.html", {"formset": formset, 'miscform': gradingselectform})
 
 @permission_required("dashboard.add_belt")
@@ -736,6 +736,7 @@ def manageBelts(request, **kwargs):
             for i, form in enumerate(formset.ordered_forms):
                 belt = form.save(commit=False)
                 belt.degree = no_forms - i
+                belt.style = request.session.get('pk', 1)
                 belt.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
@@ -744,7 +745,7 @@ def manageBelts(request, **kwargs):
         else:
             pass
     else:
-        formset = BeltFormSet(prefix='belt-formset')
+        formset = BeltFormSet(prefix='belt-formset', queryset=Belt.objects.filter(style__pk=request.session.get('pk', 1)))
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 @login_required
@@ -869,7 +870,7 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
             
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_form'] = RecurringPaymentSearchForm(self.request.GET)
+        context['search_form'] = RecurringPaymentSearchForm(self.request.GET, request=self.request)
         return context 
 
 class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
