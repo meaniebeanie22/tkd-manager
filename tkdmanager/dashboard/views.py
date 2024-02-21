@@ -161,7 +161,7 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
-        queryset = GradingResult.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        queryset = GradingResult.objects.filter(style__pk=self.request.session.get('style', 1)).all()
 
         # Process form data to filter queryset
         form = GradingResultSearchForm(self.request.GET, request=self.request)
@@ -265,7 +265,7 @@ class AwardListView(LoginRequiredMixin, generic.ListView):
     model = Award
 
     def get_queryset(self):
-        queryset = Award.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        queryset = Award.objects.filter(style__pk=self.request.session.get('style', 1)).all()
         return queryset
 
 class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
@@ -345,7 +345,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
     model = Class
 
     def get_queryset(self):
-        queryset = Class.objects.filter(classtype__style__pk=self.request.session.get('pk', 1)).all()
+        queryset = Class.objects.filter(classtype__style__pk=self.request.session.get('style', 1)).all()
 
         # Process form data to filter queryset
         form = ClassSearchForm(self.request.GET, request=self.request)
@@ -499,14 +499,14 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         today = timezone.now().date()
         six_months_before = today - timedelta(days=6 * 30)
 
-        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).filter(grading__grading_type__style=request.session.get('pk', 1)).all()
+        grading_invites = selected_member.gradinginvite_set.filter(grading__grading_datetime__date__gte=six_months_before).filter(grading__grading_type__style=request.session.get('style', 1)).all()
 
         data = [{'value': invite.id, 'label': str(invite)} for invite in grading_invites]
         return JsonResponse(data, safe=False)
 
 class GetGradingsJSON(LoginRequiredMixin, View):
     def get(self, request):
-        gradings = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1)).all()
+        gradings = Grading.objects.filter(grading_type__style__pk=self.request.session.get('style', 1)).all()
         data = [{'value': grading.id, 'label': str(grading)} for grading in gradings]
         return JsonResponse(data, safe=False)
 
@@ -537,7 +537,7 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
-        queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('pk', 1)).all()
+        queryset = GradingInvite.objects.filter(style__pk=self.request.session.get('style', 1)).all()
 
         # Process form data to filter queryset
         form = GradingInviteSearchForm(self.request.GET, request=self.request)
@@ -641,7 +641,7 @@ class GradingListView(LoginRequiredMixin, generic.ListView):
     model = Grading
 
     def get_queryset(self):
-        queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('pk', 1)).all()
+        queryset = Grading.objects.filter(grading_type__style__pk=self.request.session.get('style', 1)).all()
         return queryset
 
 class GradingDelete(LoginRequiredMixin, DeleteView):
@@ -797,7 +797,7 @@ def manageBelts(request, **kwargs):
             for i, form in enumerate(formset.ordered_forms):
                 belt = form.save(commit=False)
                 belt.degree = no_forms - i
-                belt.style = request.session.get('pk', 1)
+                belt.style = request.session.get('style', 1)
                 belt.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
@@ -806,7 +806,7 @@ def manageBelts(request, **kwargs):
         else:
             pass
     else:
-        formset = BeltFormSet(prefix='belt-formset', queryset=Belt.objects.filter(style__pk=request.session.get('pk', 1)))
+        formset = BeltFormSet(prefix='belt-formset', queryset=Belt.objects.filter(style__pk=request.session.get('style', 1)))
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 @login_required
