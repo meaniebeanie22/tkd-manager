@@ -118,11 +118,6 @@ class GradingResultCreateForm(ModelForm):
         }
 
 class MemberForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-        super(MemberForm, self).__init__(*args, **kwargs)
-        self.fields["belt"].queryset = Belt.objects.filter(style__pk=self.request.session.get('pk', 1))
-
     class Meta:
         model = Member
         fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active', 'properties']

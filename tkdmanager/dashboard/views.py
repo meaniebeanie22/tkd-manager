@@ -226,6 +226,11 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
             i['member'] = member_id
             i['forbelt'] = get_object_or_404(Belt, pk=(Member.objects.get(id=member_id).belt.pk + 1))
         return i
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class GradingResultUpdate(LoginRequiredMixin, UpdateView):
     form_class = GradingResultUpdateForm
@@ -245,7 +250,12 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
             return reverse('dash-update-grading-result3', kwargs={'pk':self.object.pk})
         else:
             return reverse('dash-update-grading-result2', kwargs={'pk':self.object.pk})
-
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
 class GradingResultDelete(LoginRequiredMixin, DeleteView):
     model = GradingResult
     success_url = reverse_lazy("dash-gradingresults")
@@ -266,6 +276,11 @@ class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class AwardUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Award
@@ -276,6 +291,11 @@ class AwardUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class AwardDelete(LoginRequiredMixin, DeleteView):
     model = Award
@@ -364,9 +384,19 @@ class ClassCreate(LoginRequiredMixin, CreateView):
     model = Class
     form_class = ClassForm
 
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
 class ClassUpdate(LoginRequiredMixin, UpdateView):
     model = Class
     form_class = ClassForm
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class ClassDelete(LoginRequiredMixin, DeleteView):
     model = Class
@@ -421,7 +451,12 @@ class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         if member_id:
             i['member'] = member_id
         return i
-
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
 class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
@@ -431,6 +466,11 @@ class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
@@ -564,10 +604,20 @@ class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
             i['grading'] = grading
             
         return i
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class GradingInviteUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = GradingInvite
     form_class = GradingInviteForm
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         c = super().get_context_data(**kwargs)
@@ -606,6 +656,11 @@ class GradingCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class GradingUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
     model = Grading
@@ -616,6 +671,11 @@ class GradingUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         popup = self.request.GET.get('_popup', False)
         c['popup'] = popup
         return c
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 @login_required
 def gradingresult_pdf_view(request, pk, **kwargs):
@@ -877,9 +937,19 @@ class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
 
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
 class RecurringPaymentUpdate(LoginRequiredMixin, UpdateView):
     model = RecurringPayment
     form_class = RecurringPaymentUpdateForm
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 class RecurringPaymentDelete(LoginRequiredMixin, DeleteView):
     model = RecurringPayment
