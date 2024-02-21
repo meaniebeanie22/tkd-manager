@@ -799,7 +799,7 @@ def manageBelts(request, **kwargs):
             for i, form in enumerate(formset.ordered_forms):
                 belt = form.save(commit=False)
                 belt.degree = no_forms - i
-                belt.style = request.session.get('style', 1)
+                belt.style = get_object_or_404(Style, pk=request.session.get('style', 1))
                 belt.save()
                 print(f'Saved belt: {belt}')
                 print(f'Saved belt pk: {belt.pk}')
@@ -1013,7 +1013,7 @@ def manageAssessmentUnitTypes(request, **kwargs):
         if formset.is_valid():
             for form in formset.forms:
                 aut = form.save(commit=False)
-                aut.style = request.session.get('style', 1)
+                aut.style = get_object_or_404(Style, request.session.get('style', 1))
                 aut.save()
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
