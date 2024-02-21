@@ -241,6 +241,7 @@ const ConvenientFormset = function(options) {
                 const lastFormOrderValue = parseInt(
                     lastForm.querySelector(selector).value, 10
                 );
+                console.log('Last form order value: ' + lastFormOrderValue);
                 newFormOrderValue = lastFormOrderValue + 1;
             }
             else {
