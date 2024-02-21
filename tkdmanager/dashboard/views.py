@@ -526,7 +526,9 @@ class MemberGetDetails(LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
         data = model_to_dict(selected_member)
-        data['next_belt'] = get_object_or_404(Belt, degree=(data.get('belt').degree + 1)).pk
+        style = request.session.get('style', 1)
+        data['belt'] = data['belt'].filter(style__pk=style)
+        data['next_belt'] = get_object_or_404(Belt, style=style, degree=(data.get('belt').degree + 1)).pk
         data['belt'] = data['belt'].pk
         return JsonResponse(data, safe=False)
 
