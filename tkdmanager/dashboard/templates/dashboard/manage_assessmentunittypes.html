@@ -35,6 +35,7 @@
 <!-- Render formset using the following basic structure -->
 <form method="post">
     {% csrf_token %}
+    {{ formset.management_form }}
     <div id="assessmentunittype-formset">
     <div id="assessmentunittype-forms-container">
         {% for assessmentunittype_form in formset.forms %}
@@ -66,7 +67,6 @@
             </div>
         </div>
     </template>
-    {{ formset.management_form }}
     </div>
 </form>
 
