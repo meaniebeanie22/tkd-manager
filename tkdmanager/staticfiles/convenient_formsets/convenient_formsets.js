@@ -2,7 +2,6 @@
  * Convenient Formsets 2.0 (https://github.com/tiesjan/django-convenient-formsets/)
  * Copyright 2021-present Ties Jan Hefting
  * Licensed under BSD 3-Clause License
- * CHANGED 2102
  */
 'use strict';
 
@@ -236,20 +235,15 @@ const ConvenientFormset = function(options) {
             const selector = 'input[name$="ORDER"]';
             let newFormOrderValue;
             if (visibleForms.length) {
-                console.log('Setting new value...');
                 const lastForm = visibleForms[visibleForms.length - 1];
                 const lastFormOrderValue = parseInt(
                     lastForm.querySelector(selector).value, 10
                 );
-                console.log('Last form order value: ' + lastFormOrderValue);
                 newFormOrderValue = lastFormOrderValue + 1;
             }
             else {
-                console.log('Setting to default value...');
                 newFormOrderValue = 1;
             }
-            console.log('New form order value:');
-            console.log(newFormOrderValue)
             const newFormOrderElement = newForm.querySelector(selector);
             newFormOrderElement.value = newFormOrderValue;
         }
