@@ -235,6 +235,7 @@ const ConvenientFormset = function(options) {
             const selector = 'input[name$="ORDER"]';
             let newFormOrderValue;
             if (visibleForms.length) {
+                console.log('Setting new value...');
                 const lastForm = visibleForms[visibleForms.length - 1];
                 const lastFormOrderValue = parseInt(
                     lastForm.querySelector(selector).value, 10
@@ -242,8 +243,11 @@ const ConvenientFormset = function(options) {
                 newFormOrderValue = lastFormOrderValue + 1;
             }
             else {
+                console.log('Setting to default value...');
                 newFormOrderValue = 1;
             }
+            console.log('New form order value:');
+            console.log(newFormOrderValue)
             const newFormOrderElement = newForm.querySelector(selector);
             newFormOrderElement.value = newFormOrderValue;
         }
