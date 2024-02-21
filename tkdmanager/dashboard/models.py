@@ -1,27 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
 from django.urls import \
     reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
-
-# Create your models here.
-GRADINGS = [
-    ('MS','Musketeers'),
-    ('JR','Juniors'),
-    ('SN','Seniors'),
-    ('JS','Juniors/Seniors All'),
-    ('JD','Juniors/Seniors Beginner-Blue'),
-    ('JF','Juniors/Seniors Red-Black'),
-    ('PA','TKD Patterns/Grading'),
-    ('BB','Black Belts'),
-    ('BJ','BJJ/MMA'),
-    ('BO','Boxing'),
-    ('BK','BJJ for Kids'),
-    ('WE','Weapons'),
-    ('FC','Fight Class'),
-]
 
 TL_INST_RANKS = [
     ('T1','Team Leader Level 1'),

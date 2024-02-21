@@ -28,7 +28,7 @@
           <div style="position: sticky; top: 0px;">
             {% block sidebar %}
             <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
-                <div class="btn-group">
+                <div class="btn-group d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
                   <form action="{% url 'dash-index' %}">
                     <button type="submit" class="btn btn-light"><span class="fs-5 fw-semibold">{{ style }} Manager</span></button>
                   </form>
@@ -95,7 +95,7 @@
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-belts' %}" class="link-dark rounded">Belts</a></li>
                         <li><a href="#" class="link-dark rounded">Member attributes</a></li>
-                        <li><a href="#" class="link-dark rounded">Styles</a></li>
+                        <li><a href="{% url 'dash-styles' %}" class="link-dark rounded">Styles</a></li>
                         <li><a href="#" class="link-dark rounded">Class/Grading types</a></li>
                         <li><a href="#" class="link-dark rounded">Assessable units</a></li>
                         <li><a href="{% url 'dash-get-token' %}" class="link-dark rounded">Get API token</a></li>

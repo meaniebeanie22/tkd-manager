@@ -24,9 +24,10 @@ from pypdf import PdfReader, PdfWriter
 from rest_framework.authtoken.models import Token
 
 from .forms import *
-from .models import (GRADINGS, LETTER_GRADES, AssessmentUnit, Award, Class,
+from .models import (LETTER_GRADES, AssessmentUnit, Award, Class,
                      Grading, GradingInvite, GradingResult, Member, Payment,
-                     PaymentType, RecurringPayment, Belt, AssessmentUnitType)
+                     PaymentType, RecurringPayment, Belt, AssessmentUnitType,
+                     Style)
 
 
 def time_difference_in_seconds(time1, time2):
@@ -988,3 +989,15 @@ class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
 def selectStyle(request, pk):
     request.session['style'] = pk
     return HttpResponse()
+
+@permission_required("dashboard.add_style")
+def manageStyles(request, **kwargs):
+    StyleFormSet = modelformset_factory(Style, form=StyleForm, formset=ConvenientBaseModelFormSet, can_delete=True)
+
+    if request.method == "POST":
+        formset = StyleFormSet(request.POST, request.FILES, prefix='belt-formset')
+        if formset.is_valid():
+            formset.save()
+    else:
+        formset = StyleFormSet(prefix='style-formset', queryset=Style.objects.all())
+    return render(request, "dashboard/manage_styles.html", {"formset": formset})

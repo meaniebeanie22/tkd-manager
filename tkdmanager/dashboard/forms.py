@@ -12,11 +12,11 @@ from django_addanother.widgets import (AddAnotherEditSelectedWidgetWrapper,
                                        AddAnotherWidgetWrapper)
 from django_select2 import forms as s2forms
 
-from .models import (GRADINGS, LETTER_GRADES,
+from .models import (LETTER_GRADES,
                      AssessmentUnit, Award, Class, Grading, GradingInvite,
                      GradingResult, Member, Payment, PaymentType,
                      RecurringPayment, MemberProperty, Belt, AssessmentUnitType,
-                     GradingType, ClassType)
+                     GradingType, ClassType, Style)
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -463,4 +463,9 @@ class BeltForm(ModelForm):
             
     class Meta:
         model = Belt
+        fields = ['name']
+
+class StyleForm(ModelForm):
+    class Meta:
+        model = Style
         fields = ['name']
