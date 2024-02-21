@@ -1008,7 +1008,7 @@ def manageAssessmentUnitTypes(request, **kwargs):
     AssessmentUnitTypeFormSet = modelformset_factory(AssessmentUnitType, form=AssessmentUnitTypeForm, formset=ConvenientBaseModelFormSet, can_delete=True)
 
     if request.method == "POST":
-        formset = AssessmentUnitTypeFormSet(request.POST, request.FILES, prefix='belt-formset')
+        formset = AssessmentUnitTypeFormSet(request.POST, request.FILES, prefix='assessmentunittype-formset')
         print(f'Formset data: {formset.data}')
         if formset.is_valid():
             for form in formset.forms:
