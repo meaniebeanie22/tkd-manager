@@ -996,7 +996,7 @@ def manageStyles(request, **kwargs):
     StyleFormSet = modelformset_factory(Style, form=StyleForm, formset=ConvenientBaseModelFormSet, can_delete=True)
 
     if request.method == "POST":
-        formset = StyleFormSet(request.POST, request.FILES, prefix='belt-formset')
+        formset = StyleFormSet(request.POST, request.FILES, prefix='style-formset')
         if formset.is_valid():
             formset.save()
     else:
