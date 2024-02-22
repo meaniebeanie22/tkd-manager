@@ -73,9 +73,6 @@ def token_delete(request):
     token.delete()
     return HttpResponseRedirect(reverse_lazy('dash-get-token'))
 
-def health(request):
-    return JsonResponse({'STATUS': 'OK', 'TIMESTAMP': timezone.now()})
-
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ['-belt','last_name']
