@@ -47,7 +47,7 @@ def index(request):
     num_active_members = Member.objects.filter(active__exact=True).count()
     belts = Belt.objects.filter(style__pk=request.session.get('style', 1))
     labels = [belt.name for belt in belts]
-    counts = [belt.member_set.count() for belt in belts]
+    counts = [belt.belts.count() for belt in belts]
 
     context = {
         'num_members': num_members,
