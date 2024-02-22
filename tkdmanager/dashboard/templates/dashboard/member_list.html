@@ -40,7 +40,7 @@
       <th>Properties</th>
     </tr>
     {% for member in member_list %}
-      {% call_method_context member get_belt_context as belt %}
+      {% call_method_context member 'get_belt_context' as belt %}
       <tr class="content">
         <td><a href="{{ member.get_absolute_url }}">{{ member.last_name }}, {{ member.first_name }}</a></td>
         <td>{% if belt %}{{ belt.name }}{% else %}No Belt{% endif %}</td>
