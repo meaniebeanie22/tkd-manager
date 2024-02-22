@@ -44,7 +44,7 @@ class AssessmentUnitSerializer(serializers.HyperlinkedModelSerializer):
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member 
-        fields = ['url', 'first_name', 'last_name', 'idnumber', 'address_line_1', 'address_line_2', 'address_line_3', 'date_of_birth', 'belt', 'email', 'phone', 'team_leader_instructor', 'active', 'properties']
+        fields = ['url', 'first_name', 'last_name', 'idnumber', 'address_line_1', 'address_line_2', 'address_line_3', 'date_of_birth', 'belts', 'email', 'phone', 'team_leader_instructor', 'active', 'properties']
 
 class GradingResultSerializer(serializers.HyperlinkedModelSerializer):
     assessmentunits = AssessmentUnitSerializer(many=True, read_only=True)

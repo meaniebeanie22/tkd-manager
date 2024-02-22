@@ -26,6 +26,24 @@ LETTER_GRADES = ['F', 'D', 'C', 'C+', 'B', 'B+', 'A', 'A+']
 def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 
+def has_duplicate_styles(queryset):
+    # Annotate the queryset to count occurrences of each style
+    queryset = queryset.values('style__pk').annotate(style_count=Count('style__pk'))
+    
+    # Filter to get styles with count greater than 1
+    duplicate_styles = queryset.filter(style_count__gt=1)
+    
+    # Return True if there are duplicate styles, False otherwise
+    return duplicate_styles.exists()
+
+class NoLongerWorks(Exception):
+    """
+    A 'gentle' reminder that this thing doesn't work anymore
+    """
+    def __init__(self, message='This doesn\'t work anymore!'):
+        self.message = message
+        super().__init__(message)
+
 class Style(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
@@ -53,6 +71,7 @@ class Belt(models.Model):
     @classmethod
     def get_default_pk(cls):
         belt, created = cls.objects.get_or_create(
+            style=Style.objects.get_or_create(name='TKD'),
             degree=2,
             name='No Belt'
         )
@@ -96,7 +115,7 @@ class Member(models.Model):
     address_line_2 = models.CharField(max_length=200, help_text="Suburb", blank=True)
     address_line_3 = models.CharField(max_length=4, help_text="Postcode", blank=True)
     date_of_birth = models.DateField()
-    belt = models.ForeignKey(Belt, default=Belt.get_default_pk, on_delete=models.PROTECT)
+    belts = models.ManyToManyField(Belt, default=Belt.get_default_pk, related_name='belts')
     email = models.EmailField()
     phone = models.CharField(max_length=100)
     team_leader_instructor = models.CharField(max_length=2, choices=TL_INST_RANKS, blank=True, verbose_name="Team Leader/Instructor")
@@ -104,7 +123,7 @@ class Member(models.Model):
     properties = models.ManyToManyField('MemberProperty', related_name='properties', blank=True)
 
     class Meta:
-        ordering = ['-belt__degree','last_name']
+        ordering = ['last_name']
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} ({self.idnumber})'
@@ -125,6 +144,47 @@ class Member(models.Model):
         classes_queryset = self.students2classes.filter(date__gte=six_months_ago)
         class_types = classes_queryset.values_list('type', flat=True).distinct()
         return class_types
+    
+    def save(self, *args, **kwargs):
+        """
+        There can only be one belt with each style for a member
+        """
+        # get all belts
+        belts = self.belts.all()
+        # see if there is already a belt in the same style with the same degree - if there is, scream
+        if has_duplicate_styles(belts):
+            # This below line will render error by breaking page, you will see
+            raise ValidationError(
+                "A member can't have two belts from the same style!"
+            )
+        return super(Belt, self).save(*args, **kwargs)
+    
+    @property
+    def belt(self):
+        """
+        NOOO!
+        """
+        raise NoLongerWorks('You can\'t just read a belt from a member - specify a style and use get_belt(style)')
+    
+    def get_belt(self, style):
+        """
+        Return a belt from a given member and style
+        """
+        return self.belts.filter(style=style)
+
+    @belt.setter
+    def belt(self, new_belt):
+        """
+        when setting a belt
+        see if we have any others on this guy of the same style
+        if we do, replace them, else just add them
+        """
+        belts = self.belts.all()
+        existing_belt = belts.filter(style=new_belt.style)
+        if existing_belt.exists():
+            belts.remove(existing_belt)
+        belts.add(new_belt)
+        self.save()
     
 class AssessmentUnit(models.Model):
     """An individual assessment component from one persons grading"""

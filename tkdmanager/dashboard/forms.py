@@ -26,6 +26,12 @@ class MembersWidget(s2forms.ModelSelect2MultipleWidget):
         'idnumber__istartswith'
     ]
 
+class BeltsWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        'style__name__icontains',
+        'name__icontains'
+    ]
+
 class MemberWidget(s2forms.ModelSelect2Widget):
     search_fields = [
         'first_name__icontains',
@@ -121,7 +127,7 @@ class GradingResultCreateForm(ModelForm):
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belt','email','phone','team_leader_instructor','active', 'properties']
+        fields = ['first_name','last_name','idnumber','address_line_1','address_line_2','address_line_3','date_of_birth','belts','email','phone','team_leader_instructor','active', 'properties']
         widgets = {
             'phone': TextInput(attrs={'type': 'tel', 'placeholder': '0400 000 000'}),
             'date_of_birth': DateInput(attrs={'placeholder': 'yyyy-mm-dd'}),

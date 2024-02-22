@@ -45,7 +45,7 @@ def index(request):
     # Number of members
     num_members = Member.objects.count()
     num_active_members = Member.objects.filter(active__exact=True).count()
-    belts = Belt.objects.all()
+    belts = Belt.objects.filter(style__pk=request.session.get('style', 1))
     labels = [belt.name for belt in belts]
     counts = [belt.member_set.count() for belt in belts]
 
@@ -209,7 +209,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         response = super(GradingResultCreate, self).form_valid(form)
         # do something with self.object
         target = self.object.member
-        target.belt = target.member2gradings.order_by('-grading__grading_datetime').first().forbelt
+        target.belt = target.member2gradings.order_by('-grading__grading_datetime').filter(style__pk=self.request.get('style', 1)).first().forbelt
         target.save()
         return response
 
