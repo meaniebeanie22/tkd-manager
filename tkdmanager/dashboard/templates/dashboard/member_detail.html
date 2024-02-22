@@ -24,7 +24,14 @@
               No DOB on file - <a href="{% url 'dash-update-member' member.pk %}">Fix</a>
             {% endif %}
             </li>
-            <li class="list-group-item">{% if member.belt %}Belt - {{ member.belt.name }}{% else %}No Belt{% endif %}</li>
+            {% call_method_context member get_belt_context as belt %}
+            <li class="list-group-item">{% if belt %}Belt - {{ belt.name }}{% else %}No Belt{% endif %}</li>
+            <p>Other belts.</p>
+            <ul class="list-group list-group-flush">
+              {% for b in member.belts %}
+                <li class="list-group-item">{{ b }}</li>
+              {% endfor %}
+            </ul>
             <li class="list-group-item">Email - <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
             <li class="list-group-item">Phone Number - <a href="tel: {{ member.phone }}">{{ member.phone }}</a></li>
             <li class="list-group-item">{% if member.address_line_1 %}Address - {{ member.address_line_1 }}, {{ member.address_line_2 }} {{ member.address_line_3 }}{% else %}No address on file - <a href="{% url 'dash-update-member' member.pk %}">Fix</a>{% endif %}</li>

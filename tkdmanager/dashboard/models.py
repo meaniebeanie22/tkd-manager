@@ -6,6 +6,7 @@ from django.urls import \
     reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 TL_INST_RANKS = [
     ('T1','Team Leader Level 1'),
@@ -171,6 +172,13 @@ class Member(models.Model):
         Return a belt from a given member and style
         """
         return self.belts.filter(style=style)
+    
+    def get_belt_context(self, context):
+        """
+        Use the context dict from a view to extract the style
+        """
+        style = context.get('request').get('session').get('style')
+        return self.get_belt(get_object_or_404(Style, pk=style))
 
     @belt.setter
     def belt(self, new_belt):
