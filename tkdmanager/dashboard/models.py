@@ -174,15 +174,18 @@ class Member(models.Model):
         """
         Return a belt from a given member and style
         """
-        return self.belts.filter(style=style)
+        belt = self.belts.filter(style=style)
+        print(f'Get belt:\nStyle: {style}\nBelt: {belt}')
+        return belt
     
     def get_belt_context(self, context):
         """
         Use the context dict from a view to extract the style
         """
         style = context.request.session.get('style', 1)
-
-        return self.get_belt(Style.objects.get(pk=style))
+        belt = self.get_belt(Style.objects.get(pk=style))
+        print(f'Belt: {belt}')
+        return belt
 
     @belt.setter
     def belt(self, new_belt):
