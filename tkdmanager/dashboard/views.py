@@ -53,7 +53,7 @@ def order_members_by_belt_from_style(
         m_rank.append((m, m.belts.get(style__pk=selected_style_id).degree))
     m_rank.sort(key=lambda x: x[1])
 
-    my_ids = [x[0] for x in m_rank]
+    my_ids = [x[0].pk for x in m_rank]
 
     Member.objects.filter(pk__in=my_ids).order_by(
         Case(
