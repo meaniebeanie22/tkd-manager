@@ -158,7 +158,7 @@ class Member(models.Model):
             raise ValidationError(
                 "A member can't have two belts from the same style!"
             )
-        return super(Belt, self).save(*args, **kwargs)
+        return super(Member, self).save(*args, **kwargs)
     
     @property
     def belt(self):
@@ -187,7 +187,7 @@ class Member(models.Model):
         see if we have any others on this guy of the same style
         if we do, replace them, else just add them
         """
-        belts = self.belts.all()
+        belts = self.belts
         existing_belt = belts.filter(style=new_belt.style)
         if existing_belt.exists():
             belts.remove(existing_belt)
