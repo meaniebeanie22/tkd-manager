@@ -7,7 +7,7 @@ from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
-from django.db.models import Q
+from django.db.models import Q, Case, When, IntegerField
 
 from django.forms import inlineformset_factory, modelformset_factory
 from django.forms.models import model_to_dict
@@ -27,6 +27,18 @@ from .models import (LETTER_GRADES, AssessmentUnit, Award, Class,
                      PaymentType, RecurringPayment, Belt, AssessmentUnitType,
                      Style)
 
+def order_members_by_belt_from_style(selected_style_id: int, queryset=Member.objects.all()):
+    """
+    Does what it says on the tin
+    """
+    members_ordered_by_selected_style_belt_degree = queryset.annotate(
+        selected_style_belt_degree=Case(
+            When(belts__style_id=selected_style_id, then='belts__degree'),
+            default=None,
+            output_field=IntegerField()
+        )
+    ).order_by('-selected_style_belt_degree')
+    return members_ordered_by_selected_style_belt_degree
 
 def time_difference_in_seconds(time1, time2):
     # Convert time objects to timedelta
@@ -94,7 +106,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
             # Apply all filters to the queryset in a single call
             queryset = queryset.filter(**filters)
 
-        return queryset
+        return order_members_by_belt_from_style(self.request.session.get('style', 1), queryset)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = MemberSearchForm(self.request.GET, request=self.request)
