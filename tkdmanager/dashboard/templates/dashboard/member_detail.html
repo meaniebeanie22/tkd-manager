@@ -26,7 +26,7 @@
             </li>
             {% print_potato %}
             {% comment %}
-              {% call_method_context member get_belt_context as belt %}
+              {% call_method_context member 'get_belt_context' as belt %}
             {% endcomment %}
             <li class="list-group-item">{% if belt %}Belt - {{ belt.name }}{% else %}No Belt{% endif %}</li>
             <p>Other belts.</p>
