@@ -17,3 +17,7 @@ def call_method(obj, method_name, *args):
 def call_method_context(context, obj, method_name, *args):
     method = getattr(obj, method_name)
     return method(context, *args)
+
+@register.simple_tag
+def print_potato():
+    return 'potatos are very cool'
