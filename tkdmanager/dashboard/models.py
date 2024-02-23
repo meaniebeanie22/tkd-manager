@@ -180,7 +180,7 @@ class Member(models.Model):
         """
         Use the context dict from a view to extract the style
         """
-        style = context.request.session.get('style')
+        style = context.request.session.get('style', 1)
 
         return self.get_belt(Style.objects.get(pk=style))
 
