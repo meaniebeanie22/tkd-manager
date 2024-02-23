@@ -55,7 +55,7 @@ def order_members_by_belt_from_style(
 
     my_ids = [x[0].pk for x in m_rank]
 
-    Member.objects.filter(pk__in=my_ids).order_by(
+    return Member.objects.filter(pk__in=my_ids).order_by(
         Case(
             *[When(pk=pk, then=Value(i)) for i, pk in enumerate(my_ids)],
             output_field=models.IntegerField(),
