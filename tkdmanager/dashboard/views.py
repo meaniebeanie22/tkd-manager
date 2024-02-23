@@ -7,7 +7,7 @@ from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
-from django.db.models import Q, Case, When
+from django.db.models import Q, Case, When, Value
 from django.db import models
 
 from django.forms import inlineformset_factory, modelformset_factory
@@ -44,20 +44,23 @@ def order_members_by_belt_from_style(
     selected_style_id: int, queryset=Member.objects.all()
 ):
     """
+    THIS IS UGLY AS HELL AND NEEDS TO BE FIXED
     Does what it says on the tin
     """
-    members_ordered_by_selected_style_belt_degree = (
-        queryset.annotate(
-            selected_style_belt_degree=Case(
-                When(belts__style_id=selected_style_id, then="belts__degree"),
-                default=None,
-                output_field=models.IntegerField(),
-            )
-        )
-        .filter(belts__degree__isnull=False)
-        .order_by("-selected_style_belt_degree")
+
+    m_rank = []
+    for m in queryset:
+        m_rank.append((m, m.belts.filter(style__pk=selected_style_id).degree))
+    m.sort(key=lambda x: x[1])
+
+    my_ids = [x[0] for x in m_rank]
+
+    Member.objects.filter(pk__in=my_ids).order_by(
+        Case(
+            *[When(pk=pk, then=Value(i)) for i, pk in enumerate(my_ids)],
+            output_field=models.IntegerField(),
+        ).asc()
     )
-    return members_ordered_by_selected_style_belt_degree
 
 
 def time_difference_in_seconds(time1, time2):
