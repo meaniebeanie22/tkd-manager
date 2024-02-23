@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
 from django.db.models import Q, Case, When, IntegerField
+from django.db import models
 
 from django.forms import inlineformset_factory, modelformset_factory
 from django.forms.models import model_to_dict
@@ -35,7 +36,7 @@ def order_members_by_belt_from_style(selected_style_id: int, queryset=Member.obj
         selected_style_belt_degree=Case(
             When(belts__style_id=selected_style_id, then='belts__degree'),
             default=None,
-            output_field=IntegerField()
+            output_field=models.IntegerField()
         )
     ).order_by('-selected_style_belt_degree')
     return members_ordered_by_selected_style_belt_degree
