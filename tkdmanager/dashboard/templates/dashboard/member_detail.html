@@ -24,10 +24,7 @@
               No DOB on file - <a href="{% url 'dash-update-member' member.pk %}">Fix</a>
             {% endif %}
             </li>
-            {% print_potato %}
-            {% comment %}
-              {% call_method_context member 'get_belt_context' as belt %}
-            {% endcomment %}
+            {% callmethodcontext member 'get_belt_context' as belt %}
             <li class="list-group-item">{% if belt %}Belt - {{ belt.name }}{% else %}No Belt{% endif %}</li>
             <p>Other belts.</p>
             <ul class="list-group list-group-flush">
