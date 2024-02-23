@@ -174,7 +174,7 @@ class Member(models.Model):
         """
         Return a belt from a given member and style
         """
-        belt = self.belts.filter(style=style)
+        belt = self.belts.filter(style=style).first()
         print(f'Get belt:\nStyle: {style}\nBelt: {belt}')
         return belt
     
