@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from io import BytesIO
 from typing import Any
 from convenient_formsets import ConvenientBaseModelFormSet
@@ -6,12 +6,10 @@ from convenient_formsets import ConvenientBaseModelFormSet
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.core import mail
 from django.db.models import Q
-from django.db.models.query import QuerySet
-from django.forms import (BooleanField, Form, ModelChoiceField, ModelForm,
-                          inlineformset_factory, modelformset_factory)
+
+from django.forms import inlineformset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import (HttpResponse, HttpResponseRedirect, JsonResponse,
                          QueryDict)
