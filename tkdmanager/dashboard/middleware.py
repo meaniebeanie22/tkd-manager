@@ -7,5 +7,6 @@ class HealthCheckMiddleware:
 
     def __call__(self, request):
         if request.path == '/health':
+            print('Request to /health.')
             return HttpResponse('ok')
         return self.get_response(request)
