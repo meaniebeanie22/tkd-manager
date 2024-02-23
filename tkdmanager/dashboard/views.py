@@ -7,7 +7,7 @@ from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
-from django.db.models import Q, Case, When, IntegerField
+from django.db.models import Q, Case, When
 from django.db import models
 
 from django.forms import inlineformset_factory, modelformset_factory
