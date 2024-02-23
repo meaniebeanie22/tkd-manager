@@ -50,7 +50,7 @@ def order_members_by_belt_from_style(
 
     m_rank = []
     for m in queryset:
-        m_rank.append((m, m.belts.filter(style__pk=selected_style_id).degree))
+        m_rank.append((m, m.belts.get(style__pk=selected_style_id).degree))
     m.sort(key=lambda x: x[1])
 
     my_ids = [x[0] for x in m_rank]
