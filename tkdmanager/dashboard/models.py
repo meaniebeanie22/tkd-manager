@@ -181,7 +181,8 @@ class Member(models.Model):
         Use the context dict from a view to extract the style
         """
         style = context.request.session.get('style')
-        return self.get_belt(get_object_or_404(Style, pk=style))
+
+        return self.get_belt(Style.objects.get(pk=style))
 
     @belt.setter
     def belt(self, new_belt):
