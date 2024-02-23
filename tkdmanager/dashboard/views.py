@@ -38,7 +38,7 @@ def order_members_by_belt_from_style(selected_style_id: int, queryset=Member.obj
             default=None,
             output_field=models.IntegerField()
         )
-    ).order_by('-selected_style_belt_degree')
+    ).filter(belts__degree__isnull=False).order_by('-selected_style_belt_degree')
     return members_ordered_by_selected_style_belt_degree
 
 def time_difference_in_seconds(time1, time2):
