@@ -28,12 +28,14 @@ def time_in_a_month():
     return(timezone.now()+timedelta(days=30))
 
 def has_duplicate_styles(queryset):
+    print(f'Input QS: {queryset.values()}')
     # Annotate the queryset to count occurrences of each style
     queryset = queryset.values('style__pk').annotate(style_count=Count('style__pk'))
-    
+    print(f'Annotated QS: {queryset.values()}')
     # Filter to get styles with count greater than 1
     duplicate_styles = queryset.filter(style_count__gt=1)
-    
+    print(f'Duplicated styles: {duplicate_styles.values()}')
+    print(f'Exists? {duplicate_styles.exists()}')
     # Return True if there are duplicate styles, False otherwise
     return duplicate_styles.exists()
 
