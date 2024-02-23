@@ -154,6 +154,7 @@ class Member(models.Model):
         """
         # get all belts
         belts = self.belts.all()
+        print(f'Member Belts: {belts.values()}')
         # see if there is already a belt in the same style with the same degree - if there is, scream
         if has_duplicate_styles(belts):
             # This below line will render error by breaking page, you will see
