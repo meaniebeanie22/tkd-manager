@@ -130,7 +130,7 @@
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="#" class="link-dark rounded">Settings</a></li>
                         <li>
-                          <form action="{% url 'logout' %}" method="post">
+                          <form action="{% url 'account_logout' %}" method="post">
                               {% csrf_token %}
                               <a href="#" onclick="this.closest('form').submit();return false;" class="link-dark rounded">Sign out</a>
                           </form>
