@@ -20,3 +20,8 @@ admin.site.register(AssessmentUnitType)
 admin.site.register(ClassType)
 admin.site.register(GradingType)
 admin.site.register(Style)
+
+from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+
+admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)
