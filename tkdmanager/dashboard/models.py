@@ -83,23 +83,6 @@ class Belt(models.Model):
         )
         return belt.pk
 
-    def save(self, *args, **kwargs):
-        """
-        There can only be one belt with each degree for each style
-        """
-        # get all belts
-        belts = Belt.objects.all()
-        belt = belts.filter(style__pk=self.style.pk).filter(
-            degree__exact=self.degree
-        )  # filter them to find ones with the same style and degree
-        # see if there is already a belt in the same style with the same degree - if there is, scream
-        if belt.exists():
-            # This below line will render error by breaking page, you will see
-            raise ValidationError(
-                "The degree of a belt must be unique within its style"
-            )
-        return super(Belt, self).save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.style}: {self.name}"
 
