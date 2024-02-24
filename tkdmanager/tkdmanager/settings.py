@@ -166,6 +166,8 @@ USE_TZ = True
 
 MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
+ACCOUNT_CHANGE_EMAIL = True
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
