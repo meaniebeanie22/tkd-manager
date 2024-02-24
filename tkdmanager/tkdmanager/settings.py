@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.mfa",
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -191,6 +193,10 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
