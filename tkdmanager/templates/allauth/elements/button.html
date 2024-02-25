@@ -5,7 +5,7 @@
 {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
 {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
 {% if attrs.type %}type="{{ attrs.type }}"{% endif %}
-class="btn btn-outline-{% if 'primary' in attrs.tags %}primary{% elif 'secondary' in attrs.tags %}secondary{% elif 'login' in attrs.tags %}success{% else %}success{% endif %} btn-outline-thicker"
+class="btn btn-outline-{% if 'login' in attrs.tags %}success{% elif 'cancel' in attrs.tags %}danger{% elif 'primary' in attrs.tags %}primary{% elif 'secondary' in attrs.tags %}secondary{% else %}success{% endif %} btn-outline-thicker"
 >
 {% slot %}
 {% endslot %}
