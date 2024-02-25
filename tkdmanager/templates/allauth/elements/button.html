@@ -6,7 +6,7 @@
 {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
 {% if attrs.type %}type="{{ attrs.type }}"{% endif %}
 class="btn btn-outline-{% if 'primary' in attrs.tags %}primary{% elif 'secondary' in attrs.tags %}secondary{% elif 'login' in attrs.tags %}success{% else %}success{% endif %} btn-outline-thicker"
->|| {{ attrs.tags }} ||
+>
 {% slot %}
 {% endslot %}
 </{% if attrs.href %}a{% else %}button{% endif %}>
