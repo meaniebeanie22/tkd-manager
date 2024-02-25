@@ -221,7 +221,7 @@ class MemberSearchForm(Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(MemberSearchForm, self).__init__(*args, **kwargs)
-        self.fields["belt"].queryset = Belt.objects.filter(
+        self.fields["belts"].queryset = Belt.objects.filter(
             style__pk=self.request.session.get("style", 1)
         )
 

@@ -116,7 +116,7 @@ def token_delete(request):
 
 class MemberListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Member
-    ordering = ["-belt", "last_name"]
+    ordering = ["-belts", "last_name"]
 
     def get_queryset(self):
         queryset = Member.objects.all()
@@ -683,7 +683,7 @@ class MemberGetDetails(MFARequiredMixin, LoginRequiredMixin, View):
         selected_member = get_object_or_404(Member, pk=pk)
         data = model_to_dict(selected_member)
         style = request.session.get("style", 1)
-        data["belt"] = data["belt"].filter(style__pk=style)
+        data["belt"] = data["belts"].filter(style__pk=style)
         data["next_belt"] = get_object_or_404(
             Belt, style=style, degree=(data.get("belt").degree + 1)
         ).pk
