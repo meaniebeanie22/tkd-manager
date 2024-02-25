@@ -29,7 +29,7 @@
             <li class="list-group-item">{% if belt %}Belt - {{ belt.name }}{% else %}No Belt{% endif %}</li>
             <p>Other belts.</p>
             <ul class="list-group list-group-flush">
-              {% for b in member.belts %}
+              {% for b in member.belts.all %}
                 <li class="list-group-item">{{ b }}</li>
               {% endfor %}
             </ul>
