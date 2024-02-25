@@ -44,8 +44,8 @@
 <h4>Manage Class Types and Grading Types</h4>
 
 <!-- Render formset using the following basic structure -->
-<div class="row">
-    <form method="post">
+<form method="post">
+    <div class="row">
         <div class="col">
             <h5>Class Types</h5>
             {% csrf_token %}
@@ -121,8 +121,8 @@
             </div>
         </div>
         <input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/> 
-    </form>
-</div>
+    </div>
+</form>
 
 {% endblock %}
 
