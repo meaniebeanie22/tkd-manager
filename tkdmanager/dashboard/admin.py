@@ -25,7 +25,7 @@ from django.conf import settings
 from .decorators import staff_mfa_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-# admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)
+admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)
 
 
-admin.site.login = staff_mfa_required(admin.site.login)
+# admin.site.login = staff_mfa_required(admin.site.login)
