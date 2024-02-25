@@ -14,7 +14,7 @@ pypdf==4.0.2
 pytz==2024.1
 requests==2.31.0
 sqlparse==0.4.4
-tzdata==2023.4
+tzdata==2024.1
 urllib3==2.2.1
 whitenoise==6.6.0
 django-convenient-formsets==2.0
