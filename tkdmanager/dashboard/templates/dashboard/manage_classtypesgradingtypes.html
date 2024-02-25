@@ -47,6 +47,7 @@
 <div class="row">
     <form method="post">
         <div class="col-sm-5">
+            <h5>Class Types</h5>
             {% csrf_token %}
             {{ classtype_formset.management_form }}
             <div id="classtype-formset">
@@ -66,7 +67,7 @@
                     </div>
                     {% endfor %}
                 </div>
-                <hr>
+                <!-- <hr> -->
                 <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
                 <template id="empty-form-template">
                     <div class="row classtype-form">
@@ -83,6 +84,7 @@
             </div>
         </div>
         <div class="col-sm-5">
+            <h5>Grading Types</h5>
             {% csrf_token %}
             {{ gradingtype_formset.management_form }}
             <div id="gradingtype-formset">
@@ -102,7 +104,7 @@
                     </div>
                     {% endfor %}
                 </div>
-                <hr>
+                <!-- <hr> -->
                 <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
                 <template id="empty-form-template">
                     <div class="row gradingtype-form">
