@@ -5,7 +5,7 @@ from convenient_formsets import ConvenientBaseModelFormSet
 
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core import mail
 from django.db.models import Q, Case, When, Value
 from django.db import models
@@ -20,6 +20,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
 from pypdf import PdfReader, PdfWriter
 from rest_framework.authtoken.models import Token
+from allauth.mfa.models import Authenticator
 
 from .forms import *
 from .models import (
@@ -111,6 +112,17 @@ def token_delete(request):
     return HttpResponseRedirect(reverse_lazy("dash-get-token"))
 
 
+class MFARequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        has_mfa = Authenticator.objects.filter(
+            user=self.request.user, type="totp"
+        ).exists()
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return HttpResponseRedirect(reverse("mfa_activate_totp"))
+
+
 class MemberListView(LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ["-belt", "last_name"]
@@ -146,7 +158,7 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class MemberDetailView(LoginRequiredMixin, generic.DetailView):
+class MemberDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Member
 
     def get_context_data(self, **kwargs):
