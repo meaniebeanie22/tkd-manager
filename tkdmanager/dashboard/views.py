@@ -5,7 +5,11 @@ from convenient_formsets import ConvenientBaseModelFormSet
 
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    MFARequiredMixin,
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+)
 from django.core import mail
 from django.db.models import Q, Case, When, Value
 from django.db import models
@@ -129,7 +133,7 @@ class MFARequiredMixin(UserPassesTestMixin):
         return HttpResponseRedirect(reverse("mfa_activate_totp"))
 
 
-class MemberListView(LoginRequiredMixin, generic.ListView):
+class MemberListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Member
     ordering = ["-belt", "last_name"]
 
@@ -202,7 +206,7 @@ class MemberDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView)
         return context
 
 
-class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
+class GradingResultDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = GradingResult
 
     def get_context_data(self, **kwargs):
@@ -231,7 +235,7 @@ class GradingResultDetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class GradingResultListView(LoginRequiredMixin, generic.ListView):
+class GradingResultListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = GradingResult
 
     def get_queryset(self):
@@ -267,22 +271,22 @@ class GradingResultListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class MemberCreate(LoginRequiredMixin, CreateView):
+class MemberCreate(MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Member
     form_class = MemberForm
 
 
-class MemberUpdate(LoginRequiredMixin, UpdateView):
+class MemberUpdate(MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Member
     form_class = MemberForm
 
 
-class MemberDelete(LoginRequiredMixin, DeleteView):
+class MemberDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Member
     success_url = reverse_lazy("dash-members")
 
 
-class GradingResultCreate(LoginRequiredMixin, CreateView):
+class GradingResultCreate(MFARequiredMixin, LoginRequiredMixin, CreateView):
     form_class = GradingResultCreateForm
     model = GradingResult
     template_name = "dashboard/gradingresult_form.html"
@@ -323,7 +327,7 @@ class GradingResultCreate(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class GradingResultUpdate(LoginRequiredMixin, UpdateView):
+class GradingResultUpdate(MFARequiredMixin, LoginRequiredMixin, UpdateView):
     form_class = GradingResultUpdateForm
     template_name = "dashboard/gradingresult_form.html"
     model = GradingResult
@@ -352,12 +356,12 @@ class GradingResultUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class GradingResultDelete(LoginRequiredMixin, DeleteView):
+class GradingResultDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = GradingResult
     success_url = reverse_lazy("dash-gradingresults")
 
 
-class AwardListView(LoginRequiredMixin, generic.ListView):
+class AwardListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Award
 
     def get_queryset(self):
@@ -367,7 +371,7 @@ class AwardListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class AwardCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Award
     fields = ["name"]
 
@@ -383,7 +387,7 @@ class AwardCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class AwardUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class AwardUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Award
     fields = ["name"]
 
@@ -399,12 +403,12 @@ class AwardUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class AwardDelete(LoginRequiredMixin, DeleteView):
+class AwardDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Award
     success_url = reverse_lazy("dash-awards")
 
 
-class AwardDetailView(LoginRequiredMixin, generic.DetailView):
+class AwardDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Award
 
 
@@ -470,7 +474,7 @@ def manageGradingResultLetter(request, **kwargs):
     return render(request, "dashboard/gradingresult_form2.html", {"formset": formset})
 
 
-class ClassListView(LoginRequiredMixin, generic.ListView):
+class ClassListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Class
 
     def get_queryset(self):
@@ -499,7 +503,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class ClassDetailView(LoginRequiredMixin, generic.DetailView):
+class ClassDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Class
 
     def get_context_data(self, **kwargs):
@@ -514,7 +518,7 @@ class ClassDetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class ClassCreate(LoginRequiredMixin, CreateView):
+class ClassCreate(MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Class
     form_class = ClassForm
 
@@ -524,7 +528,7 @@ class ClassCreate(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class ClassUpdate(LoginRequiredMixin, UpdateView):
+class ClassUpdate(MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Class
     form_class = ClassForm
 
@@ -534,12 +538,12 @@ class ClassUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class ClassDelete(LoginRequiredMixin, DeleteView):
+class ClassDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Class
     success_url = reverse_lazy("dash-classes")
 
 
-class PaymentListView(LoginRequiredMixin, generic.ListView):
+class PaymentListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Payment
 
     def get_queryset(self):
@@ -580,11 +584,11 @@ class PaymentListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class PaymentDetailView(LoginRequiredMixin, generic.DetailView):
+class PaymentDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Payment
 
 
-class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class PaymentCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Payment
     form_class = PaymentForm
 
@@ -608,7 +612,7 @@ class PaymentCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class PaymentUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
 
@@ -624,19 +628,19 @@ class PaymentUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class PaymentDelete(LoginRequiredMixin, DeleteView):
+class PaymentDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Payment
     success_url = reverse_lazy("dash-payments")
 
 
-class GetStandardAmountView(LoginRequiredMixin, View):
+class GetStandardAmountView(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request, pk):
         payment_type = get_object_or_404(PaymentType, pk=pk)
         standard_amount = payment_type.standard_amount
         return JsonResponse({"standard_amount": standard_amount})
 
 
-class GetGradingInviteDetailView(LoginRequiredMixin, View):
+class GetGradingInviteDetailView(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request, pk):
         gradinginvite = get_object_or_404(GradingInvite, pk=pk)
         response = {
@@ -646,7 +650,7 @@ class GetGradingInviteDetailView(LoginRequiredMixin, View):
         return JsonResponse(response)
 
 
-class MemberGetGradingInvites(LoginRequiredMixin, View):
+class MemberGetGradingInvites(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
@@ -667,7 +671,7 @@ class MemberGetGradingInvites(LoginRequiredMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class GetGradingsJSON(LoginRequiredMixin, View):
+class GetGradingsJSON(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request):
         gradings = Grading.objects.filter(
             grading_type__style__pk=self.request.session.get("style", 1)
@@ -676,7 +680,7 @@ class GetGradingsJSON(LoginRequiredMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class MemberGetPayments(LoginRequiredMixin, View):
+class MemberGetPayments(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
 
@@ -693,7 +697,7 @@ class MemberGetPayments(LoginRequiredMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class MemberGetDetails(LoginRequiredMixin, View):
+class MemberGetDetails(MFARequiredMixin, LoginRequiredMixin, View):
     def get(self, request, pk):
         selected_member = get_object_or_404(Member, pk=pk)
         data = model_to_dict(selected_member)
@@ -706,11 +710,11 @@ class MemberGetDetails(LoginRequiredMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class GradingInviteDetailView(LoginRequiredMixin, generic.DetailView):
+class GradingInviteDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = GradingInvite
 
 
-class GradingInviteListView(LoginRequiredMixin, generic.ListView):
+class GradingInviteListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = GradingInvite
 
     def get_queryset(self):
@@ -754,12 +758,14 @@ class GradingInviteListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class GradingInviteDelete(LoginRequiredMixin, DeleteView):
+class GradingInviteDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = GradingInvite
     success_url = reverse_lazy("dash-gradinginvites")
 
 
-class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingInviteCreate(
+    CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView
+):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -797,7 +803,9 @@ class GradingInviteCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class GradingInviteUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingInviteUpdate(
+    UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView
+):
     model = GradingInvite
     form_class = GradingInviteForm
 
@@ -824,11 +832,11 @@ def gradinginvite_pdf_view(request, pk, **kwargs):
     )
 
 
-class GradingDetailView(LoginRequiredMixin, generic.DetailView):
+class GradingDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Grading
 
 
-class GradingListView(LoginRequiredMixin, generic.ListView):
+class GradingListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = Grading
 
     def get_queryset(self):
@@ -838,12 +846,12 @@ class GradingListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class GradingDelete(LoginRequiredMixin, DeleteView):
+class GradingDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Grading
     success_url = reverse_lazy("dash-gradings")
 
 
-class GradingCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class GradingCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Grading
     form_class = GradingForm
 
@@ -859,7 +867,7 @@ class GradingCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class GradingUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class GradingUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Grading
     form_class = GradingForm
 
@@ -1195,11 +1203,13 @@ def gradinginvite_batch_email_view(request, **kwargs):
         return JsonResponse(response_data, status=204)
 
 
-class RecurringPaymentDetailView(LoginRequiredMixin, generic.DetailView):
+class RecurringPaymentDetailView(
+    MFARequiredMixin, LoginRequiredMixin, generic.DetailView
+):
     model = RecurringPayment
 
 
-class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
+class RecurringPaymentListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = RecurringPayment
 
     def get_queryset(self):
@@ -1227,7 +1237,7 @@ class RecurringPaymentListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
+class RecurringPaymentCreate(MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = RecurringPayment
     form_class = RecurringPaymentForm
 
@@ -1237,7 +1247,7 @@ class RecurringPaymentCreate(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class RecurringPaymentUpdate(LoginRequiredMixin, UpdateView):
+class RecurringPaymentUpdate(MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = RecurringPayment
     form_class = RecurringPaymentUpdateForm
 
@@ -1247,12 +1257,14 @@ class RecurringPaymentUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class RecurringPaymentDelete(LoginRequiredMixin, DeleteView):
+class RecurringPaymentDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = RecurringPayment
     success_url = reverse_lazy("dash-rpayments")
 
 
-class PaymentTypeCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
+class PaymentTypeCreate(
+    CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView
+):
     model = PaymentType
     form_class = PaymentTypeForm
 
@@ -1263,7 +1275,9 @@ class PaymentTypeCreate(CreatePopupMixin, LoginRequiredMixin, CreateView):
         return c
 
 
-class PaymentTypeUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
+class PaymentTypeUpdate(
+    UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView
+):
     model = PaymentType
     form_class = PaymentTypeForm
 
@@ -1274,16 +1288,16 @@ class PaymentTypeUpdate(UpdatePopupMixin, LoginRequiredMixin, UpdateView):
         return c
 
 
-class PaymentTypeDelete(LoginRequiredMixin, DeleteView):
+class PaymentTypeDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = PaymentType
     success_url = reverse_lazy("dash-payment-types")
 
 
-class PaymentTypeDetailView(LoginRequiredMixin, generic.DetailView):
+class PaymentTypeDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = PaymentType
 
 
-class PaymentTypeListView(LoginRequiredMixin, generic.ListView):
+class PaymentTypeListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
     model = PaymentType
 
 
