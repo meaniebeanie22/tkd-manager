@@ -79,7 +79,7 @@ class Belt(models.Model):
     @classmethod
     def get_default_pk(cls):
         belt, created = cls.objects.get_or_create(
-            style=Style.objects.get_or_create(name="TKD"), degree=2, name="No Belt"
+            style=Style.objects.get_or_create(name="TKD").pk, degree=2, name="No Belt"
         )
         return belt.pk
 
