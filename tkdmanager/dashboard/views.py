@@ -457,7 +457,7 @@ class ClassListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = Class.objects.filter(
-            classtype__style__pk=self.request.session.get("style", 1)
+            type__style__pk=self.request.session.get("style", 1)
         ).all()
 
         # Process form data to filter queryset
