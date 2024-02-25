@@ -23,5 +23,7 @@ admin.site.register(Style)
 
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import mfa_required
 
+admin.site.login = mfa_required(admin.site.login)
 admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)

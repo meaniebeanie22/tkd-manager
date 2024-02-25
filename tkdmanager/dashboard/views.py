@@ -7,7 +7,6 @@ from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
-    UserPassesTestMixin,
 )
 from django.core import mail
 from django.db.models import Q, Case, When, Value
@@ -23,7 +22,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
 from pypdf import PdfReader, PdfWriter
 from rest_framework.authtoken.models import Token
-from allauth.mfa.models import Authenticator
 
 from .forms import *
 from .models import (
@@ -42,6 +40,7 @@ from .models import (
     AssessmentUnitType,
     Style,
 )
+from .mixins import MFARequiredMixin
 
 
 def order_members_by_belt_from_style(
@@ -113,23 +112,6 @@ def token_delete(request):
     token = get_object_or_404(Token, user=request.user)
     token.delete()
     return HttpResponseRedirect(reverse_lazy("dash-get-token"))
-
-
-class MFARequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        try:
-            user = self.request.user.pk
-            # test if anon
-            if user == None:
-                return False
-            has_mfa = Authenticator.objects.filter(user__pk=user).exists()
-            return has_mfa
-        except Exception as error:
-            print(f"Error in MFARequiredMixin: {error}")
-            return False
-
-    def handle_no_permission(self) -> HttpResponseRedirect:
-        return HttpResponseRedirect(reverse("mfa_activate_totp"))
 
 
 class MemberListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
