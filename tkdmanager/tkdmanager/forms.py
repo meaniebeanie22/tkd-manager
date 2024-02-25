@@ -8,13 +8,17 @@ from allauth.account.forms import (
     ResetPasswordForm,
     ResetPasswordKeyForm,
 )
+from django.forms.widgets import CheckboxInput
 
 
 class BSMixin:
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
+            if visible.field.widget == CheckboxInput:
+                visible.field.widget.attrs["class"] = "form-check-input"
+            else:
+                visible.field.widget.attrs["class"] = "form-control"
 
 
 class CustomAuthenticateForm(BSMixin, AuthenticateForm):
