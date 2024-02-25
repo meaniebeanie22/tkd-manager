@@ -239,6 +239,22 @@ class MemberSearchForm(Form):
 
 
 class ClassForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(ClassForm, self).__init__(*args, **kwargs)
+        self.fields["type"].queryset = ClassType.objects.filter(
+            style__pk=self.request.session.get("style", 1)
+        )
+        self.fields["instructors"].queryset = Member.objects.filter(
+            Q(properties__propertytype__teacher_property__exact=True)
+            & Q(
+                properties__propertytype__style__pk=self.request.session.get("style", 1)
+            )
+        )
+        self.fields["students"].queryset = Member.objects.filter(
+            belts__style__pk=self.request.session.get("style", 1)
+        )
+
     class Meta:
         model = Class
         fields = ["type", "date", "start", "end", "instructors", "students"]
