@@ -1333,3 +1333,63 @@ def manageAssessmentUnitTypes(request, **kwargs):
     return render(
         request, "dashboard/manage_assessmentunittypes.html", {"formset": formset}
     )
+
+
+@permission_required(["dashboard.add_classtype", "dashboard.add_gradingtype"])
+def manageClassTypeGradingType(request):
+    ClassTypeFormSet = modelformset_factory(
+        ClassType,
+        form=ClassTypeForm,
+        formset=ConvenientBaseModelFormSet,
+        can_delete=True,
+    )
+    GradingTypeFormSet = modelformset_factory(
+        GradingType,
+        form=GradingTypeForm,
+        formset=ConvenientBaseModelFormSet,
+        can_delete=True,
+    )
+
+    if request.method == "POST":
+        classtype_formset = ClassTypeFormSet(
+            request.POST, request.FILES, prefix="classtype-formset"
+        )
+        gradingtype_formset = ClassTypeFormSet(
+            request.POST, request.FILES, prefix="gradingtype-formset"
+        )
+        if gradingtype_formset.is_valid() and classtype_formset.is_valid():
+            for form in gradingtype_formset.forms:
+                gt = form.save(commit=False)
+                gt.style = get_object_or_404(Style, request.session.get("style", 1))
+                gt.save()
+            instances = gradingtype_formset.save(commit=False)
+            for obj in gradingtype_formset.deleted_objects:
+                obj.delete()
+            for form in classtype_formset.forms:
+                ct = form.save(commit=False)
+                ct.style = get_object_or_404(Style, request.session.get("style", 1))
+                ct.save()
+            instances = classtype_formset.save(commit=False)
+            for obj in classtype_formset.deleted_objects:
+                obj.delete()
+    else:
+        classtype_formset = ClassTypeFormSet(
+            prefix="classtype-formset",
+            queryset=ClassType.objects.filter(
+                style__pk=request.session.get("style", 1)
+            ),
+        )
+        gradingtype_formset = GradingTypeFormSet(
+            prefix="gradingtype-formset",
+            queryset=GradingType.objects.filter(
+                style__pk=request.session.get("style", 1)
+            ),
+        )
+    return render(
+        request,
+        "dashboard/manage_classtypesgradingtypes.html",
+        {
+            "gradingtype_formset": gradingtype_formset,
+            "classtype_formset": classtype_formset,
+        },
+    )

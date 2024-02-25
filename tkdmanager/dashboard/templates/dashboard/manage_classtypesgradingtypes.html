@@ -1,0 +1,126 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>{{ style }} Manager - Manage CT and GT</title>
+{% endblock %}
+
+{% block extrahead %}
+{% load static %}
+<!-- Include the formset's media -->
+<script src="{% static 'convenient_formsets/convenient_formsets.js' %}"></script>
+
+<!-- Initialize a ConvenientFormset -->
+<script>
+    window.addEventListener('load', function(event) {
+        new ConvenientFormset({
+            'formsetPrefix': '{{ classtype_formset.prefix }}',
+            'formsContainerSelector': '#classtype-formset #classtype-forms-container',
+            'formSelector': '.classtype-form',
+
+            'canAddForms': true,
+            'addFormButtonSelector': '#classtype-formset #add-form-button',
+            'emptyFormTemplateSelector': '#classtype-formset #empty-form-template',
+
+            'canDeleteForms': true,
+            'deleteFormButtonSelector': '.delete-form-button',
+        });
+        new ConvenientFormset({
+            'formsetPrefix': '{{ gradingtype_formset.prefix }}',
+            'formsContainerSelector': '#gradingtype-formset #gradingtype-forms-container',
+            'formSelector': '.gradingtype-form',
+
+            'canAddForms': true,
+            'addFormButtonSelector': '#gradingtype-formset #add-form-button',
+            'emptyFormTemplateSelector': '#gradingtype-formset #empty-form-template',
+
+            'canDeleteForms': true,
+            'deleteFormButtonSelector': '.delete-form-button',
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<h4>Manage Class Types and Grading Types</h4>
+
+<!-- Render formset using the following basic structure -->
+<div class="row">
+    <form method="post">
+        <div class="col-md-6">
+            {% csrf_token %}
+            {{ classtype_formset.management_form }}
+            <div id="classtype-formset">
+            <div id="classtype-forms-container">
+                {% for classtype_form in classtype_formset.forms %}
+                <div class="row classtype-form">
+                    <div class="col" classtype="max-width: 350px;">
+                        {{ classtype_form.id }} <!-- hidden field needed for modelformset -->
+                        {{ classtype_form.name }}
+                    </div>
+                    <div class="col">
+                        {% if classtype_formset.can_delete %}
+                            {{ classtype_form.DELETE }}
+                            <input type="button" class="btn btn-outline-danger btn-outline-thicker delete-form-button" value="Delete">
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
+            <template id="empty-form-template">
+                <div class="row classtype-form">
+                    <div class="col" classtype="max-width: 350px;">
+                        {{ classtype_formset.empty_form.name }}
+                    </div>
+                    <div class="col">
+                        {% if classtype_formset.can_delete %}
+                            <input type="button" class="btn btn-outline-danger btn-outline-thicker delete-form-button" value="Delete">
+                        {% endif %}
+                    </div>
+                </div>
+            </template>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% csrf_token %}
+            {{ gradingtype_formset.management_form }}
+            <div id="gradingtype-formset">
+            <div id="gradingtype-forms-container">
+                {% for gradingtype_form in gradingtype_formset.forms %}
+                <div class="row gradingtype-form">
+                    <div class="col" gradingtype="max-width: 350px;">
+                        {{ gradingtype_form.id }} <!-- hidden field needed for modelformset -->
+                        {{ gradingtype_form.name }}
+                    </div>
+                    <div class="col">
+                        {% if gradingtype_formset.can_delete %}
+                            {{ gradingtype_form.DELETE }}
+                            <input type="button" class="btn btn-outline-danger btn-outline-thicker delete-form-button" value="Delete">
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <div><input type="button" id="add-form-button" class="btn btn-outline-primary btn-outline-thicker" value="Add another"></div>
+            <template id="empty-form-template">
+                <div class="row gradingtype-form">
+                    <div class="col" gradingtype="max-width: 350px;">
+                        {{ gradingtype_formset.empty_form.name }}
+                    </div>
+                    <div class="col">
+                        {% if gradingtype_formset.can_delete %}
+                            <input type="button" class="btn btn-outline-danger btn-outline-thicker delete-form-button" value="Delete">
+                        {% endif %}
+                    </div>
+                </div>
+            </template>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/> 
+    </form>
+</div>
+
+{% endblock %}
+

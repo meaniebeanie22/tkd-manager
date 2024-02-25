@@ -262,4 +262,9 @@ urlpatterns = [
     path(
         "assessableunits", views.manageAssessmentUnitTypes, name="dash-assessableunits"
     ),
+    path(
+        "gradingtypeclasstype",
+        views.manageClassTypeGradingType,
+        name="dash-classtypegradingtype",
+    ),
 ]

@@ -704,3 +704,15 @@ class AssessmentUnitTypeForm(ModelForm):
     class Meta:
         model = AssessmentUnitType
         fields = ["name", "style"]
+
+
+class ClassTypeForm(ModelForm):
+    class Meta:
+        model = ClassType
+        fields = ["name", "style"]
+
+
+class GradingTypeForm(ModelForm):
+    class Meta:
+        model = GradingType
+        fields = ["name", "style"]
