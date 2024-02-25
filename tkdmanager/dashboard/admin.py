@@ -21,9 +21,11 @@ admin.site.register(ClassType)
 admin.site.register(GradingType)
 admin.site.register(Style)
 
-from django.urls import reverse
+from django.conf import settings
 from .decorators import staff_mfa_required
+from django.contrib.admin.views.decorators import staff_member_required
 
-admin.site.login = staff_mfa_required(
-    admin.site.login, login_url=reverse("mfa_activate_totp")
-)
+admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)
+
+
+# admin.site.login = staff_mfa_required(admin.site.login, login_url=settings.LOGIN_URL)
