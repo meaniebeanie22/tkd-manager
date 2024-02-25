@@ -115,11 +115,14 @@ def token_delete(request):
 class MFARequiredMixin(UserPassesTestMixin):
     def test_func(self):
         try:
-            user = self.request.user
-            has_mfa = Authenticator.objects.filter(user=user).exists()
+            user = self.request.user.pk
+            # test if anon
+            if user == None:
+                return False
+            has_mfa = Authenticator.objects.filter(user__pk=user).exists()
             return has_mfa
         except Exception as error:
-            print(f'Error in MFARequiredMixin: {error}')
+            print(f"Error in MFARequiredMixin: {error}")
             return False
 
     def handle_no_permission(self) -> HttpResponseRedirect:

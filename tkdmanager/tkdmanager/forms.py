@@ -15,9 +15,7 @@ class BSMixin:
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            print(f"Widget: {visible.field.widget}")
             if isinstance(visible.field.widget, CheckboxInput):
-                print("Checkbox!")
                 visible.field.widget.attrs["class"] = "form-check-input"
             else:
                 visible.field.widget.attrs["class"] = "form-control"
