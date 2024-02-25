@@ -46,7 +46,7 @@
 <!-- Render formset using the following basic structure -->
 <div class="row">
     <form method="post">
-        <div class="col-md-5">
+        <div class="col-sm-5">
             {% csrf_token %}
             {{ classtype_formset.management_form }}
             <div id="classtype-formset">
@@ -82,7 +82,7 @@
                 </template>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-sm-5">
             {% csrf_token %}
             {{ gradingtype_formset.management_form }}
             <div id="gradingtype-formset">
