@@ -6,7 +6,6 @@ from convenient_formsets import ConvenientBaseModelFormSet
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (
-    MFARequiredMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,
 )
