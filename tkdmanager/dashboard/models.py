@@ -29,14 +29,10 @@ def time_in_a_month():
 
 
 def has_duplicate_styles(queryset):
-    print(f"Input QS: {queryset.values()}")
     # Annotate the queryset to count occurrences of each style
     queryset = queryset.values("style__pk").annotate(style_count=Count("style__pk"))
-    print(f"Annotated QS: {queryset.values()}")
     # Filter to get styles with count greater than 1
     duplicate_styles = queryset.filter(style_count__gt=1)
-    print(f"Duplicated styles: {duplicate_styles.values()}")
-    print(f"Exists? {duplicate_styles.exists()}")
     # Return True if there are duplicate styles, False otherwise
     return duplicate_styles.exists()
 
@@ -160,7 +156,6 @@ class Member(models.Model):
         """
         # get all belts
         belts = self.belts.all()
-        print(f"Member Belts: {belts.values()}")
         # see if there is already a belt in the same style with the same degree - if there is, scream
         if has_duplicate_styles(belts):
             # This below line will render error by breaking page, you will see
@@ -181,7 +176,6 @@ class Member(models.Model):
         Return a belt from a given member and style
         """
         belt = self.belts.filter(style=style).first()
-        print(f"Get belt:\nStyle: {style}\nBelt: {belt}")
         return belt
 
     def get_belt_context(self, context):
@@ -190,7 +184,6 @@ class Member(models.Model):
         """
         style = context.request.session.get("style", 1)
         belt = self.get_belt(Style.objects.get(pk=style))
-        print(f"Belt: {belt}")
         return belt
 
     @belt.setter

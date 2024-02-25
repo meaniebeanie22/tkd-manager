@@ -1029,9 +1029,7 @@ def manageBelts(request, **kwargs):
 
     if request.method == "POST":
         formset = BeltFormSet(request.POST, request.FILES, prefix="belt-formset")
-        print(f"Belt Formset Data: {formset.data}")
         if formset.is_valid():
-            print("Belt Formset Valid")
             no_forms = len(formset)
             for i, form in enumerate(formset.ordered_forms):
                 belt = form.save(commit=False)
@@ -1040,14 +1038,9 @@ def manageBelts(request, **kwargs):
                     Style, pk=request.session.get("style", 1)
                 )
                 belt.save()
-                print(f"Saved belt: {belt}")
-                print(f"Saved belt pk: {belt.pk}")
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
                 obj.delete()
-            print("Belt Formset: Done")
-        else:
-            print(f"Formset errors: {formset.errors}")
     else:
         formset = BeltFormSet(
             prefix="belt-formset",
@@ -1078,7 +1071,6 @@ def gradingresult_batch_email_view(request, **kwargs):
     View that sends emails with the GR PDF attached to the email the assessed member has on file
     GRs to be sent are specified by the selected_items query key
     """
-    print("Email send request for gradingresults")
     try:
         pks = request.GET.getlist("selected_items")
     except:
@@ -1143,7 +1135,6 @@ def gradinginvite_batch_email_view(request, **kwargs):
     View that sends emails with the GI PDF attached to the email the assessed member has on file
     GIs to be sent are specified by the selected_items query key
     """
-    print("Email send request for gradingresults")
     try:
         pks = request.GET.getlist("selected_items")
     except:
