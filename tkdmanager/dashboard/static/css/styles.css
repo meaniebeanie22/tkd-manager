@@ -12,6 +12,10 @@ th, td {
   padding-bottom: 2px;
 }
 
+.fixed-top {
+  z-index: 1000; /* Adjust z-index to ensure the banner appears above other elements */
+}
+
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }

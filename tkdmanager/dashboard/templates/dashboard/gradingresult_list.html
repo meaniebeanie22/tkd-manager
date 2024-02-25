@@ -29,12 +29,6 @@
 {{ search_form.media.js }}
 <br>
   {% if gradingresult_list %}
-  <style>
-    /* Additional styling for the fixed banner */
-    .fixed-top {
-        z-index: 1000; /* Adjust z-index to ensure the banner appears above other elements */
-    }
-  </style>
   <script>
     $(document).ready(function() {
         $('#email-pdfs-button').click(function(event) {
