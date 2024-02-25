@@ -32,31 +32,29 @@
             {% endif %}
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                         <div style="position: sticky; top: 0px;">
-                            <div class="flex-shrink-0 p-3 bg-white" style="width: 100px;">
-                                <strong>{% trans "Menu:" %}</strong>
-                                <ul>
-                                    {% if user.is_authenticated %}
-                                        <li>
-                                            <a href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-                                        </li>
-                                    {% else %}
-                                        <li>
-                                            <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
+                            <strong>{% trans "Menu:" %}</strong>
+                            <ul>
+                                {% if user.is_authenticated %}
+                                    <li>
+                                        <a href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
-                    <div class="col-sm-10 mb-3">
+                    <div class="col-sm-11 mb-3">
                         {% block content %}
                         {% endblock content %}
                     </div>

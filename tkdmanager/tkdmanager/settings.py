@@ -168,9 +168,21 @@ MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
 ACCOUNT_CHANGE_EMAIL = True
 
+ACCOUNT_FORMS = {
+    "login": "tkdmanager.forms.CustomLoginForm",
+    "signup": "tkdmanager.forms.CustomSignupForm",
+    "add_email": "tkdmanager.forms.CustomAddEmailForm",
+    "change_password": "tkdmanager.forms.CustomChangePasswordForm",
+    "set_password": "tkdmanager.forms.CustomSetPasswordForm",
+    "reset_password": "tkdmanager.forms.CustomResetPasswordForm",
+    "reset_password_from_key": "tkdmanager.forms.CustomResetPasswordKeyForm",
+}
+
 MFA_FORMS = {
     "authenticate": "tkdmanager.forms.CustomAuthenticateForm",
     "reauthenticate": "tkdmanager.forms.CustomAuthenticateForm",
+    "activatetotp": "tkdmanager.forms.CustomActivateTOTPForm",
+    "deactivatetotp": "tkdmanager.forms.CustomDeactivateTOTPForm",
 }
 
 # Static files (CSS, JavaScript, Images)
