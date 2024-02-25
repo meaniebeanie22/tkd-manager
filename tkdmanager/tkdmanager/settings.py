@@ -168,6 +168,11 @@ MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
 ACCOUNT_CHANGE_EMAIL = True
 
+MFA_FORMS = {
+    "authenticate": "tkdmanager.forms.CustomAuthenticateForm",
+    "reauthenticate": "tkdmanager.forms.CustomAuthenticateForm",
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
