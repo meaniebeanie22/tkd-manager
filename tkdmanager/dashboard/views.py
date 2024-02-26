@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from io import BytesIO
 from typing import Any
-from convenient_formsets import ConvenientBaseModelFormSet
+from convenient_formsets import ConvenientBaseModelFormSet, ConvenientBaseInlineFormSet
 
 from dashboard import renderers
 from django.contrib.auth.decorators import login_required, permission_required
@@ -39,6 +39,8 @@ from .models import (
     Belt,
     AssessmentUnitType,
     Style,
+    MemberProperty,
+    MemberPropertyType,
 )
 from .mixins import MFARequiredMixin
 
@@ -1399,4 +1401,30 @@ def manageClassTypeGradingType(request):
     ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
 )
 def manageMemberPropertyMemberPropertyType(request):
-    pass
+    MemberPropertyTypeFormSet = modelformset_factory(
+        MemberPropertyType,
+        form=MemberPropertyTypeBulkForm,
+        formset=ConvenientBaseModelFormSet,
+        can_delete=True,
+    )
+    MemberPropertyFormSet = inlineformset_factory(
+        MemberProperty,
+        form=MemberPropertyBulkForm,
+        formset=ConvenientBaseInlineFormSet,
+        can_delete=True,
+    )
+
+    if request.method == "POST":
+        pass
+    else:
+        # make a mpt formset with a prefix, and then make a bunch of memberproperty formsets (one for each mpt with a prefix)
+        pass
+
+    return render(
+        request,
+        "dashboard/manage_memberpropertymemberpropertytype.html",
+        {
+            "memberpropertytype_formset": memberpropertytype_formset,
+            "memberproperty_formsets": memberproperty_formsets,
+        },
+    )
