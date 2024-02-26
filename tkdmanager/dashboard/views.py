@@ -1393,3 +1393,10 @@ def manageClassTypeGradingType(request):
             "classtype_formset": classtype_formset,
         },
     )
+
+
+@permission_required(
+    ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
+)
+def manageMemberPropertyMemberPropertyType(request):
+    pass
