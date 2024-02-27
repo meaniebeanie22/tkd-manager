@@ -51,6 +51,10 @@ from .models import (
 )
 
 from tkdmanager.forms import BSMixin
+from django.forms.models import BaseInlineFormSet, inlineformset_factory
+from django.utils.translation import gettext_lazy as _
+
+from utils.forms import is_empty_form, is_form_persisted
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -224,7 +228,7 @@ class MemberSearchForm(Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(MemberSearchForm, self).__init__(*args, **kwargs)
-        self.fields["belts"].queryset = Belt.objects.filter(
+        self.fields["belt"].queryset = Belt.objects.filter(
             style__pk=self.request.session.get("style", 1)
         )
 
@@ -701,23 +705,6 @@ class GradingTypeForm(BSMixin, ModelForm):
     class Meta:
         model = GradingType
         fields = ["name", "style"]
-
-"""
-class MemberPropertyBulkForm(ModelForm):
-    class Meta:
-        model = MemberProperty
-        fields = ["name"]
-
-class MemberPropertyTypeBulkForm(ModelForm):
-    class Meta:
-        model = MemberPropertyType
-        fields = ['name', 'searchable', 'teacher_property']
-"""
-
-from django.forms.models import BaseInlineFormSet, inlineformset_factory
-from django.utils.translation import gettext_lazy as _
-
-from utils.forms import is_empty_form, is_form_persisted
 
 # The formset for editing the BookImages that belong to a Book.
 MemberPropertyFormset = inlineformset_factory(
