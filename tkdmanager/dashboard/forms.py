@@ -717,12 +717,11 @@ class MemberPropertyTypeBulkForm(ModelForm):
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
-from publishing.utils.forms import is_empty_form, is_form_persisted
-
+from utils.forms import is_empty_form, is_form_persisted
 
 # The formset for editing the BookImages that belong to a Book.
 MemberPropertyFormset = inlineformset_factory(
-    MemberPropertyType, MemberProperty, fields=("name"), extra=1
+    MemberPropertyType, MemberProperty, fields=("name",), extra=1
 )
 
 

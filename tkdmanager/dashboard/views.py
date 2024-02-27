@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import (
 )
 from django.core import mail
 from django.db.models import Q, Case, When, Value
-from django.db import models
+from django.db import models, transaction
 
 from django.forms import inlineformset_factory, modelformset_factory
 from django.forms.models import model_to_dict
@@ -1026,6 +1026,7 @@ def gradinginvite_batch_create(request, **kwargs):
 
 
 @permission_required("dashboard.add_belt")
+@transaction.atomic
 def manageBelts(request, **kwargs):
     BeltFormSet = modelformset_factory(
         Belt,

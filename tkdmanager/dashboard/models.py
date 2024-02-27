@@ -71,6 +71,13 @@ class Belt(models.Model):
 
     class Meta:
         ordering = ["-style", "-degree"]
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_style_degree",
+                fields=["style", "degree"],
+                deferrable=models.Deferrable.DEFERRED
+            )
+        ]
 
     @classmethod
     def get_default_pk(cls):
