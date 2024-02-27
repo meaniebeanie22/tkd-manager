@@ -39,6 +39,8 @@
                             <ul>
                                 {% if user.is_authenticated %}
                                     <li>
+                                        <a href="{% url 'dash-index' %}">{% trans "Home" %}</a>
+                                    <li>
                                         <a href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
                                     </li>
                                     <li>
