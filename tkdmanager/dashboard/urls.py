@@ -267,4 +267,5 @@ urlpatterns = [
         views.manageClassTypeGradingType,
         name="dash-classtypegradingtype",
     ),
+    path("memberpropertytype", views.manageMemberPropertyMemberPropertyType, name="dash-memberpropertytype")
 ]
