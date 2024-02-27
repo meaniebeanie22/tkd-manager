@@ -42,12 +42,15 @@ from .models import (
     PaymentType,
     RecurringPayment,
     MemberProperty,
+    MemberPropertyType,
     Belt,
     AssessmentUnitType,
     GradingType,
     ClassType,
     Style,
 )
+
+from tkdmanager.forms import BSMixin
 
 
 class MembersWidget(s2forms.ModelSelect2MultipleWidget):
@@ -670,61 +673,156 @@ class GradingInviteBulkForm(ModelForm):
         return bool(self.initial or changed_data)
 
 
-class BeltForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
-            visible.field.widget.attrs["placeholder"] = visible.field.label
-
+class BeltForm(BSMixin, ModelForm):
     class Meta:
         model = Belt
         fields = ["name"]
 
 
-class StyleForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
-            visible.field.widget.attrs["placeholder"] = visible.field.label
-
+class StyleForm(BSMixin, ModelForm):
     class Meta:
         model = Style
         fields = ["name"]
 
 
-class AssessmentUnitTypeForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
-            visible.field.widget.attrs["placeholder"] = visible.field.label
-
+class AssessmentUnitTypeForm(BSMixin, ModelForm):
     class Meta:
         model = AssessmentUnitType
         fields = ["name", "style"]
 
 
-class ClassTypeForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
-            visible.field.widget.attrs["placeholder"] = visible.field.label
-
+class ClassTypeForm(BSMixin, ModelForm):
     class Meta:
         model = ClassType
         fields = ["name", "style"]
 
 
-class GradingTypeForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control"
-            visible.field.widget.attrs["placeholder"] = visible.field.label
-
+class GradingTypeForm(BSMixin, ModelForm):
     class Meta:
         model = GradingType
         fields = ["name", "style"]
+
+"""
+class MemberPropertyBulkForm(ModelForm):
+    class Meta:
+        model = MemberProperty
+        fields = ["name"]
+
+class MemberPropertyTypeBulkForm(ModelForm):
+    class Meta:
+        model = MemberPropertyType
+        fields = ['name', 'searchable', 'teacher_property']
+"""
+
+from django.forms.models import BaseInlineFormSet, inlineformset_factory
+from django.utils.translation import gettext_lazy as _
+
+from publishing.utils.forms import is_empty_form, is_form_persisted
+
+
+# The formset for editing the BookImages that belong to a Book.
+MemberPropertyFormset = inlineformset_factory(
+    MemberPropertyType, MemberProperty, fields=("name"), extra=1
+)
+
+
+class BaseMPTsWithMPsFormset(BaseInlineFormSet):
+    """
+    The base formset for editing MemberPropertyTypes belonging to a style and their MemberProperties
+    """
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+
+        # Save the formset for an MPT's MP's in the nested property.
+        form.nested = MemberPropertyFormset(
+            instance=form.instance,
+            data=form.data if form.is_bound else None,
+            files=form.files if form.is_bound else None,
+            prefix="memberproperty-%s-%s"
+            % (form.prefix, MemberPropertyFormset.get_default_prefix()),
+        )
+
+    def is_valid(self):
+        """
+        Also validate the nested formsets.
+        """
+        result = super().is_valid()
+
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, "nested"):
+                    result = result and form.nested.is_valid()
+
+        return result
+
+    def clean(self):
+        """
+        If a parent form has no data, but its nested forms do, we should
+        return an error, because we can't save the parent.
+        For example, if the MPT form is empty, but there are MPs.
+        """
+        super().clean()
+
+        for form in self.forms:
+            if not hasattr(form, "nested") or self._should_delete_form(form):
+                continue
+
+            if self._is_adding_nested_inlines_to_empty_form(form):
+                form.add_error(
+                    field=None,
+                    error=_(
+                        "You are trying to add property(ies) to a property type which "
+                        "does not yet exist. Please add information "
+                        "about the property type and enter the properties again."
+                    ),
+                )
+
+    def save(self, commit=True):
+        """
+        Also save the nested formsets.
+        """
+        result = super().save(commit=commit)
+
+        for form in self.forms:
+            if hasattr(form, "nested"):
+                if not self._should_delete_form(form):
+                    form.nested.save(commit=commit)
+
+        return result
+
+    def _is_adding_nested_inlines_to_empty_form(self, form):
+        """
+        Are we trying to add data in nested inlines to a form that has no data?
+        e.g. Adding properties to a new propertytype whose data we haven't entered?
+        """
+        if not hasattr(form, "nested"):
+            # A basic form; it has no nested forms to check.
+            return False
+
+        if is_form_persisted(form):
+            # We're editing (not adding) an existing model.
+            return False
+
+        if not is_empty_form(form):
+            # The form has errors, or it contains valid data.
+            return False
+
+        # All the inline forms that aren't being deleted:
+        non_deleted_forms = set(form.nested.forms).difference(
+            set(form.nested.deleted_forms)
+        )
+
+        # At this point we know that the "form" is empty.
+        # In all the inline forms that aren't being deleted, are there any that
+        # contain data? Return True if so.
+        return any(not is_empty_form(nested_form) for nested_form in non_deleted_forms)
+
+
+# This is the formset for the propertytypes belonging to a style and the
+# property belonging to those propertytypes.
+#
+# You'd use this by passing in a Style:
+#     StyleMPTswithMPsFormset(**form_kwargs, instance=self.object)
+
+        

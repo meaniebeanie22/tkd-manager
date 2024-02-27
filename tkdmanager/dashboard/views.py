@@ -1401,30 +1401,27 @@ def manageClassTypeGradingType(request):
     ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
 )
 def manageMemberPropertyMemberPropertyType(request):
-    MemberPropertyTypeFormSet = modelformset_factory(
+    StyleMPTswithMPsFormset = inlineformset_factory(
+        Style,
         MemberPropertyType,
-        form=MemberPropertyTypeBulkForm,
-        formset=ConvenientBaseModelFormSet,
-        can_delete=True,
+        formset=BaseMPTsWithMPsFormset,
+        # We need to specify at least one MPT field:
+        fields=("name", "searchable", "teacher_property"),
+        extra=1,
+        # If you don't want to be able to delete Styles:
+        can_delete=False
     )
-    MemberPropertyFormSet = inlineformset_factory(
-        MemberProperty,
-        form=MemberPropertyBulkForm,
-        formset=ConvenientBaseInlineFormSet,
-        can_delete=True,
-    )
-
     if request.method == "POST":
-        pass
+        formset = StyleMPTswithMPsFormset(request.POST, request.FILES)
+        formset.save()
     else:
         # make a mpt formset with a prefix, and then make a bunch of memberproperty formsets (one for each mpt with a prefix)
-        pass
+        formset = StyleMPTswithMPsFormset(instance=Style.get(pk=request.session.get('style', 1)))
 
     return render(
         request,
         "dashboard/manage_memberpropertymemberpropertytype.html",
         {
-            "memberpropertytype_formset": memberpropertytype_formset,
-            "memberproperty_formsets": memberproperty_formsets,
+            "memberpropertyformset": formset
         },
     )
