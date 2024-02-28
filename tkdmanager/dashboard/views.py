@@ -1027,7 +1027,6 @@ def gradinginvite_batch_create(request, **kwargs):
 
 
 @permission_required("dashboard.add_belt")
-@transaction.atomic
 def manageBelts(request, **kwargs):
     BeltFormSet = modelformset_factory(
         Belt,
@@ -1041,17 +1040,18 @@ def manageBelts(request, **kwargs):
     if request.method == "POST":
         formset = BeltFormSet(request.POST, request.FILES, prefix="belt-formset")
         if formset.is_valid():
-            no_forms = len(formset)
-            for i, form in enumerate(formset.ordered_forms):
-                belt = form.save(commit=False)
-                belt.degree = no_forms - i
-                belt.style = get_object_or_404(
-                    Style, pk=request.session.get("style", 1)
-                )
-                belt.save()
-            instances = formset.save(commit=False)
-            for obj in formset.deleted_objects:
-                obj.delete()
+            with transaction.atomic():
+                no_forms = len(formset)
+                for i, form in enumerate(formset.ordered_forms):
+                    belt = form.save(commit=False)
+                    belt.degree = no_forms - i
+                    belt.style = get_object_or_404(
+                        Style, pk=request.session.get("style", 1)
+                    )
+                    belt.save()
+                instances = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
     else:
         formset = BeltFormSet(
             prefix="belt-formset",
