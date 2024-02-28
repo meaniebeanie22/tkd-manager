@@ -150,7 +150,7 @@ class GradingResultUpdateForm(ModelForm):
 class GradingResultCreateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(GradingResultSearchForm, self).__init__(*args, **kwargs)
+        super(GradingResultCreateForm, self).__init__(*args, **kwargs)
         self.fields["forbelt"].queryset = Belt.objects.filter(
             style__pk=self.request.session.get("style", 1)
         )
@@ -516,7 +516,7 @@ class GradingInviteForm(ModelForm):
         self.request = kwargs.pop("request")
         super(GradingInviteForm, self).__init__(*args, **kwargs)
         self.fields["grading"].queryset = Grading.objects.filter(
-            style__pk=self.request.session.get("style", 1)
+            grading_type__style__pk=self.request.session.get("style", 1)
         )
         self.fields["forbelt"].queryset = Belt.objects.filter(
             style__pk=self.request.session.get("style", 1)
@@ -705,6 +705,11 @@ class GradingTypeForm(BSMixin, ModelForm):
     class Meta:
         model = GradingType
         fields = ["name", "style"]
+
+class AwardForm(BSMixin, ModelForm):
+    class Meta:
+        model = Award
+        fields = ["name"]
 
 # The formset for editing the BookImages that belong to a Book.
 MemberPropertyFormset = inlineformset_factory(

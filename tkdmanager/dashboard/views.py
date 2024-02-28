@@ -356,7 +356,7 @@ class AwardListView(MFARequiredMixin, LoginRequiredMixin, generic.ListView):
 
 class AwardCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, CreateView):
     model = Award
-    fields = ["name"]
+    form_class = AwardForm
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         c = super().get_context_data(**kwargs)
@@ -364,15 +364,16 @@ class AwardCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Create
         c["popup"] = popup
         return c
 
-    def get_form_kwargs(self) -> dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        return kwargs
+    def form_valid(self, form):
+        response = super(AwardCreate, self).form_valid(form)
+        self.object.style = self.request.session.get('style', 1)
+        self.object.save()
+        return response    
 
 
 class AwardUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView):
     model = Award
-    fields = ["name"]
+    form_class = AwardForm
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         c = super().get_context_data(**kwargs)
@@ -380,11 +381,11 @@ class AwardUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Update
         c["popup"] = popup
         return c
 
-    def get_form_kwargs(self) -> dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        return kwargs
-
+    def form_valid(self, form):
+        response = super(AwardCreate, self).form_valid(form)
+        self.object.style = self.request.session.get('style', 1)
+        self.object.save()
+        return response   
 
 class AwardDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Award
