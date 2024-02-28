@@ -1,8 +1,13 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   {% block title %}
-    <title>{{ style }} Manager - {{ style }} Manager</title>
+    <title>
+      {% block head_title %}
+        {{ style }} Manager - {{ style }} Manager
+      {% endblock head_title %}
+    </title>
   {% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,9 +26,17 @@
   {% block extrahead %}{% endblock %}
 </head>
 <body>
+  {% block body %}
   <div class="container-fluid">
     <div class="row">
       {% if not popup %}
+            {% if messages %}
+                <div class="fixed-top sticky-top">
+                    {% for message in messages %}
+                        <div class="alert alert-dismissible fade show alert-info" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         <div class="col-sm-2">
           <div style="position: sticky; top: 0px;">
             {% block sidebar %}
@@ -58,6 +71,7 @@
                     </script>
                   </ul>
                 </div>
+                {% if user.is_authenticated %}
                 <ul class="list-unstyled ps-0">
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#member-collapse" aria-expanded="false">
@@ -111,7 +125,7 @@
                     <div class="collapse" id="admin-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="{% url 'dash-belts' %}" class="link-dark rounded">Belts</a></li>
-                        <li><a href="#" class="link-dark rounded">Member attributes</a></li>
+                        <li><a href="{% url 'dash-memberpropertytype' %}" class="link-dark rounded">Member attributes</a></li>
                         <li><a href="{% url 'dash-styles' %}" class="link-dark rounded">Styles</a></li>
                         <li><a href="{% url "dash-classtypegradingtype" %}" class="link-dark rounded">Class/Grading types</a></li>
                         <li><a href="{% url 'dash-assessableunits' %}" class="link-dark rounded">Assessable units</a></li>
@@ -120,8 +134,7 @@
                     </div>
                   </li>
                   {% endif %}
-                  <li class="border-top my-3"></li>
-                  {% if user.is_authenticated %}
+                  <li class="border-top my-3"></li>               
                   <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                       {{ user }}
@@ -134,6 +147,23 @@
                               {% csrf_token %}
                               <a href="#" onclick="this.closest('form').submit();return false;" class="link-dark rounded">Sign out</a>
                           </form>
+                        </li>
+                        <li><a href="{% url 'account_email' %}" class="link-dark rounded">{% trans "Change Email" %}</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                      {% trans "Accounts" %}
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li>
+                            <a href="{% url 'account_login' %}" class="link-dark rounded">{% trans "Sign In" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'account_signup' %}" class="link-dark rounded">{% trans "Sign Up" %}</a>
                         </li>
                       </ul>
                     </div>
@@ -167,5 +197,8 @@
       </div>
     </div>
   </div>
+{% endblock %}
+{% block extra_body %}
+{% endblock extra_body %}
 </body>
 </html>
