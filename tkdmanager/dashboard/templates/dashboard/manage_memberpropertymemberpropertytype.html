@@ -1,0 +1,85 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}
+<title>{{ style }} Manager - Manage Member Properties</title>
+{% endblock %}
+
+
+{% block content %}
+<h4>Add/Update Member Properties</h4>
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+
+    {% for type_form in form.forms %}
+
+      <hr>
+
+      <h2>
+        {% if type_form.instance.id %}
+          {% if form.forms|length > 1 %}
+            Add another type
+          {% else %}
+            Add a type
+          {% endif %}
+        {% endif %}
+      </h2>
+
+      {% for hidden_field in type_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+
+      <table>
+        {{ type_form.as_table }}
+      </table>
+
+      {% if type_form.nested %}
+        <div class="indent">
+
+          <h3>Images</h3>
+
+          {{ type_form.nested.management_form }}
+          {{ type_form.nested.non_form_errors }}
+
+          <table>
+            {% for property_form in type_form.nested.forms %}
+
+              <tr>
+                <td>
+                  <em>
+                    {% if property_form.instance.id %}
+                    {% else %}
+                      Add a property
+                    {% endif %}
+                  </em>
+                </td>
+                <td>
+                  {% for hidden_field in property_form.hidden_fields %}
+                    {{ hidden_field.errors }}
+                  {% endfor %}
+
+                  <table>
+                    {{ property_form.as_table }}
+                  </table>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+
+    <hr>
+    <input type="submit" class="btn btn-outline-success btn-outline-thicker" value="Submit"/>
+  </form>
+
+{% endblock content %}
