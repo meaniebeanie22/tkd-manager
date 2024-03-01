@@ -11,13 +11,13 @@ def user_is_mfa(userobj):
         if user == None:
             return False
         # get user session
-        session = Session.objects.filter(_auth_user_id=userobj.pk).first().get_decoded()
-        print(f'Session: {session.items()}')
-        for method in session['account_authentication_methods']:
-            if method['method'] == 'mfa':
-                return True
-            else:
-                return False
+        session = Session.objects.filter(session_key=userobj.session_key)
+        if session:
+            session_data = session.get_decoded()
+            for method in session_data.get('account_authentication_methods', []):
+                if method.get('method') == 'mfa':
+                    return True
+        return False
             
     except Exception as error:
         print(f"Error in user_is_mfa: {error}")
