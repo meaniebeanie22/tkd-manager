@@ -1,8 +1,7 @@
-from allauth.mfa.models import Authenticator
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-
+from django.contrib.sessions.models import Session
 
 def user_is_mfa(userobj):
     try:
@@ -10,8 +9,13 @@ def user_is_mfa(userobj):
         # test if anon
         if user == None:
             return False
-        has_mfa = Authenticator.objects.filter(user__pk=user).exists()
-        return has_mfa
+        # get user session
+        session = Session.objects.filter(_auth_user_id=userobj.pk).first()
+        for method in session['account_authentication_methods']:
+            if method['method'] == 'mfa':
+                return True
+            else:
+                return False
     except Exception as error:
         print(f"Error in user_is_mfa: {error}")
         return False
