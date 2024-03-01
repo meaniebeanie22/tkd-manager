@@ -49,9 +49,10 @@ def request_decorator(
 
     return decorator
 
-def mfa_required(function=None):
+def mfa_required(function=None, login_url=None):
     actual_decorator = request_decorator(
         lambda r: req_user_is_mfa(r),
+        login_url=login_url,
     )
     if function:
         return actual_decorator(function)
