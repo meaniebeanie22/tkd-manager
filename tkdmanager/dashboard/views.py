@@ -41,7 +41,8 @@ from .models import (
     Style,
     MemberPropertyType,
 )
-from .mixins import MFARequiredMixin, mfa_required
+from .mixins import MFARequiredMixin
+from .decorators import mfa_required
 
 
 def order_members_by_belt_from_style(
@@ -83,8 +84,6 @@ def time_difference_in_seconds(time1, time2):
 @mfa_required
 def index(request):
     """homepage"""
-    for k, v in request.session.items():
-        print(f'Key: {k}\nValue: {v}\n---')
 
     # Number of members
     num_members = Member.objects.count()
