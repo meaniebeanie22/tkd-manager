@@ -83,6 +83,7 @@ def time_difference_in_seconds(time1, time2):
 @login_required
 def index(request):
     """homepage"""
+    print(request.session.values())
 
     # Number of members
     num_members = Member.objects.count()
