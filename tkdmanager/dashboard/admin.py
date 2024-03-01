@@ -22,7 +22,7 @@ admin.site.register(GradingType)
 admin.site.register(Style)
 
 from django.conf import settings
-from .decorators import staff_mfa_required
+# from .decorators import staff_mfa_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 admin.site.login = staff_member_required(admin.site.login, login_url=settings.LOGIN_URL)
