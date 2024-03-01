@@ -39,7 +39,6 @@ from .models import (
     Belt,
     AssessmentUnitType,
     Style,
-    MemberProperty,
     MemberPropertyType,
 )
 from .mixins import MFARequiredMixin, mfa_required
