@@ -42,7 +42,7 @@ from .models import (
     MemberProperty,
     MemberPropertyType,
 )
-from .mixins import MFARequiredMixin
+from .mixins import MFARequiredMixin, mfa_required
 
 
 def order_members_by_belt_from_style(
@@ -81,6 +81,7 @@ def time_difference_in_seconds(time1, time2):
 
 # Create your views here.
 @login_required
+@mfa_required
 def index(request):
     """homepage"""
     for k, v in request.session.items():
@@ -104,6 +105,7 @@ def index(request):
 
 
 @permission_required("authtoken.add_token")
+@mfa_required
 def token_display(request):
     token, created = Token.objects.get_or_create(user=request.user)
     context = {"token": token.key}
@@ -112,6 +114,7 @@ def token_display(request):
 
 
 @permission_required("authtoken.delete_token")
+@mfa_required
 def token_delete(request):
     token = get_object_or_404(Token, user=request.user)
     token.delete()

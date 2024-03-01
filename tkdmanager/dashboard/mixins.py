@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.sessions.models import Session
+from django.contrib.auth.decorators import user_passes_test
 
 def user_is_mfa(userobj):
     try:
@@ -22,6 +23,13 @@ def user_is_mfa(userobj):
         print(f"Error in user_is_mfa: {error}")
         return False
 
+def mfa_required(function=None):
+    actual_decorator = user_passes_test(
+        lambda u: user_is_mfa(u),
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
 class MFARequiredMixin(UserPassesTestMixin):
     def test_func(self):
