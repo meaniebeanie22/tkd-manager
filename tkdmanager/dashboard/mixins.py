@@ -11,8 +11,7 @@ def req_user_is_mfa(request):
     try:
         session = request.session
         if session:
-            session_data = session.get_decoded()
-            for method in session_data.get('account_authentication_methods', []):
+            for method in session.get('account_authentication_methods', []):
                 if method.get('method') == 'mfa':
                     return True
         return False
