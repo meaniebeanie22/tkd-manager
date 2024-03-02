@@ -9,23 +9,23 @@
 <h4>Add/Update Member Properties</h4>
   <form action="" method="post" enctype="multipart/form-data">
 
-    {% for hidden_field in form.hidden_fields %}
+    {% for hidden_field in formset.hidden_fields %}
       {{ hidden_field.errors }}
       {{ hidden_field }}
     {% endfor %}
 
     {% csrf_token %}
 
-    {{ form.management_form }}
-    {{ form.non_form_errors }}
+    {{ formset.management_form }}
+    {{ formset.non_form_errors }}
 
-    {% for type_form in form.forms %}
+    {% for type_form in formset.forms %}
 
       <hr>
 
       <h2>
         {% if type_form.instance.id %}
-          {% if form.forms|length > 1 %}
+          {% if formset.forms|length > 1 %}
             Add another type
           {% else %}
             Add a type

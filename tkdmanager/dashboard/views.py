@@ -398,7 +398,7 @@ class AwardDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
 class AwardDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Award
 
-
+@mfa_required
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResult(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs["pk"])
@@ -426,7 +426,7 @@ def manageGradingResult(request, **kwargs):
         )
     return render(request, "dashboard/gradingresult_form2.html", {"formset": formset})
 
-
+@mfa_required
 @permission_required("dashboard.change_gradingresult")
 def manageGradingResultLetter(request, **kwargs):
     gradingresult = GradingResult.objects.get(pk=kwargs["pk"])
@@ -809,6 +809,7 @@ class GradingInviteUpdate(
 
 
 @login_required
+@mfa_required
 def gradinginvite_pdf_view(request, pk, **kwargs):
     gi = get_object_or_404(GradingInvite, pk=pk)
     data = {"gradinginvite": gi}
@@ -871,6 +872,7 @@ class GradingUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Upda
 
 
 @login_required
+@mfa_required
 def gradingresult_pdf_view(request, pk, **kwargs):
     gr = get_object_or_404(GradingResult, pk=pk)
     data = {"gradingresult": gr}
@@ -896,6 +898,8 @@ def gradingresult_pdf_view(request, pk, **kwargs):
     )
 
 
+@login_required
+@mfa_required
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist("selected_items")
     if pks:
@@ -937,7 +941,8 @@ def gradingresult_batch_pdf_view(request, **kwargs):
     else:
         return HttpResponse(status=204)
 
-
+@login_required
+@mfa_required
 def gradinginvite_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist("selected_items")
     if pks:
@@ -962,7 +967,7 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
     else:
         return HttpResponse(status=204)
 
-
+@mfa_required
 @permission_required("dashboard.add_gradingresult")
 def gradinginvite_batch_create(request, **kwargs):
     GradingInviteFormSet = modelformset_factory(
@@ -1028,7 +1033,7 @@ def gradinginvite_batch_create(request, **kwargs):
         {"formset": formset, "miscform": gradingselectform},
     )
 
-
+@mfa_required
 @permission_required("dashboard.add_belt")
 def manageBelts(request, **kwargs):
     BeltFormSet = modelformset_factory(
@@ -1064,6 +1069,7 @@ def manageBelts(request, **kwargs):
 
 
 @login_required
+@mfa_required
 def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist("selected_items")
     gis = [get_object_or_404(GradingInvite, pk=pk) for pk in pks]
@@ -1080,6 +1086,7 @@ def batch_gradinginvite_revise(request, **kwargs):
 
 
 @login_required
+@mfa_required
 def gradingresult_batch_email_view(request, **kwargs):
     """
     View that sends emails with the GR PDF attached to the email the assessed member has on file
@@ -1144,6 +1151,7 @@ def gradingresult_batch_email_view(request, **kwargs):
 
 
 @login_required
+@mfa_required
 def gradinginvite_batch_email_view(request, **kwargs):
     """
     View that sends emails with the GI PDF attached to the email the assessed member has on file
@@ -1293,7 +1301,7 @@ def selectStyle(request, pk):
     request.session["style"] = pk
     return HttpResponse()
 
-
+@mfa_required
 @permission_required("dashboard.add_style")
 def manageStyles(request, **kwargs):
     StyleFormSet = modelformset_factory(
@@ -1308,7 +1316,7 @@ def manageStyles(request, **kwargs):
         formset = StyleFormSet(prefix="style-formset", queryset=Style.objects.all())
     return render(request, "dashboard/manage_styles.html", {"formset": formset})
 
-
+@mfa_required
 @permission_required("dashboard.add_assessmentunittype")
 def manageAssessmentUnitTypes(request, **kwargs):
     AssessmentUnitTypeFormSet = modelformset_factory(
@@ -1341,7 +1349,7 @@ def manageAssessmentUnitTypes(request, **kwargs):
         request, "dashboard/manage_assessmentunittypes.html", {"formset": formset}
     )
 
-
+@mfa_required
 @permission_required(["dashboard.add_classtype", "dashboard.add_gradingtype"])
 def manageClassTypeGradingType(request):
     ClassTypeFormSet = modelformset_factory(
@@ -1401,7 +1409,7 @@ def manageClassTypeGradingType(request):
         },
     )
 
-
+@mfa_required
 @permission_required(
     ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
 )
