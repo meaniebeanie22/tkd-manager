@@ -24,7 +24,7 @@
       <hr>
 
       <h2>
-        {% if type_form.instance.id %}
+        {% if not type_form.instance.id %}
           {% if formset.forms|length > 1 %}
             Add another type
           {% else %}
