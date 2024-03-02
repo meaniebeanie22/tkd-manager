@@ -24,7 +24,14 @@ class BSMixin:
 class CustomAuthenticateForm(BSMixin, AuthenticateForm):
     def __init__(self, *args, **kwargs):
         super(CustomAuthenticateForm, self).__init__(*args, **kwargs)
-        self.fields["code"].widget.attrs.update({"autofocus": ""})
+        self.fields["code"].widget.attrs.update(
+            {
+                "autofocus": "",
+                "inputmode": "numeric",
+                "pattern": "[0-9]*",
+                "autocomplete": "one-time-code",
+            }
+        )
 
 
 class CustomLoginForm(BSMixin, LoginForm):
