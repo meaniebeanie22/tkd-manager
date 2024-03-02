@@ -29,7 +29,7 @@
   {% block body %}
   {% if not popup %}
     {% if messages %}
-        <div class="position: sticky; top: 0px;">
+        <div class="position: fixed; top: 0px;">
             {% for message in messages %}
                 <div class="alert alert-dismissible fade show alert-info" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
             {% endfor %}
@@ -40,7 +40,7 @@
     <div class="row">
       {% if not popup %}
         <div class="col-sm-2">
-          <div style="position: sticky; top: 0px;">
+          <div style="position: fixed; top: 0px;">
             {% block sidebar %}
             <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
                 <div class="btn-group d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
