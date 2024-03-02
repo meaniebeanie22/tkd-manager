@@ -1426,7 +1426,8 @@ def manageMemberPropertyMemberPropertyType(request):
     )
     if request.method == "POST":
         formset = StyleMPTswithMPsFormset(request.POST, request.FILES)
-        formset.save()
+        with transaction.atomic():
+            formset.save()
     else:
         # make a mpt formset with a prefix, and then make a bunch of memberproperty formsets (one for each mpt with a prefix)
         formset = StyleMPTswithMPsFormset(instance=Style.objects.get(pk=request.session.get('style', 1)))

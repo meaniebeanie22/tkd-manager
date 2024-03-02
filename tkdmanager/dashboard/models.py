@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, Count
+from django.db.models import F, Count, Q
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -491,27 +491,15 @@ class MemberPropertyType(models.Model):
     style = models.ForeignKey(Style, on_delete=models.PROTECT, blank=True, null=True)
     teacher_property = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        """
-        There can only be one type with the teacher_property attr set to true
-        """
-        # get all memberpropertytypes
-        mpts = MemberPropertyType.objects.all()
-        mpts = mpts.filter(
-            style__pk=self.style.pk
-        )  # filter them to find ones with the same style
-        teacherpropertyexists = mpts.filter(
-            teacher_property__exact=True
-        ).exists()  # see if there is a teacher propertytype in the style's memberpropertytypes
-        if teacherpropertyexists:
-            # This below line will render error by breaking page, you will see
-            raise ValidationError(
-                "There must only be one teacher propertytype for each style!"
-            )
-        return super(MemberPropertyType, self).save(*args, **kwargs)
-
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_teacher_property_style',
+                fields=['style', 'teacher_property'],
+                condition=Q(teacher_property=True),
+            )
+        ]
 
     def __str__(self):
         return f"{self.name}"
