@@ -1435,6 +1435,6 @@ def manageMemberPropertyMemberPropertyType(request):
         request,
         "dashboard/manage_memberpropertymemberpropertytype.html",
         {
-            "memberpropertyformset": formset
+            "formset": formset
         },
     )
