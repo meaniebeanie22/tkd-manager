@@ -1439,3 +1439,30 @@ def manageMemberPropertyMemberPropertyType(request):
             "formset": formset
         },
     )
+
+def manageMemberPropertyMemberPropertyTypeunstyled(request):
+    StyleMPTswithMPsFormset = inlineformset_factory(
+        Style,
+        MemberPropertyType,
+        formset=BaseMPTsWithMPsFormset,
+        # We need to specify at least one MPT field:
+        fields=("name", "searchable", "teacher_property"),
+        extra=1,
+        # If you don't want to be able to delete Styles:
+        can_delete=False
+    )
+    if request.method == "POST":
+        formset = StyleMPTswithMPsFormset(request.POST, request.FILES)
+        with transaction.atomic():
+            formset.save()
+    else:
+        # make a mpt formset with a prefix, and then make a bunch of memberproperty formsets (one for each mpt with a prefix)
+        formset = StyleMPTswithMPsFormset(instance=None)
+
+    return render(
+        request,
+        "dashboard/manage_memberpropertymemberpropertytype.html",
+        {
+            "formset": formset
+        },
+    )
