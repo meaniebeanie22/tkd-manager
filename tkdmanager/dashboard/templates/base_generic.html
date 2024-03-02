@@ -31,7 +31,7 @@
     <div class="row">
       {% if not popup %}
             {% if messages %}
-                <div class="fixed-top sticky-top">
+                <div class="position: sticky; top: 0px;">
                     {% for message in messages %}
                         <div class="alert alert-dismissible fade show alert-info" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
                     {% endfor %}
