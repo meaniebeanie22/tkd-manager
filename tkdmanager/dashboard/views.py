@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from io import BytesIO
 from typing import Any
 from convenient_formsets import ConvenientBaseModelFormSet, ConvenientBaseInlineFormSet
@@ -43,6 +43,7 @@ from .models import (
 )
 from .mixins import MFARequiredMixin
 from .decorators import mfa_required
+from utils.views import time_difference_in_seconds
 
 
 def order_members_by_belt_from_style(
@@ -67,16 +68,6 @@ def order_members_by_belt_from_style(
             output_field=models.IntegerField(),
         ).asc()
     )
-
-
-def time_difference_in_seconds(time1, time2):
-    # Convert time objects to timedelta
-    delta = datetime.combine(timezone.now().date(), time2) - datetime.combine(
-        timezone.now().date(), time1
-    )
-    # Calculate the time difference in seconds
-    difference_seconds = delta.total_seconds()
-    return difference_seconds
 
 
 # Create your views here.
