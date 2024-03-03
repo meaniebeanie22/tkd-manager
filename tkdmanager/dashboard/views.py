@@ -369,9 +369,9 @@ class AwardCreate(CreatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Create
 
     def form_valid(self, form):
         response = super(AwardCreate, self).form_valid(form)
-        self.object.style = self.request.session.get('style', 1)
+        self.object.style = self.request.session.get("style", 1)
         self.object.save()
-        return response    
+        return response
 
 
 class AwardUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, UpdateView):
@@ -386,9 +386,10 @@ class AwardUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Update
 
     def form_valid(self, form):
         response = super(AwardCreate, self).form_valid(form)
-        self.object.style = self.request.session.get('style', 1)
+        self.object.style = self.request.session.get("style", 1)
         self.object.save()
-        return response   
+        return response
+
 
 class AwardDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
     model = Award
@@ -397,6 +398,7 @@ class AwardDelete(MFARequiredMixin, LoginRequiredMixin, DeleteView):
 
 class AwardDetailView(MFARequiredMixin, LoginRequiredMixin, generic.DetailView):
     model = Award
+
 
 @mfa_required
 @permission_required("dashboard.change_gradingresult")
@@ -425,6 +427,7 @@ def manageGradingResult(request, **kwargs):
             instance=gradingresult, form_kwargs={"request": request}
         )
     return render(request, "dashboard/gradingresult_form2.html", {"formset": formset})
+
 
 @mfa_required
 @permission_required("dashboard.change_gradingresult")
@@ -941,6 +944,7 @@ def gradingresult_batch_pdf_view(request, **kwargs):
     else:
         return HttpResponse(status=204)
 
+
 @login_required
 @mfa_required
 def gradinginvite_batch_pdf_view(request, **kwargs):
@@ -966,6 +970,7 @@ def gradinginvite_batch_pdf_view(request, **kwargs):
         return response
     else:
         return HttpResponse(status=204)
+
 
 @mfa_required
 @permission_required("dashboard.add_gradingresult")
@@ -1032,6 +1037,7 @@ def gradinginvite_batch_create(request, **kwargs):
         "dashboard/gradinginvite_batch_create.html",
         {"formset": formset, "miscform": gradingselectform},
     )
+
 
 @mfa_required
 @permission_required("dashboard.add_belt")
@@ -1301,6 +1307,7 @@ def selectStyle(request, pk):
     request.session["style"] = pk
     return HttpResponse()
 
+
 @mfa_required
 @permission_required("dashboard.add_style")
 def manageStyles(request, **kwargs):
@@ -1315,6 +1322,7 @@ def manageStyles(request, **kwargs):
     else:
         formset = StyleFormSet(prefix="style-formset", queryset=Style.objects.all())
     return render(request, "dashboard/manage_styles.html", {"formset": formset})
+
 
 @mfa_required
 @permission_required("dashboard.add_assessmentunittype")
@@ -1348,6 +1356,7 @@ def manageAssessmentUnitTypes(request, **kwargs):
     return render(
         request, "dashboard/manage_assessmentunittypes.html", {"formset": formset}
     )
+
 
 @mfa_required
 @permission_required(["dashboard.add_classtype", "dashboard.add_gradingtype"])
@@ -1409,6 +1418,7 @@ def manageClassTypeGradingType(request):
         },
     )
 
+
 @mfa_required
 @permission_required(
     ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
@@ -1422,7 +1432,7 @@ def manageMemberPropertyMemberPropertyType(request):
         fields=("name", "searchable", "teacher_property"),
         extra=1,
         # If you don't want to be able to delete Styles:
-        can_delete=False
+        can_delete=False,
     )
     if request.method == "POST":
         formset = StyleMPTswithMPsFormset(request.POST, request.FILES)
@@ -1430,16 +1440,21 @@ def manageMemberPropertyMemberPropertyType(request):
             formset.save()
     else:
         # make a mpt formset with a prefix, and then make a bunch of memberproperty formsets (one for each mpt with a prefix)
-        formset = StyleMPTswithMPsFormset(instance=Style.objects.get(pk=request.session.get('style', 1)))
+        formset = StyleMPTswithMPsFormset(
+            instance=Style.objects.get(pk=request.session.get("style", 1))
+        )
 
     return render(
         request,
         "dashboard/manage_memberpropertymemberpropertytype.html",
-        {
-            "formset": formset
-        },
+        {"formset": formset},
     )
 
+
+@mfa_required
+@permission_required(
+    ["dashboard.add_memberproperty", "dashboard.add_memberpropertytype"]
+)
 def manageMemberPropertyMemberPropertyTypeunstyled(request):
     StyleMPTswithMPsFormset = inlineformset_factory(
         Style,
@@ -1449,7 +1464,7 @@ def manageMemberPropertyMemberPropertyTypeunstyled(request):
         fields=("name", "searchable", "teacher_property"),
         extra=1,
         # If you don't want to be able to delete Styles:
-        can_delete=False
+        can_delete=False,
     )
     if request.method == "POST":
         formset = StyleMPTswithMPsFormset(request.POST, request.FILES)
@@ -1462,7 +1477,5 @@ def manageMemberPropertyMemberPropertyTypeunstyled(request):
     return render(
         request,
         "dashboard/manage_memberpropertymemberpropertytype.html",
-        {
-            "formset": formset
-        },
+        {"formset": formset},
     )
