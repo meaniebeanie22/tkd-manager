@@ -10,7 +10,7 @@ gunicorn==21.2.0
 idna==3.6
 packaging==23.2
 psycopg2-binary==2.9.9
-pypdf==4.0.2
+pypdf==4.1.0
 pytz==2024.1
 requests==2.31.0
 sqlparse==0.4.4
