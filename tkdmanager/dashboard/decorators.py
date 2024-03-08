@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import resolve_url
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 
 def req_user_is_mfa(request):
@@ -54,7 +54,7 @@ def request_decorator(
     return decorator
 
 
-def mfa_required(function=None, login_url=reverse("mfa_authenticate")):
+def mfa_required(function=None, login_url=reverse_lazy("mfa_authenticate")):
     actual_decorator = request_decorator(
         lambda r: req_user_is_mfa(r),
         login_url=login_url,
