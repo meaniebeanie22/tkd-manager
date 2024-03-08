@@ -75,14 +75,16 @@ class Belt(models.Model):
             models.UniqueConstraint(
                 name="unique_style_degree",
                 fields=["style", "degree"],
-                deferrable=models.Deferrable.DEFERRED
+                deferrable=models.Deferrable.DEFERRED,
             )
         ]
 
     @classmethod
     def get_default_pk(cls):
         style, created = Style.objects.get_or_create(name="TKD")
-        belt, created = cls.objects.get_or_create(style=style, degree=2, name="No Belt")
+        belt, created = cls.objects.get_or_create(
+            style__pk=style.pk, degree=2, name="No Belt"
+        )
         return belt.pk
 
     def __str__(self):
@@ -495,8 +497,8 @@ class MemberPropertyType(models.Model):
         ordering = ["name"]
         constraints = [
             models.UniqueConstraint(
-                name='unique_teacher_property_style',
-                fields=['style', 'teacher_property'],
+                name="unique_teacher_property_style",
+                fields=["style", "teacher_property"],
                 condition=Q(teacher_property=True),
             )
         ]
