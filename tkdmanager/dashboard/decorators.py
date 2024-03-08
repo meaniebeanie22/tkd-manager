@@ -54,7 +54,7 @@ def request_decorator(
     return decorator
 
 
-def mfa_required(function=None, login_url=reverse_lazy("mfa_authenticate")):
+def mfa_required(function=None, login_url=reverse_lazy("mfa_index")):
     actual_decorator = request_decorator(
         lambda r: req_user_is_mfa(r),
         login_url=login_url,
