@@ -3,20 +3,24 @@ from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import resolve_url
+from django.urls import reverse
+
 
 def req_user_is_mfa(request):
     try:
         session = request.session
         if session:
-            for method in session.get('account_authentication_methods', []):
-                if method.get('method') == 'mfa':
+            for method in session.get("account_authentication_methods", []):
+                if method.get("method") == "mfa":
                     return True
+            print(f"MFA check session: ")
         return False
-            
+
     except Exception as error:
         print(f"Error in req_user_is_mfa: {error}")
         return False
-           
+
+
 def request_decorator(
     test_func, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME
 ):
@@ -49,7 +53,8 @@ def request_decorator(
 
     return decorator
 
-def mfa_required(function=None, login_url=None):
+
+def mfa_required(function=None, login_url=reverse("mfa_authenticate")):
     actual_decorator = request_decorator(
         lambda r: req_user_is_mfa(r),
         login_url=login_url,
