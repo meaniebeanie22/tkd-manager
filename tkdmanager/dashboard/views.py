@@ -71,7 +71,6 @@ def order_members_by_belt_from_style(
 
 
 # Create your views here.
-@login_required
 @mfa_required
 def index(request):
     """homepage"""
@@ -802,7 +801,6 @@ class GradingInviteUpdate(
         return c
 
 
-@login_required
 @mfa_required
 def gradinginvite_pdf_view(request, pk, **kwargs):
     gi = get_object_or_404(GradingInvite, pk=pk)
@@ -865,7 +863,6 @@ class GradingUpdate(UpdatePopupMixin, MFARequiredMixin, LoginRequiredMixin, Upda
         return kwargs
 
 
-@login_required
 @mfa_required
 def gradingresult_pdf_view(request, pk, **kwargs):
     gr = get_object_or_404(GradingResult, pk=pk)
@@ -892,7 +889,6 @@ def gradingresult_pdf_view(request, pk, **kwargs):
     )
 
 
-@login_required
 @mfa_required
 def gradingresult_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist("selected_items")
@@ -936,7 +932,6 @@ def gradingresult_batch_pdf_view(request, **kwargs):
         return HttpResponse(status=204)
 
 
-@login_required
 @mfa_required
 def gradinginvite_batch_pdf_view(request, **kwargs):
     pks = request.GET.getlist("selected_items")
@@ -1065,7 +1060,6 @@ def manageBelts(request, **kwargs):
     return render(request, "dashboard/manage_belts.html", {"formset": formset})
 
 
-@login_required
 @mfa_required
 def batch_gradinginvite_revise(request, **kwargs):
     pks = request.GET.getlist("selected_items")
@@ -1082,7 +1076,6 @@ def batch_gradinginvite_revise(request, **kwargs):
     )
 
 
-@login_required
 @mfa_required
 def gradingresult_batch_email_view(request, **kwargs):
     """
@@ -1147,7 +1140,6 @@ def gradingresult_batch_email_view(request, **kwargs):
         return JsonResponse(response_data, status=204)
 
 
-@login_required
 @mfa_required
 def gradinginvite_batch_email_view(request, **kwargs):
     """

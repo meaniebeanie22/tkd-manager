@@ -9,4 +9,7 @@ class MFARequiredMixin(UserPassesTestMixin):
         return req_user_is_mfa(self.request)
 
     def handle_no_permission(self) -> HttpResponseRedirect:
-        return HttpResponseRedirect(reverse("mfa_activate_totp"))
+        print(
+            f"Failed MFA, request: {self.request}\nSession: {self.request.session.items()}"
+        )
+        return HttpResponseRedirect(reverse("mfa_authenticate"))

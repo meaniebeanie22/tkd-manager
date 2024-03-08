@@ -3,7 +3,7 @@ from dashboard.models import Belt
 from django.core.exceptions import ValidationError
 
 
-class AnimalTestCase(TestCase):
+class BeltTestCase(TestCase):
     def setUp(self):
         Belt.objects.create(degree=1, name="White")
 
