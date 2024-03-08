@@ -13,7 +13,7 @@ def req_user_is_mfa(request):
             for method in session.get("account_authentication_methods", []):
                 if method.get("method") == "mfa":
                     return True
-            print(f"MFA check session: ")
+            print(f"MFA check session: {session.items()}")
         return False
 
     except Exception as error:
