@@ -132,6 +132,9 @@ DATABASES = {
         "PASSWORD": os.environ.get("PGPASSWORD"),
         "HOST": os.environ.get("PGHOST"),
         "PORT": os.environ.get("PGPORT"),
+        "TEST": {
+            "NAME": "test" + os.environ.get("PGDATABASE"),
+        },
     }
 }
 # Password validation
