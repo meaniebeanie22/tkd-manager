@@ -293,7 +293,13 @@ class GradingResultCreate(MFARequiredMixin, LoginRequiredMixin, CreateView):
         if member_id:
             i["member"] = member_id
             i["forbelt"] = get_object_or_404(
-                Belt, pk=(Member.objects.get(id=member_id).belt.pk + 1)
+                Belt,
+                pk=(
+                    Member.objects.get(id=member_id)
+                    .belts.get(style__pk=self.request.session.get("style", 1))
+                    .pk
+                    + 1
+                ),
             )
         return i
 
