@@ -82,9 +82,10 @@ class Belt(models.Model):
     @classmethod
     def get_default_pk(cls):
         style, created = Style.objects.get_or_create(name="TKD")
-        belt, created = cls.objects.get_or_create(
-            style__pk=style.pk, degree=2, name="No Belt"
-        )
+        belt, created = cls.objects.get_or_create(style=style, degree=1)
+        if created:
+            belt.name = "No Belt"
+        belt.save()
         return belt.pk
 
     def __str__(self):
