@@ -5,7 +5,7 @@ Django==5.0.3
 django-appconf==1.0.6
 django-select2==8.1.2
 django_addanother==2.2.2
-djangorestframework==3.14.0
+djangorestframework==3.15.0
 gunicorn==21.2.0
 idna==3.6
 packaging==23.2
