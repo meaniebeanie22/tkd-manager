@@ -8,7 +8,7 @@ django_addanother==2.2.2
 djangorestframework==3.15.1
 gunicorn==22.0.0
 idna==3.7
-packaging==24.0
+packaging==24.1
 psycopg2-binary==2.9.9
 pypdf==4.2.0
 pytz==2024.1
