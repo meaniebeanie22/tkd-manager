@@ -21,4 +21,4 @@ django-convenient-formsets==2.0
 celery==5.4.0
 django-celery-results==2.5.1
 django-celery-beat @ git+https://github.com/celery/django-celery-beat@f66796b9c5c9e47d118cb5b41d970f07cce72bbe
-redis==5.0.4
+redis==5.0.7
